@@ -19,14 +19,10 @@ public class Genero {
     @JoinTable(name = "genero_livro", joinColumns = @JoinColumn(name = "genero_id"), inverseJoinColumns = @JoinColumn(name = "livro_id"))
     private List<Livro> livros;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "generos")
-    private List<Usuario> usuarios;
-
-    public Genero(UUID genero_id, String nome, List<Livro> livros, List<Usuario> usuarios) {
+    public Genero(UUID genero_id, String nome, List<Livro> livros) {
         this.genero_id = genero_id;
         this.nome = nome;
         this.livros = livros;
-        this.usuarios = usuarios;
     }
 
     public Genero() {
@@ -57,11 +53,4 @@ public class Genero {
         this.livros = livros;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
 }
