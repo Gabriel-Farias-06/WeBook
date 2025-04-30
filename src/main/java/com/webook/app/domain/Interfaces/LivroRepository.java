@@ -8,6 +8,7 @@ import java.util.UUID;
 public interface LivroRepository {
     Livro create(Livro livro);
     Optional<Livro> findById(UUID id);
+    Optional<Livro> findByIsbn(String isbn);
     Livro update(Livro livro);
     void delete(UUID id);
 }

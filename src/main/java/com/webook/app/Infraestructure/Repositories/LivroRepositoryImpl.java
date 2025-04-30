@@ -24,6 +24,11 @@ public class LivroRepositoryImpl implements LivroRepository {
     }
 
     @Override
+    public Optional<Livro> findByIsbn(String isbn) {
+        return livroJpaRepository.findByIsbn(isbn);
+    }
+
+    @Override
     public Livro update(Livro livro) {
         return livroJpaRepository.save(livro);
     }
