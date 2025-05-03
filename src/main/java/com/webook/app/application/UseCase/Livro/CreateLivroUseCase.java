@@ -13,6 +13,8 @@ public class CreateLivroUseCase {
     }
 
     public void execute(Livro livro){
+        if(livroRepository.findByIsbn(livro.getIsbn()).isPresent())
+            throw new IllegalArgumentException("Livro com mesmo ISBN já cadastrado");
         livroRepository.create(livro);
     }
 }

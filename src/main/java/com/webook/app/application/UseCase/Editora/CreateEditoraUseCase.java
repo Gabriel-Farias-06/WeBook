@@ -13,6 +13,8 @@ public class CreateEditoraUseCase {
     }
 
     public void execute(Editora editora) throws IllegalArgumentException {
+        if(editoraRepository.findByName(editora.getNome()).isPresent())
+            throw new IllegalArgumentException("Editora com mesmo nome já cadastrada");
         editoraRepository.create(editora);
     }
 }

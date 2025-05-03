@@ -8,6 +8,7 @@ import java.util.UUID;
 public interface GeneroRepository {
     Genero create(Genero genero);
     Optional<Genero> findById(UUID id);
+    Optional<Genero> findByName(String name);
     Genero update(Genero genero);
     void delete(UUID id);
 }

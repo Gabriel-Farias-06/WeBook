@@ -3,6 +3,7 @@ package com.webook.app.domain.Entity;
 import com.webook.app.domain.Exceptions.EmailInvalidoException;
 import com.webook.app.domain.Exceptions.SenhaInvalidaException;
 import com.webook.app.domain.Validators.EmailValidator;
+import com.webook.app.domain.Validators.SenhaValidator;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -35,8 +36,18 @@ public class Usuario {
         this.caminhoFoto = caminhoFoto;
         EmailValidator.validarEmail(email);
         this.email = email;
+        SenhaValidator.validarSenha(senha);
         this.senha = senha;
         this.livros = livros;
+    }
+
+    public Usuario(UUID usuario_id, String nome, String email, String senha) throws EmailInvalidoException, SenhaInvalidaException {
+        this.usuario_id = usuario_id;
+        this.nome = nome;
+        EmailValidator.validarEmail(email);
+        this.email = email;
+        SenhaValidator.validarSenha(senha);
+        this.senha = senha;
     }
 
     public Usuario() {

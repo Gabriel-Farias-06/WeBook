@@ -12,8 +12,8 @@ public class UpdateEditoraUseCase {
     }
 
     public void execute(Editora editora){
-        if(editoraRepository.findById(editora.getEditora_id()).isEmpty())
-            throw new IllegalArgumentException("Id nao cadastrado");
+        if(editoraRepository.findByName(editora.getNome()).isEmpty())
+            throw new IllegalArgumentException("Livro nao cadastrado");
 
         editoraRepository.update(editora);
     }

@@ -24,7 +24,7 @@ public class SenhaValidator {
             throw new SenhaInvalidaException("A senha deve conter pelo menos um caractere especial.");
 
         if (senha.matches(".*\\s.*"))
-            throw new SenhaInvalidaException("A senha não pode conter espaços em branco.");
+            throw new SenhaInvalidaException("A senha não pode conter espaços.");
 
         return true;
     }

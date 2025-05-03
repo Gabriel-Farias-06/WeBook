@@ -27,6 +27,9 @@ public class AutorRepositoryImpl implements AutorRepository {
     }
 
     @Override
+    public Optional<Autor> findByName(String name) { return autorJpaRepository.findByName(name);}
+
+    @Override
     public Autor update(Autor autor) {
         return autorJpaRepository.save(autor);
     }

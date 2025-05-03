@@ -13,7 +13,7 @@ public class CreateUsuarioUseCase {
     }
 
     public void execute(Usuario usuario) throws IllegalArgumentException {
-        if(usuarioRepository.findByEmail(usuario.getEmail()).isEmpty())
+        if(usuarioRepository.findByEmail(usuario.getEmail()).isPresent())
             throw new IllegalArgumentException("Email já cadastrado");
         usuarioRepository.create(usuario);
     }
