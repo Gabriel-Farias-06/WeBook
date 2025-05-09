@@ -2,7 +2,9 @@ package com.webook.app.application.UseCase.Genero;
 
 import com.webook.app.domain.Entity.Genero;
 import com.webook.app.domain.Interfaces.GeneroRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CreateGeneroUseCase {
 
     private final GeneroRepository generoRepository;
@@ -11,9 +13,9 @@ public class CreateGeneroUseCase {
         this.generoRepository = generoRepository;
     }
 
-    public void execute(Genero genero) {
-        if(generoRepository.findById(genero.getGenero_id()).isPresent())
-            throw new IllegalArgumentException("Gênero com mesmo ID já cadastrado");
-        generoRepository.create(genero);
+    public Genero execute(Genero genero) {
+        if(generoRepository.findByNome(genero.getNome()).isPresent())
+            throw new IllegalArgumentException("Gênero com mesmo nome já cadastrado");
+        return generoRepository.create(genero);
     }
 }

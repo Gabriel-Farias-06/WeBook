@@ -2,7 +2,9 @@ package com.webook.app.application.UseCase.Autor;
 
 import com.webook.app.domain.Entity.Autor;
 import com.webook.app.domain.Interfaces.AutorRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CreateAutorUseCase {
 
     private final AutorRepository autorRepository;
@@ -11,9 +13,10 @@ public class CreateAutorUseCase {
         this.autorRepository = autorRepository;
     }
 
-    public void execute(Autor autor) {
-        if(autorRepository.findById(autor.getAutor_id()).isPresent())
-            throw new IllegalArgumentException("Gênero com mesmo nome já cadastrado");
+    public Autor execute(Autor autor) {
+        if(autorRepository.findByNome(autor.getNome()).isPresent())
+            throw new IllegalArgumentException("Autor com mesmo nome já cadastrado");
         autorRepository.create(autor);
+        return autor;
     }
 }

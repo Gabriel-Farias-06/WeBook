@@ -2,10 +2,12 @@ package com.webook.app.application.UseCase.Editora;
 
 import com.webook.app.domain.Entity.Editora;
 import com.webook.app.domain.Interfaces.EditoraRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class FindByIdEditoraUseCase {
 
     private final EditoraRepository editoraRepository;

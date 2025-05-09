@@ -1,9 +1,11 @@
 package com.webook.app.application.DTOs;
 
+import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Exceptions.EmailInvalidoException;
 import com.webook.app.domain.Exceptions.SenhaInvalidaException;
 import com.webook.app.domain.Validators.EmailValidator;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UsuarioDTO {
@@ -14,10 +16,16 @@ public class UsuarioDTO {
 
     private String email;
 
-    public UsuarioDTO(UUID usuario_id, String nome, String email) throws EmailInvalidoException, SenhaInvalidaException {
+    private List<LivroDTO> livros;
+
+    public static UsuarioDTO toDTO(Usuario usuario) {
+        return new UsuarioDTO(usuario.getUsuario_id(), usuario.getNome(), usuario.getEmail(), usuario.getLivros().stream().map(LivroDTO::toDTO).toList());
+    }
+
+    public UsuarioDTO(UUID usuario_id, String nome, String email, List<LivroDTO> livros) {
         this.usuario_id = usuario_id;
         this.nome = nome;
-        EmailValidator.validarEmail(email);
+        this.livros = livros;
         this.email = email;
     }
 
@@ -45,4 +53,11 @@ public class UsuarioDTO {
         this.email = email;
     }
 
+    public List<LivroDTO> getLivros() {
+        return livros;
+    }
+
+    public void setLivros(List<LivroDTO> livros) {
+        this.livros = livros;
+    }
 }

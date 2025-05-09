@@ -8,5 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface EditoraJpaRepository extends JpaRepository<Editora, UUID>  {
-    Optional<Editora> findByName(String name);
+    Optional<Editora> findByNome(String name);
 }

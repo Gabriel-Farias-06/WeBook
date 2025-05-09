@@ -2,7 +2,9 @@ package com.webook.app.application.UseCase.Autor;
 
 import com.webook.app.domain.Entity.Autor;
 import com.webook.app.domain.Interfaces.AutorRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UpdateAutorUseCase {
     private final AutorRepository autorRepository;
 

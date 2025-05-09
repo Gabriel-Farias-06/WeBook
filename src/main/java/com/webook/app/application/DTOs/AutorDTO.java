@@ -1,5 +1,7 @@
 package com.webook.app.application.DTOs;
 
+import com.webook.app.domain.Entity.Autor;
+
 import java.util.UUID;
 
 public class AutorDTO {
@@ -9,6 +11,9 @@ public class AutorDTO {
 
     private String sobrenome;
 
+    public static AutorDTO toDTO(Autor autor) {
+        return new AutorDTO(autor.getAutor_id(), autor.getNome(), autor.getSobrenome());
+    }
 
     public AutorDTO(UUID autor_id, String nome, String sobrenome) {
         this.autor_id = autor_id;

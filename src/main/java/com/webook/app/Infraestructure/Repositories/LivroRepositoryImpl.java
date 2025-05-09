@@ -11,11 +11,15 @@ import java.util.UUID;
 @Repository
 public class LivroRepositoryImpl implements LivroRepository {
 
-    private LivroJpaRepository livroJpaRepository;
+    private final LivroJpaRepository livroJpaRepository;
+
+    public LivroRepositoryImpl(LivroJpaRepository livroJpaRepository) {
+        this.livroJpaRepository = livroJpaRepository;
+    }
 
     @Override
     public Livro create(Livro livro) {
-        return livroJpaRepository.save(livro);
+            return livroJpaRepository.save(livro);
     }
 
     @Override

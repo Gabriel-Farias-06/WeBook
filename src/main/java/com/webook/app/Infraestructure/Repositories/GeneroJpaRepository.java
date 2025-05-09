@@ -8,5 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface GeneroJpaRepository extends JpaRepository<Genero, UUID>  {
-    Optional<Genero> findByName(String name);
+    Optional<Genero> findByNome(String name);
 }

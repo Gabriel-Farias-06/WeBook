@@ -2,10 +2,12 @@ package com.webook.app.application.UseCase.Genero;
 
 import com.webook.app.domain.Entity.Genero;
 import com.webook.app.domain.Interfaces.GeneroRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class FindByIdGeneroUseCase {
 
     private final GeneroRepository generoRepository;

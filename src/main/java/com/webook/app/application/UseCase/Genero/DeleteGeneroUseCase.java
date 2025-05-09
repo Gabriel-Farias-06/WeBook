@@ -1,9 +1,11 @@
 package com.webook.app.application.UseCase.Genero;
 
 import com.webook.app.domain.Interfaces.GeneroRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class DeleteGeneroUseCase {
 
     private final GeneroRepository generoRepository;

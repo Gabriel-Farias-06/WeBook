@@ -2,7 +2,9 @@ package com.webook.app.application.UseCase.Genero;
 
 import com.webook.app.domain.Entity.Genero;
 import com.webook.app.domain.Interfaces.GeneroRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UpdateGeneroUseCase {
     private final GeneroRepository generoRepository;
 

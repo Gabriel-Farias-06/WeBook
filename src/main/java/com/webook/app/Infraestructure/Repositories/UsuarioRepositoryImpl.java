@@ -2,10 +2,12 @@ package com.webook.app.Infraestructure.Repositories;
 
 import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Interfaces.UsuarioRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class UsuarioRepositoryImpl implements UsuarioRepository {
     private final UsuarioJpaRepository usuarioJpaRepository;
 

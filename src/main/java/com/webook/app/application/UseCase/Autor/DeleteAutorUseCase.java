@@ -1,9 +1,11 @@
 package com.webook.app.application.UseCase.Autor;
 
 import com.webook.app.domain.Interfaces.AutorRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class DeleteAutorUseCase {
 
     private final AutorRepository autorRepository;

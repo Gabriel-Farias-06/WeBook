@@ -1,5 +1,6 @@
 package com.webook.app.domain.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
 import jakarta.persistence.*;
 
@@ -41,10 +42,10 @@ public class Livro {
     @OneToOne(cascade = CascadeType.ALL)
     private Editora editora;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "livros")
+    @ManyToMany(mappedBy = "livros", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Usuario> usuarios;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "genero_livro", joinColumns = @JoinColumn(name = "livro_id"), inverseJoinColumns = @JoinColumn(name = "genero_id"))
     private List<Genero> generos;
 

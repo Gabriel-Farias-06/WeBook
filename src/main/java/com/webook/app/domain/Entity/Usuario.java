@@ -1,5 +1,8 @@
 package com.webook.app.domain.Entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.webook.app.domain.Exceptions.EmailInvalidoException;
 import com.webook.app.domain.Exceptions.SenhaInvalidaException;
 import com.webook.app.domain.Validators.EmailValidator;
@@ -26,7 +29,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_livro", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "livro_id"))
     private List<Livro> livros;
 
@@ -41,7 +44,8 @@ public class Usuario {
         this.livros = livros;
     }
 
-    public Usuario(UUID usuario_id, String nome, String email, String senha) throws EmailInvalidoException, SenhaInvalidaException {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Usuario(@JsonProperty("usuario_id") UUID usuario_id, @JsonProperty("nome") String nome, @JsonProperty("email") String email, @JsonProperty("senha") String senha) throws EmailInvalidoException, SenhaInvalidaException {
         this.usuario_id = usuario_id;
         this.nome = nome;
         EmailValidator.validarEmail(email);

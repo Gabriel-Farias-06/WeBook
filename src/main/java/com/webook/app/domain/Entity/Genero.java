@@ -1,5 +1,7 @@
 package com.webook.app.domain.Entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,7 +17,7 @@ public class Genero {
     @Column(nullable = false, unique = true)
     private String nome;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "genero_livro", joinColumns = @JoinColumn(name = "genero_id"), inverseJoinColumns = @JoinColumn(name = "livro_id"))
     private List<Livro> livros;
 
@@ -23,6 +25,12 @@ public class Genero {
         this.genero_id = genero_id;
         this.nome = nome;
         this.livros = livros;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public Genero(@JsonProperty("genero_id") UUID genero_id, @JsonProperty("nome") String nome) {
+        this.genero_id = genero_id;
+        this.nome = nome;
     }
 
     public Genero() {

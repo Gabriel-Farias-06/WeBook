@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://mainline.proxy.rlwy.net:26998/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate

@@ -1,9 +1,6 @@
 package com.webook.app.application.DTOs;
 
-import com.webook.app.domain.Entity.Autor;
-import com.webook.app.domain.Entity.Editora;
-import com.webook.app.domain.Entity.Genero;
-import com.webook.app.domain.Entity.Usuario;
+import com.webook.app.domain.Entity.*;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
 import jakarta.persistence.*;
 
@@ -19,7 +16,7 @@ public class LivroDTO {
 
     private String sinopse;
 
-    private  int numeroPaginas;
+    private int numeroPaginas;
 
     private Double preco;
 
@@ -27,13 +24,15 @@ public class LivroDTO {
 
     private Autor autor;
 
-    private Editora editora;
+    private EditoraDTO editora;
 
-    private List<Usuario> usuarios;
+    private List<GeneroDTO> generos;
 
-    private List<Genero> generos;
+    public static LivroDTO toDTO(Livro livro){
+        return new LivroDTO(livro.getLivro_id(), livro.getIsbn(), livro.getTitulo(), livro.getSinopse(), livro.getNumeroPaginas(), livro.getPreco(), livro.getClassificacaoIndicativa(), livro.getAutor(), EditoraDTO.toDTO(livro.getEditora()), livro.getGeneros().stream().map(GeneroDTO::toDTO).toList());
+    }
 
-    public LivroDTO(UUID livro_id, String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Usuario> usuarios, List<Genero> generos) {
+    public LivroDTO(UUID livro_id, String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, EditoraDTO editora, List<GeneroDTO> generos) {
         this.livro_id = livro_id;
         this.isbn = isbn;
         this.titulo = titulo;
@@ -43,7 +42,6 @@ public class LivroDTO {
         this.classificacaoIndicativa = classificacaoIndicativa;
         this.autor = autor;
         this.editora = editora;
-        this.usuarios = usuarios;
         this.generos = generos;
     }
 
@@ -114,27 +112,19 @@ public class LivroDTO {
         this.autor = autor;
     }
 
-    public Editora getEditora() {
+    public EditoraDTO getEditora() {
         return editora;
     }
 
-    public void setEditora(Editora editora) {
+    public void setEditora(EditoraDTO editora) {
         this.editora = editora;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public List<Genero> getGeneros() {
+    public List<GeneroDTO> getGeneros() {
         return generos;
     }
 
-    public void setGeneros(List<Genero> generos) {
+    public void setGeneros(List<GeneroDTO> generos) {
         this.generos = generos;
     }
 }
