@@ -2,7 +2,6 @@ package com.webook.app.application.DTOs;
 
 import com.webook.app.domain.Entity.*;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
-import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,27 +15,33 @@ public class LivroDTO {
 
     private String sinopse;
 
+    private String caminhoLivro;
+
     private int numeroPaginas;
 
     private Double preco;
 
     private ClassificacaoIndicativa classificacaoIndicativa;
 
-    private Autor autor;
+    private UUID autor;
 
-    private EditoraDTO editora;
+    private UUID editora;
 
-    private List<GeneroDTO> generos;
+    private List<UUID> generos;
 
     public static LivroDTO toDTO(Livro livro){
-        return new LivroDTO(livro.getLivro_id(), livro.getIsbn(), livro.getTitulo(), livro.getSinopse(), livro.getNumeroPaginas(), livro.getPreco(), livro.getClassificacaoIndicativa(), livro.getAutor(), EditoraDTO.toDTO(livro.getEditora()), livro.getGeneros().stream().map(GeneroDTO::toDTO).toList());
+        if(livro.getLivro_id() == null)
+            return new LivroDTO(livro.getIsbn(), livro.getTitulo(), livro.getSinopse(), livro.getCaminhoLivro(), livro.getNumeroPaginas(), livro.getPreco(), livro.getClassificacaoIndicativa(), livro.getAutor().getAutor_id(), livro.getEditora().getEditora_id(), livro.getGeneros().stream().map(Genero::getGenero_id).toList());
+
+        return new LivroDTO(livro.getLivro_id(), livro.getIsbn(), livro.getTitulo(), livro.getSinopse(), livro.getCaminhoLivro(), livro.getNumeroPaginas(), livro.getPreco(), livro.getClassificacaoIndicativa(), livro.getAutor().getAutor_id(), livro.getEditora().getEditora_id(), livro.getGeneros().stream().map(Genero::getGenero_id).toList());
     }
 
-    public LivroDTO(UUID livro_id, String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, EditoraDTO editora, List<GeneroDTO> generos) {
+    public LivroDTO(UUID livro_id, String isbn, String titulo, String sinopse, String caminhoLivro, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, UUID autor, UUID editora, List<UUID> generos) {
         this.livro_id = livro_id;
         this.isbn = isbn;
         this.titulo = titulo;
         this.sinopse = sinopse;
+        this.caminhoLivro = caminhoLivro;
         this.numeroPaginas = numeroPaginas;
         this.preco = preco;
         this.classificacaoIndicativa = classificacaoIndicativa;
@@ -45,8 +50,20 @@ public class LivroDTO {
         this.generos = generos;
     }
 
-    public LivroDTO() {
+    public LivroDTO(String isbn, String titulo, String sinopse, String caminhoLivro, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, UUID autor, UUID editora, List<UUID> generos) {
+        this.isbn = isbn;
+        this.titulo = titulo;
+        this.sinopse = sinopse;
+        this.caminhoLivro = caminhoLivro;
+        this.numeroPaginas = numeroPaginas;
+        this.preco = preco;
+        this.classificacaoIndicativa = classificacaoIndicativa;
+        this.autor = autor;
+        this.editora = editora;
+        this.generos = generos;
     }
+
+    public LivroDTO() {}
 
     public UUID getLivro_id() {
         return livro_id;
@@ -104,27 +121,35 @@ public class LivroDTO {
         this.classificacaoIndicativa = classificacaoIndicativa;
     }
 
-    public Autor getAutor() {
+    public UUID getAutor() {
         return autor;
     }
 
-    public void setAutor(Autor autor) {
+    public void setAutor(UUID autor) {
         this.autor = autor;
     }
 
-    public EditoraDTO getEditora() {
+    public UUID getEditora() {
         return editora;
     }
 
-    public void setEditora(EditoraDTO editora) {
+    public void setEditora(UUID editora) {
         this.editora = editora;
     }
 
-    public List<GeneroDTO> getGeneros() {
+    public List<UUID> getGeneros() {
         return generos;
     }
 
-    public void setGeneros(List<GeneroDTO> generos) {
+    public void setGeneros(List<UUID> generos) {
         this.generos = generos;
+    }
+
+    public String getCaminhoLivro() {
+        return caminhoLivro;
+    }
+
+    public void setCaminhoLivro(String caminhoLivro) {
+        this.caminhoLivro = caminhoLivro;
     }
 }

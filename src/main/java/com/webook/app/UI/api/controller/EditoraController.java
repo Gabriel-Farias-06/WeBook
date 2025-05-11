@@ -47,12 +47,12 @@ public class EditoraController {
         return ResponseEntity.ok(true);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Optional<Editora>> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(findByIdEditoraUseCase.execute(id));
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<Optional<Editora>> findById(@PathVariable String name) {
         return ResponseEntity.ok(findByNomeEditoraUseCase.execute(name));
     }

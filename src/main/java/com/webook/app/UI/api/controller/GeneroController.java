@@ -48,12 +48,12 @@ public class GeneroController {
         return ResponseEntity.ok(true);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Optional<Genero>> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(findByIdGeneroUseCase.execute(id));
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<Optional<Genero>> findById(@PathVariable String name) {
         return ResponseEntity.ok(findByNomeGeneroUseCase.execute(name));
     }

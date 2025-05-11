@@ -5,6 +5,7 @@ import com.webook.app.domain.Entity.Genero;
 import com.webook.app.domain.Interfaces.GeneroRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

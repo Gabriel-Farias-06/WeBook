@@ -31,6 +31,7 @@ public class Usuario {
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_livro", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "livro_id"))
+    @JsonManagedReference
     private List<Livro> livros;
 
     public Usuario(UUID usuario_id, String nome, String caminhoFoto, String email, String senha, List<Livro> livros) throws EmailInvalidoException, SenhaInvalidaException {

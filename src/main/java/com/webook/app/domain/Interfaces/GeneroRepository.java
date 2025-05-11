@@ -2,6 +2,7 @@ package com.webook.app.domain.Interfaces;
 
 import com.webook.app.domain.Entity.Genero;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

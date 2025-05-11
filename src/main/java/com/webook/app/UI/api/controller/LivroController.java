@@ -29,7 +29,7 @@ public class LivroController {
     }
 
     @PostMapping
-    public ResponseEntity<LivroDTO> create(@RequestBody Livro livro) {
+    public ResponseEntity<LivroDTO> create(@RequestBody LivroDTO livro) {
         Livro livroCriado = createLivroUseCase.execute(livro);
         URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(livroCriado.getLivro_id()).toUri();
         return ResponseEntity.created(localizacao).body(LivroDTO.toDTO(livroCriado));
@@ -43,16 +43,16 @@ public class LivroController {
 
     @DeleteMapping("/{isbn}")
     public ResponseEntity<Boolean> delete(@PathVariable String isbn) {
-        deleteLivroUseCase.execute(findByIsbnLivroUseCase.execute(isbn).get().getLivro_id());
+        deleteLivroUseCase.execute((findByIsbnLivroUseCase.execute(isbn).orElseThrow().getLivro_id()));
         return ResponseEntity.ok(true);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Optional<Livro>> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(findByIdLivroUseCase.execute(id));
     }
 
-    @GetMapping("/{isbn}")
+    @GetMapping("/isbn/{isbn}")
     public ResponseEntity<Optional<Livro>> findByIsbn(@PathVariable String isbn) {
         return ResponseEntity.ok(findByIsbnLivroUseCase.execute(isbn));
     }
