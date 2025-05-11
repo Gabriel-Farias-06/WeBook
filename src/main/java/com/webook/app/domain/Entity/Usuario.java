@@ -1,8 +1,6 @@
 package com.webook.app.domain.Entity;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.webook.app.domain.Exceptions.EmailInvalidoException;
 import com.webook.app.domain.Exceptions.SenhaInvalidaException;
 import com.webook.app.domain.Validators.EmailValidator;
@@ -12,6 +10,7 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "usuario_id")
 @Entity
 public class Usuario {
 
@@ -31,7 +30,6 @@ public class Usuario {
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_livro", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "livro_id"))
-    @JsonManagedReference
     private List<Livro> livros;
 
     public Usuario(UUID usuario_id, String nome, String caminhoFoto, String email, String senha, List<Livro> livros) throws EmailInvalidoException, SenhaInvalidaException {

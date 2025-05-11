@@ -17,14 +17,12 @@ public class AutorController {
     private final UpdateAutorUseCase updateAutorUseCase;
     private final DeleteAutorUseCase deleteAutorUseCase;
     private final FindByIdAutorUseCase findByIdAutorUseCase;
-    private final FindByNomeAutorUseCase findByNomeAutorUseCase;
 
-    public AutorController(CreateAutorUseCase createAutorUseCase, UpdateAutorUseCase updateAutorUseCase, DeleteAutorUseCase deleteAutorUseCase, FindByIdAutorUseCase findByIdAutorUseCase, FindByNomeAutorUseCase findByNomeAutorUseCase) {
+    public AutorController(CreateAutorUseCase createAutorUseCase, UpdateAutorUseCase updateAutorUseCase, DeleteAutorUseCase deleteAutorUseCase, FindByIdAutorUseCase findByIdAutorUseCase) {
         this.createAutorUseCase = createAutorUseCase;
         this.updateAutorUseCase = updateAutorUseCase;
         this.deleteAutorUseCase = deleteAutorUseCase;
         this.findByIdAutorUseCase = findByIdAutorUseCase;
-        this.findByNomeAutorUseCase = findByNomeAutorUseCase;
     }
 
     @PostMapping
@@ -40,19 +38,19 @@ public class AutorController {
         return ResponseEntity.ok(true);
     }
 
-    @DeleteMapping("/{name}")
-    public ResponseEntity<Boolean> delete(@PathVariable String name) {
-        deleteAutorUseCase.execute(findByNomeAutorUseCase.execute(name).get().getAutor_id());
-        return ResponseEntity.ok(true);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
+        if(findByIdAutorUseCase.execute(id).isPresent()) {
+            deleteAutorUseCase.execute(findByIdAutorUseCase.execute(id).get().getAutor_id());
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<AutorDTO> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(AutorDTO.toDTO(findByIdAutorUseCase.execute(id).get()));
-    }
-
-    @GetMapping("/name/{name}")
-    public ResponseEntity<AutorDTO> findByName(@PathVariable String name) {
-        return ResponseEntity.ok(AutorDTO.toDTO(findByNomeAutorUseCase.execute(name).get()));
+        if(findByIdAutorUseCase.execute(id).isPresent())
+            return ResponseEntity.ok(AutorDTO.toDTO(findByIdAutorUseCase.execute(id).get()));
+        return ResponseEntity.notFound().build();
     }
 }

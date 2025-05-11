@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -22,13 +21,15 @@ public class UsuarioController {
     private final DeleteUsuarioUseCase deleteUsuarioUseCase;
     private final FindByIdUsuarioUseCase findByIdUsuarioUseCase;
     private final FindByEmailUsuarioUseCase findByEmailUsuarioUseCase;
+    private final AddRelationshipUsuarioLivroUseCase addRelationshipUsuarioLivroUseCase;
 
-    public UsuarioController(CreateUsuarioUseCase createUsuarioUseCase, UpdateUsuarioUseCase updateUsuarioUseCase, DeleteUsuarioUseCase deleteUsuarioUseCase, FindByIdUsuarioUseCase findByIdUsuarioUseCase, FindByEmailUsuarioUseCase findByEmailUsuarioUseCase) {
+    public UsuarioController(CreateUsuarioUseCase createUsuarioUseCase, UpdateUsuarioUseCase updateUsuarioUseCase, DeleteUsuarioUseCase deleteUsuarioUseCase, FindByIdUsuarioUseCase findByIdUsuarioUseCase, FindByEmailUsuarioUseCase findByEmailUsuarioUseCase, AddRelationshipUsuarioLivroUseCase addRelationshipUsuarioLivroUseCase) {
         this.createUsuarioUseCase = createUsuarioUseCase;
         this.updateUsuarioUseCase = updateUsuarioUseCase;
         this.deleteUsuarioUseCase = deleteUsuarioUseCase;
         this.findByIdUsuarioUseCase = findByIdUsuarioUseCase;
         this.findByEmailUsuarioUseCase = findByEmailUsuarioUseCase;
+        this.addRelationshipUsuarioLivroUseCase = addRelationshipUsuarioLivroUseCase;
     }
 
     @PostMapping
@@ -58,5 +59,13 @@ public class UsuarioController {
     @GetMapping("/{email}/{senha}")
     public ResponseEntity<UsuarioDTO> findByIsbn(@PathVariable String email, @PathVariable String senha) {
         return ResponseEntity.ok(UsuarioDTO.toDTO(findByEmailUsuarioUseCase.execute(email, senha).get()));
+    }
+
+    @PostMapping("/{usuario_id}/livros/{livro_id}")
+    public ResponseEntity<String> addRelationshipUsuarioLivro(@PathVariable UUID usuario_id, @PathVariable UUID livro_id) {
+        if(addRelationshipUsuarioLivroUseCase.execute(usuario_id, livro_id))
+            return ResponseEntity.ok("Relação criada com sucesso");
+        else
+            return ResponseEntity.notFound().build();
     }
 }

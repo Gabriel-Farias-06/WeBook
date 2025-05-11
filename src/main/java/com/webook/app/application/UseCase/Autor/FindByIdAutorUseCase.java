@@ -16,7 +16,7 @@ public class FindByIdAutorUseCase {
 
     public Optional<Autor> execute(UUID id){
         if(autorRepository.findById(id).isEmpty())
-            throw new IllegalArgumentException("Gênero não cadastrado / encontrado.");
+            throw new IllegalArgumentException("Autor não cadastrado / encontrado.");
         return autorRepository.findById(id);
     }
 }

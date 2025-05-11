@@ -2,6 +2,7 @@ package com.webook.app.application.UseCase.Editora;
 
 import com.webook.app.domain.Interfaces.EditoraRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ public class DeleteEditoraUseCase {
         this.editoraRepository = editoraRepository;
     }
 
+    @Transactional
     public void execute(UUID id){
         if(editoraRepository.findById(id).isEmpty())
             throw new IllegalArgumentException("Id não cadastrado");

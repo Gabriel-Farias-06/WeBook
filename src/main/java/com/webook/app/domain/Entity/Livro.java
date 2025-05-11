@@ -1,13 +1,16 @@
 package com.webook.app.domain.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
 import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "livro_id")
 @Entity
 public class Livro {
 
@@ -44,12 +47,10 @@ public class Livro {
     private Editora editora;
 
     @ManyToMany(mappedBy = "livros", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JsonBackReference
     private List<Usuario> usuarios;
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "genero_livro", joinColumns = @JoinColumn(name = "livro_id"), inverseJoinColumns = @JoinColumn(name = "genero_id"))
-    @JsonManagedReference
     private List<Genero> generos;
 
     public Livro(UUID livro_id, String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Usuario> usuarios, List<Genero> generos) {

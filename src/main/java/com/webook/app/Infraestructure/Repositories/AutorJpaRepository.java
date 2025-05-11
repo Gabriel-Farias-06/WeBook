@@ -8,5 +8,4 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface AutorJpaRepository extends JpaRepository<Autor, UUID>  {
-    Optional<Autor> findByNome(String name);
 }

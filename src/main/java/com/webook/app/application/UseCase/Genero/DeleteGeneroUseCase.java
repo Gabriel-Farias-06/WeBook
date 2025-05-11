@@ -2,6 +2,7 @@ package com.webook.app.application.UseCase.Genero;
 
 import com.webook.app.domain.Interfaces.GeneroRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ public class DeleteGeneroUseCase {
         this.generoRepository = generoRepository;
     }
 
+    @Transactional
     public void execute(UUID id) {
         if(generoRepository.findById(id).isEmpty())
             throw new IllegalArgumentException("Livro com esse ID não foi encontrado");

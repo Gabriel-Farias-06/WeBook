@@ -14,8 +14,6 @@ public class CreateAutorUseCase {
     }
 
     public Autor execute(Autor autor) {
-        if(autorRepository.findByNome(autor.getNome()).isPresent())
-            throw new IllegalArgumentException("Autor com mesmo nome já cadastrado");
         autorRepository.create(autor);
         return autor;
     }
