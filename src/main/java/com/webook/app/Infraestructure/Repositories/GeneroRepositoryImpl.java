@@ -5,6 +5,7 @@ import com.webook.app.domain.Entity.Genero;
 import com.webook.app.domain.Interfaces.GeneroRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,6 +27,9 @@ public class GeneroRepositoryImpl implements GeneroRepository {
     public Optional<Genero> findById(UUID id) {
         return generoJpaRepository.findById(id);
     }
+
+    @Override
+    public Optional<Genero> findByNome(String name) {return generoJpaRepository.findByNome(name);}
 
     @Override
     public Genero update(Genero genero) {

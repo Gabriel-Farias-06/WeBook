@@ -1,11 +1,17 @@
 package com.webook.app.application.DTOs;
 
+import com.webook.app.domain.Entity.Genero;
+
 import java.util.UUID;
 
 public class GeneroDTO {
     private UUID genero_id;
 
     private String nome;
+
+    public static GeneroDTO toDTO(Genero genero) {
+        return new GeneroDTO(genero.getGenero_id(), genero.getNome());
+    }
 
     public GeneroDTO(UUID genero_id, String nome) {
         this.genero_id = genero_id;

@@ -27,6 +27,9 @@ public class EditoraRepositoryImpl implements EditoraRepository {
     }
 
     @Override
+    public Optional<Editora> findByNome(String name) { return editoraJpaRepository.findByNome(name);}
+
+    @Override
     public Editora update(Editora editora) {
         return editoraJpaRepository.save(editora);
     }

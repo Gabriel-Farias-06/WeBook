@@ -1,0 +1,159 @@
+#header {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+}
+
+#header .logo {
+  font: 600 3.2rem/1.5 "Playfair Display";
+  color: var(--r10);
+  margin-right: 40px;
+}
+
+#header span {
+  color: var(--r8);
+  font-style: italic;
+}
+
+#header input {
+  height: 2.8rem;
+  width: 660px;
+  border-radius: 32px;
+  padding-left: 32px;
+  background: linear-gradient(
+    #f9f2ff 0%,
+    #efe2f8 40%,
+    #efe2f8 70%,
+    #f9f2ff 100%
+  );
+
+  border: var(--r10) solid 3px;
+}
+
+#header input,
+#header input::placeholder {
+  font: 500 1.25rem/1.5 "Poppins";
+  color: var(--r4);
+}
+#header #input-wrapper {
+  position: relative;
+}
+
+.search-icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  top: 6px;
+  right: 16px;
+  position: absolute;
+  cursor: pointer;
+}
+
+#books {
+  margin: 32px 48px;
+}
+
+#books ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  font: 500 1.1rem/1.5 "Poppins";
+}
+
+#books h2 {
+  font: 500 1.2rem/1.1 "Poppins";
+  color: var(--c13);
+}
+
+#books div {
+  display: flex;
+  align-items: center;
+  color: var(--r9);
+}
+
+#books div img {
+  width: 28px;
+  height: 28px;
+  padding-left: 88px;
+}
+
+#books #avaliacao {
+  color: var(--r10);
+}
+
+#naoEncontrou {
+  font: 600 2rem/1.5 "Playfair Display";
+  text-align: center;
+  padding: 40px 8px;
+}
+
+#categories ul {
+  margin-top: 32px;
+  margin-left: 8px;
+  margin-right: 8px;
+  display: flex;
+  gap: 16px;
+  color: var(--c14);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#categories li {
+  background-color: #fbf6ff;
+  border-radius: 20px;
+  font: 500 1.25rem/1.5 "Roboto";
+  padding: 6px 16px;
+}
+
+#categories .active {
+  background: linear-gradient(var(--r8) 0%, var(--r10) 100%);
+  color: var(--c2);
+}
+
+#links {
+  padding: 40px 0px;
+  display: flex;
+  justify-content: center;
+  color: var(--c1);
+  font: 500 1.6rem/1.5 "Poppins";
+  gap: 40px;
+}
+
+#links img {
+  margin-right: 8px;
+}
+
+#links div {
+  display: flex;
+  gap: 8px;
+  align-content: center;
+}
+
+#links a:hover {
+  color: var(--r5);
+}
+
+#footer {
+  padding-top: 40px;
+  display: flex;
+  gap: 140px;
+  justify-content: center;
+}
+
+#footer h4 {
+  color: var(--r10);
+  font: 500 1.3rem/1.5 "Poppins";
+  margin-bottom: 8px;
+}
+
+#footer p {
+  color: var(--r13);
+  font: 400 1rem/1.5 "Poppins";
+}
+
+#copyrigth {
+  margin-top: 60px;
+  margin-bottom: 32px;
+  text-align: center;
+  font: 500 1.3rem/1.5 "Roboto";
+  color: var(--r12);
+}
