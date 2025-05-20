@@ -168,9 +168,24 @@ function App() {
         <a href="#">
           <img src="./img/Notification.svg" alt="Notificações" />
         </a>
-        <a href="#">
-          <img src="./img/UserDefault.png" alt="Usuário" />
+        <a href="#" id="userLogin">
+          <img src="./img/UserDefault.png" alt="Usuário" onClick={() => {
+
+          }} />
         </a>
+        <div className="modal">
+          <div className="modal-content" id="login">
+            <h3>Entrar</h3>
+            <p id="protect">Dados pessoais criptografados.</p>
+            <label htmlFor="email">Insira seu email</label>
+            <input type="text" id="email"/>
+            <label htmlFor="senha">Insira sua senha</label>
+            <input type="senha" id="senha"/>
+            <a href="/login">Entrar</a>
+            <p>Não tem uma conta? <a href="/termos">Cadastre-se aqui</a></p>
+            <p>Ao continuar você afirma que é maior de idade e que leu e aceita os termos da nossa <a href="/termos">política de privacidade.</a></p>
+          </div>
+        </div>
       </header>
 
       <article aria-labelledby="categories" id="categories">
