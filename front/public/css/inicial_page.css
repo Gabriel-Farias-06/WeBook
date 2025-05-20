@@ -1,7 +1,7 @@
 #header {
   display: flex;
   align-items: center;
-  gap: 42px;
+  gap: 20px;
 }
 
 #header .logo {
@@ -57,36 +57,93 @@
   top: 0px;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
   background-color: var(--c1);
-  margin: 15% auto;
-  padding: 40px;
+  margin: 6% auto;
+  padding: 32px 40px;
   border-radius: 4px;
-  width: 40%;
+  width: 30%;
+  position: relative;
 }
 
 .modal-content label {
   font: 500 1rem/1.5 "Poppins";
   display: block;
+  margin-top: 4px;
 }
 
-#login h3 {
+.modal-content input {
+  margin-top: 4px;
+  border: var(--r12) solid 2px;
+  border-radius: 8px;
+  width: 96%;
+  height: 32px;
+  background: #f6eaff;
+  padding-left: 8px;
+  font: 500 1rem/1.5 "Poppins";
+}
+
+.modal-content > a {
+  margin-top: 12px;
+  background: linear-gradient(var(--r8) 0%, var(--r11) 100%);
+  display: block;
+  text-align: center;
+  font: 500 1.2rem/1.2 "Roboto";
+  color: var(--c1);
+  padding: 12px 0px;
+  border-radius: 4px;
+}
+
+.modal-content p {
+  color: var(--c10);
+  font: 400 0.9rem/1.2 "Poppins";
+  text-align: center;
+}
+
+.modal-content p a {
+  text-decoration: underline;
+}
+
+.modal-content img {
+  cursor: pointer;
+  position: absolute;
+  right: -16px;
+  top: -12px;
+}
+
+.cadastro-link {
+  position: relative;
+  margin-top: 12px;
+}
+
+.cadastro-link::after {
+  content: "";
+  width: 100%;
+  height: 1.8px;
+  background-color: var(--c6);
+  position: absolute;
+  left: 0px;
+  top: 24px;
+}
+
+.modal h3 {
   text-align: center;
   font: 600 1.7rem/1.5 "Poppins";
 }
 
-#login #protect {
+.modal .protect {
+  padding: 0px;
   text-align: center;
-  font: 500 0.8rem/1.1 "Poppins";
+  font: 500 0.8rem/1 "Poppins";
   position: relative;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
+  color: var(--c14);
 }
 
-#login #protect::before {
+.modal .protect::before {
   display: block;
   content: "";
   background-image: url("../img/protected.svg");
@@ -94,7 +151,50 @@
   width: 24px;
   height: 24px;
   position: absolute;
-  left: 158px;
+  top: -4px;
+  left: 3.6rem;
+}
+
+p.termos {
+  font-weight: 400;
+  font-size: 0.75rem;
+  margin-top: 16px;
+}
+
+.modal-error .modal-content {
+  padding: 0px 0px 24px 0px;
+}
+
+.modal-error a {
+  background: #9c4a5c;
+  margin: 0px 48px;
+}
+
+.modal-error span {
+  background-color: #9c4a5c;
+  height: 100px;
+  display: block;
+  padding: 0px 32px;
+  border-radius: 0px 0px 12px 12px;
+}
+
+.modal-error p,
+.modal-error h3 {
+  margin: 0px 48px 12px 48px;
+}
+
+.modal-error h3 {
+  margin-top: 48px;
+  margin-bottom: 0px;
+  font-size: 1.5rem;
+}
+
+#img-error {
+  cursor: default;
+  position: absolute;
+  top: 28px;
+  left: 120px;
+  width: 120px;
 }
 
 #books {
@@ -105,6 +205,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   font: 500 1.1rem/1.5 "Poppins";
+  gap: 24px;
 }
 
 #books h2 {
@@ -121,7 +222,7 @@
 #books div img {
   width: 28px;
   height: 28px;
-  padding-left: 88px;
+  padding-left: 74px;
 }
 
 #books #avaliacao {
@@ -163,7 +264,7 @@
   justify-content: center;
   color: var(--c1);
   font: 500 1.6rem/1.5 "Poppins";
-  gap: 40px;
+  gap: 48px;
 }
 
 #links img {
@@ -172,7 +273,7 @@
 
 #links div {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   align-content: center;
 }
 
@@ -183,7 +284,7 @@
 #footer {
   padding-top: 40px;
   display: flex;
-  gap: 140px;
+  gap: 120px;
   justify-content: center;
 }
 
