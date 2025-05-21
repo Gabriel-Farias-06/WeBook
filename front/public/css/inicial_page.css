@@ -1,13 +1,16 @@
 #header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 32px;
 }
 
 #header .logo {
   font: 600 3.2rem/1.5 "Playfair Display";
   color: var(--r10);
   margin-right: 40px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 #header span {
@@ -17,7 +20,7 @@
 
 #input-wrapper input {
   height: 2.8rem;
-  width: 660px;
+  width: 97%;
   border-radius: 32px;
   padding-left: 32px;
   background: linear-gradient(
@@ -37,6 +40,10 @@
 }
 
 #header #input-wrapper {
+  width: 100%;
+  min-width: 340px;
+  max-width: 940px;
+  flex: 1;
   position: relative;
 }
 
@@ -45,7 +52,8 @@
   width: 40px;
   height: 40px;
   top: 6px;
-  right: 16px;
+  right: 4px;
+  left: auto;
   position: absolute;
   cursor: pointer;
 }
@@ -152,7 +160,7 @@
   height: 24px;
   position: absolute;
   top: -4px;
-  left: 3.6rem;
+  left: 23%;
 }
 
 p.termos {
@@ -193,7 +201,7 @@ p.termos {
   cursor: default;
   position: absolute;
   top: 28px;
-  left: 120px;
+  left:36%;
   width: 120px;
 }
 
@@ -203,9 +211,10 @@ p.termos {
 
 #books ul {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, 230px);
+  justify-items: left;
+  gap: 16px;
   font: 500 1.1rem/1.5 "Poppins";
-  gap: 24px;
 }
 
 #books h2 {
