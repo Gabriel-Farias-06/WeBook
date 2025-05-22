@@ -7,9 +7,8 @@ import Footer from "./Footer";
 import Links from "./Links";
 
 function Home() {
-
-  const[generosMock, setGenerosMock] = useGeneros();
-  const[livrosMock, setLivrosMock] = useLivros();
+  const [generosMock, setGenerosMock] = useGeneros();
+  const [livrosMock, setLivrosMock] = useLivros();
 
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosMock);
   const [generoAtivo, setGeneroAtivo] = useState(generosMock.at(0));
@@ -17,6 +16,7 @@ function Home() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [usuarioLogado, setUsuarioLogado] = useState(null);
+  const [modalLivro, setModalLivro] = useState(null);
 
   function filterFilms(genero_id, termo = "") {
     if (genero_id == "0000-zzzz")
@@ -75,7 +75,7 @@ function Home() {
             }}
           />
           <img
-            src="../img/Search.svg"
+            src="/img/Search.svg"
             className="search-icon"
             onClick={() => {
               const termo = document
@@ -86,14 +86,26 @@ function Home() {
           />
         </div>
         <a href="#">
-          <img src="./img/Cart.svg" alt="Carrinho" />
+          <img
+            src="/img/Cart.svg"
+            alt="Carrinho"
+            onClick={() => {
+              if (usuarioLogado) {
+                document.body.style.overflow = "hidden";
+                setModalAberto("shopping");
+              } else setModalAberto("login");
+            }}
+          />
         </a>
         <a href="#">
           <img
-            src="./img/Notification.svg"
+            src="/img/Notification.svg"
             alt="Notificações"
             onClick={() => {
-              usuarioLogado ? null : setModalAberto("login");
+              if (usuarioLogado) {
+                document.body.style.overflow = "hidden";
+                setModalAberto("notifications");
+              } else setModalAberto("login");
             }}
           />
         </a>
@@ -101,9 +113,9 @@ function Home() {
           to="/profile"
           id="userLogin"
           onClick={(e) => {
-              if(usuarioLogado) {
-                  e.preventDefault();
-                  setModalAberto("login");
+            if (!usuarioLogado) {
+              e.preventDefault();
+              setModalAberto("login");
             }
           }}
         >
@@ -128,13 +140,15 @@ function Home() {
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src="../img/Close.svg"
+                src="/img/Close.svg"
                 onClick={() => {
                   setModalAberto(null);
                 }}
               />
               <h3>Entrar</h3>
-              <p className="protect">Dados pessoais criptografados.</p>
+              <div id="container-flex">
+                <p className="protect">Dados pessoais criptografados.</p>
+              </div>
               <label htmlFor="email">Insira seu email</label>
               <input
                 type="email"
@@ -187,12 +201,11 @@ function Home() {
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src="../img/Close.svg"
-                onClick={() => setModalAberto(null)}
-              />
+              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <h3>Cadastro</h3>
-              <p className="protect">Dados pessoais criptografados.</p>
+              <div id="container-flex">
+                <p className="protect">Dados pessoais criptografados.</p>
+              </div>
               <label htmlFor="email">Insira seu email</label>
               <input
                 type="email"
@@ -250,12 +263,9 @@ function Home() {
               onClick={(e) => e.stopPropagation()}
             >
               <span></span>
+              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <img
-                src="../public/img/Close.svg"
-                onClick={() => setModalAberto(null)}
-              />
-              <img
-                src="../public/img/LoginError.png"
+                src="/img/LoginError.png"
                 alt="Ícone de erro no login"
                 id="img-error"
               />
@@ -267,6 +277,170 @@ function Home() {
               <a href="#" onClick={() => setModalAberto("login")}>
                 Voltar
               </a>
+            </div>
+          </div>
+        )}
+        {modalAberto == "shopping" && (
+          <div
+            className="modal"
+            id="shopping"
+            onClick={() => {
+              setModalAberto(null);
+              document.body.style.overflow = "auto";
+            }}
+          >
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <p>Produtos adicionados recentemente</p>
+              <div>
+                <ul>
+                  {livrosMock.map((livro) => (
+                    <li key={livro.livro_id}>
+                      <img
+                        src={"/img/" + livro.caminhoLivro}
+                        alt={"Capa do livro " + livro.titulo}
+                      />
+                      <p id="titulo">{livro.titulo}</p>
+                      <p>{livro.preco.toFixed(2)}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <p id="more">Ver tudo</p>
+            </div>
+          </div>
+        )}
+        {modalAberto == "notifications" && (
+          <div
+            className="modal"
+            id="notifications"
+            onClick={() => {
+              setModalAberto(null);
+              document.body.style.overflow = "auto";
+            }}
+          >
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <p>Notificações recebidas recentemente</p>
+              <div>
+                <ul>
+                  {livrosMock.map((livro) => (
+                    <li key={livro.livro_id}>
+                      <img
+                        src={"/img/" + livro.caminhoLivro}
+                        alt={"Capa do livro " + livro.titulo}
+                      />
+                      <p id="titulo">{livro.titulo}</p>
+                      <p>{livro.sinopse}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <p id="more">Ver tudo</p>
+            </div>
+          </div>
+        )}
+        {modalLivro && (
+          <div
+            className="modal"
+            id="modal-livro"
+            onClick={() => setModalLivro(null)}
+          >
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <img
+                src="/img/Close.svg"
+                id="close"
+                onClick={() => setModalLivro(null)}
+              />
+              <img src={"/img/" + modalLivro.caminhoLivro} />
+              <div id="livro-meio">
+                <h2>{modalLivro.titulo}</h2>
+                <div id="first-avaliation">
+                  <p>
+                    {(
+                      modalLivro.usuarios.reduce(
+                        (soma, usuario) => soma + usuario.nota,
+                        0
+                      ) / modalLivro.usuarios.length
+                    ).toFixed(1)}
+                  </p>
+                  <img src="/img/Stars.svg" alt="Avaliações" />
+                  <p>{modalLivro.usuarios.length} avaliações</p>
+                </div>
+                <p id="sinopse">{modalLivro.sinopse}</p>
+                <ul id="extra-info">
+                  <li>
+                    <p>Idade de leitura</p>
+                    <p>{modalLivro.idadeLeitura}+</p>
+                  </li>
+                  <li>
+                    <p>Nº de páginas</p>
+                    <p>{modalLivro.numeroPaginas}+</p>
+                  </li>
+                  <li>
+                    <p>Autor</p>
+                    <p>{modalLivro.autor.nome}</p>
+                  </li>
+                  <li>
+                    <p>Editora</p>
+                    <p>{modalLivro.editora.nome}</p>
+                  </li>
+                </ul>
+                <div id="avaliacao">
+                  <div>
+                    <h3>Avaliações ({modalLivro.usuarios.length})</h3>
+                    <p>
+                      {(
+                        modalLivro.usuarios.reduce(
+                          (soma, usuario) => soma + usuario.nota,
+                          0
+                        ) / modalLivro.usuarios.length
+                      ).toFixed(1)}
+                    </p>
+                    <img src="/img/Stars.svg" alt="Avaliações" />
+                  </div>
+                  <ul>
+                    {[5, 4, 3, 2, 1].map((i) => (
+                      <li key={i}>
+                        <p>{i} estrelas</p>
+                        <img src="/img/Bar.svg" alt="Barra de estrelas" />
+                        <p>
+                          {
+                            modalLivro.usuarios.filter(
+                              (usuario) => usuario.nota === i
+                            ).length
+                          }
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div id="livro-compra">
+                <p>R$ {modalLivro.preco.toFixed(2)}</p>
+                <div>
+                  <h3>R$ {(modalLivro.preco * 0.8).toFixed(2)}</h3>
+                  <p>20% off.</p>
+                </div>
+                <ul>
+                  <li>
+                    <h4>Política de troca e devolução</h4>
+                    <ul>
+                      <li>Para compras feitas a menos de 2 semanas.</li>
+                      <li>Não há estorno de valor na troca de item.</li>
+                    </ul>
+                  </li>
+                  <li>
+                    <h4>Segurança e privacidade</h4>
+                    <ul>
+                      <li>Dados de transações protegidos.</li>
+                      <li>Dados pessoais criptografados.</li>
+                    </ul>
+                  </li>
+                </ul>
+                <a href="#">Adicionar ao carrinho</a>
+                <a href="#">Comprar carrinho</a>
+                <h5>Formas de Pagamento</h5>
+                <img src="/img/Payments.png" alt="Formas de pagamento" />
+              </div>
             </div>
           </div>
         )}
@@ -304,12 +478,12 @@ function Home() {
         <article aria-labelledby="books" id="books" className="container">
           <ul>
             {livrosFiltrados.map((livro) => (
-              <li key={livro.livro_id}>
+              <li key={livro.livro_id} onClick={() => setModalLivro(livro)}>
                 <a href="#">
                   <img src={"/img/" + livro.caminhoLivro} />
                   <h2>
-                    {livro.titulo.length > 18
-                      ? livro.titulo.substring(0, 18) + "..."
+                    {livro.titulo.length > 21
+                      ? livro.titulo.substring(0, 21) + "..."
                       : livro.titulo}
                   </h2>
                   <div>

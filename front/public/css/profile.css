@@ -1,95 +1,95 @@
 main {
-    margin-top: 20px;
-    background-color: var(--r4);
-    position: relative;
-    padding-top: 200px;
+  margin-top: 20px;
+  background-color: var(--r4);
+  position: relative;
+  padding-top: 200px;
 }
 
 main > * {
-    position: absolute;
+  position: absolute;
 }
 
 main a {
-    bottom: -24px;
-    background: linear-gradient(var(--r8) 0%, var(--r11) 100%);
-    display: block;
-    text-align: center;
-    font: 500 1.2rem/1.2 "Roboto";
-    color: var(--c1);
-    width: 13%;
-    right: 8%;
-    padding: 12px 0px;
-    border-radius: 4px;
+  bottom: -24px;
+  background: linear-gradient(var(--r8) 0%, var(--r11) 100%);
+  display: block;
+  text-align: center;
+  font: 500 1.2rem/1.2 "Roboto";
+  color: var(--c1);
+  width: 13%;
+  right: 8%;
+  padding: 12px 0px;
+  border-radius: 4px;
 }
 
 main img {
-    width: 200px;
-    bottom: -100px;
-    left: 6%;
+  width: 200px;
+  bottom: -100px;
+  left: 6%;
 }
 
 main h2 {
-    font: 500 1.7rem/1.2 "Poppins";
-    bottom: 2px;
-    left: 21%;
+  font: 500 1.7rem/1.2 "Poppins";
+  bottom: 2px;
+  left: 21%;
 }
 
 main p {
-    font: 400 1.1rem/1.2 "Poppins";
-    bottom: -24px;
-    left: 21%;
-    color: var(--c10);
+  font: 400 1.1rem/1.2 "Poppins";
+  bottom: -24px;
+  left: 21%;
+  color: var(--c10);
 }
 
 #booksUser {
-    margin: 160px 180px 0px 180px;
+  margin: 160px 180px 0px 180px;
 }
 
 #booksUser h2 {
-    font: 600 1.7rem/1.2 "Playfair Display";
-    font-style: italic;
+  font: 600 1.7rem/1.2 "Playfair Display";
+  font-style: italic;
 }
 
 #booksUser p {
-    margin-bottom: 40px;
-    font: 400 1rem/1.5 "Poppins";
-    color: var(--c11);
+  margin-bottom: 40px;
+  font: 400 1rem/1.5 "Poppins";
+  color: var(--c11);
 }
 
 #booksUser ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 230px);
-    justify-items: left;
-    gap: 16px;
-    margin-bottom: 100px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 230px);
+  justify-items: left;
+  gap: 16px;
+  margin-bottom: 100px;
 }
 
 #checkbox-wrapper {
-    margin-top: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
 }
 
 #checkbox-wrapper input {
-    display: none;
+  display: none;
 }
 
 #checkbox-wrapper label {
-    margin: 0px;
-    display: inline;
-    cursor: pointer;
+  margin: 0px;
+  display: inline;
+  cursor: pointer;
 }
 
 #checkmark {
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--r11);
-    border-radius: 4px;
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--r11);
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
 }
 
 input[type="checkbox"]:checked + #checkmark::after {
@@ -105,6 +105,33 @@ input[type="checkbox"]:checked + #checkmark::after {
 }
 
 input:disabled {
-    background: #cabdd3 70%;
-    cursor: not-allowed;
+  background: #cabdd3 70%;
+  cursor: not-allowed;
+}
+
+.config {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.config .modal-content {
+  margin: 8% 89%;
+  width: 7%;
+  padding: 12px 4px;
+  background-color: var(--c1);
+}
+
+.config span {
+  display: flex;
+  place-items: center;
+  gap: 4px;
+  justify-content: center;
+}
+
+.config img {
+  position: static;
+}
+
+.config p {
+  font: 500 1.2rem/1.1 "Poppins";
+  color: var(--r11);
 }
