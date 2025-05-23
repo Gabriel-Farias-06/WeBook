@@ -10,8 +10,8 @@ function Profile() {
   const [modalAberto, setModalAberto] = useState(null);
   const [changePassword, setChangePassword] = useState(false);
   const [changeUsername, setChangeUsername] = useState(false);
-  const [usuarioLogado, setUsuarioLogado] = useUsuario();
-  const [livrosUsuarioMock, setLivrosUsuarioMock] = useLivrosUsuario();
+  const [usuarioLogado] = useUsuario();
+  const [livrosUsuarioMock] = useLivrosUsuario();
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuarioMock);
 
   function filterFilms(termo = "") {

@@ -160,7 +160,7 @@
 .modal .protect::before {
   display: block;
   content: "";
-  background-image: url("../img/protected.svg");
+  background-image: url("/img/protected.svg");
   background-repeat: no-repeat;
   width: 24px;
   height: 24px;
@@ -433,15 +433,16 @@ p.termos {
 
 #modal-livro .modal-content {
   width: 85%;
-  margin-top: 5%;
+  margin-top: 3%;
   display: grid;
-  grid-template-columns: 1.1fr 2fr 1.1fr;
+  grid-template-columns: 0.9fr 2fr 1.1fr;
   gap: 48px;
   justify-items: center;
 }
 
 #modal-livro img {
   position: static;
+  cursor: default;
 }
 
 img#close {
@@ -561,4 +562,93 @@ img#close {
 #livro-compra {
   border: 2px solid var(--c3);
   padding: 16px 24px;
+}
+
+#livro-compra > p {
+  text-align: start;
+  font: 500 0.9rem/1.2 "Poppins";
+  text-decoration: line-through;
+  color: var(--c9);
+}
+
+#livro-compra > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+#livro-compra h3 {
+  font: 500 1.7rem /1.2 "Poppins";
+  letter-spacing: -1px;
+}
+
+#livro-compra > div p {
+  font: 600 1.2rem /1.2 "Poppins";
+  color: #951c26;
+}
+
+#livro-compra > ul {
+  margin-top: 4px;
+  padding: 8px 0px;
+  border-top: 2px solid var(--c4);
+  border-bottom: 2px solid var(--c4);
+  margin-bottom: 8px;
+}
+
+#livro-compra .flex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+#livro-compra h4 {
+  font: 600 0.85rem/1.2 "Poppins";
+}
+
+#livro-compra ul ul li {
+  font: 500 0.8rem/1.2 "Poppins";
+  position: relative;
+  margin-left: 32px;
+  margin-bottom: 8px;
+}
+
+#livro-compra #ultimo {
+  margin-bottom: 4px;
+}
+
+#livro-compra ul ul li::before {
+  position: absolute;
+  left: -18px;
+  content: "";
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background: url("../img/Verify.svg") no-repeat center;
+}
+
+#livro-compra a {
+  display: block;
+  font: 600 0.87rem/1.2 "Roboto";
+  color: var(--c1);
+  text-align: center;
+  background: linear-gradient(#d71bc4 0%, #720f54 100%);
+  border-radius: 4px;
+  padding: 12px 0px;
+  margin-bottom: 8px;
+}
+
+#livro-compra a + a {
+  background: linear-gradient(#8f21e0 0%, var(--r10) 100%);
+  margin-bottom: 12px;
+}
+
+#livro-compra h5 {
+  text-align: center;
+  font: 600 0.9rem/1.2 "Poppins";
+  margin-bottom: 8px;
+}
+
+#livro-compra h5 + img {
+  padding-left: 30px;
 }

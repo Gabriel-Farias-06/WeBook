@@ -7,8 +7,8 @@ import Footer from "./Footer";
 import Links from "./Links";
 
 function Home() {
-  const [generosMock, setGenerosMock] = useGeneros();
-  const [livrosMock, setLivrosMock] = useLivros();
+  const [generosMock] = useGeneros();
+  const [livrosMock] = useLivros();
 
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosMock);
   const [generoAtivo, setGeneroAtivo] = useState(generosMock.at(0));
@@ -422,22 +422,28 @@ function Home() {
                 </div>
                 <ul>
                   <li>
-                    <h4>Política de troca e devolução</h4>
+                    <div className="flex">
+                      <img src="/img/Book.svg" alt="Ícone de livro" />
+                      <h4>Política de troca e devolução</h4>
+                    </div>
                     <ul>
                       <li>Para compras feitas a menos de 2 semanas.</li>
                       <li>Não há estorno de valor na troca de item.</li>
                     </ul>
                   </li>
                   <li>
-                    <h4>Segurança e privacidade</h4>
+                    <div className="flex">
+                      <img src="/img/Security.svg" alt="Ícone de proteção" />
+                      <h4>Segurança e privacidade</h4>
+                    </div>
                     <ul>
                       <li>Dados de transações protegidos.</li>
-                      <li>Dados pessoais criptografados.</li>
+                      <li id="ultimo">Dados pessoais criptografados.</li>
                     </ul>
                   </li>
                 </ul>
                 <a href="#">Adicionar ao carrinho</a>
-                <a href="#">Comprar carrinho</a>
+                <a href="#">Comprar agora</a>
                 <h5>Formas de Pagamento</h5>
                 <img src="/img/Payments.png" alt="Formas de pagamento" />
               </div>
