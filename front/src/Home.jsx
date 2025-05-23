@@ -68,10 +68,8 @@ function Home() {
             placeholder="pesquise seu livro"
             autoComplete="on"
             onKeyUp={(e) => {
-              if (e.key == "Enter") {
-                const termo = e.currentTarget.value.toLowerCase();
-                filterFilms(generoAtivo.genero_id, termo);
-              }
+              const termo = e.currentTarget.value.toLowerCase();
+              filterFilms(generoAtivo.genero_id, termo);
             }}
           />
           <img
@@ -113,7 +111,7 @@ function Home() {
           to="/profile"
           id="userLogin"
           onClick={(e) => {
-            if (!usuarioLogado) {
+            if (usuarioLogado) {
               e.preventDefault();
               setModalAberto("login");
             }

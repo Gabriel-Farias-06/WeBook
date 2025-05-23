@@ -4,7 +4,7 @@ import { useLivrosUsuario } from "./LivrosUsuarioProvider";
 import "../public/css/profile.css";
 import Footer from "./Footer";
 import Links from "./Links";
-import { LivrosProvider } from "./LivrosProvider";
+import { v4 as uuidv4 } from "uuid";
 
 function Profile() {
   const [modalAberto, setModalAberto] = useState(null);
@@ -20,6 +20,24 @@ function Profile() {
         livroFiltrado.titulo.toLowerCase().includes(termo)
       )
     );
+  }
+
+  async function handleUpload(file) {
+    const formData = new FormData();
+    const uuid = uuidv4();
+    formData.append("image-" + file.url, file);
+
+    const res = await fetch(
+      "https://api.imgbb.com/ " +
+        uuid +
+        "/upload?key=02649a0bafaed4123cfcc89e63003b10",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
   }
 
   return (
@@ -163,6 +181,16 @@ function Profile() {
                 autoComplete="newPassword"
                 disabled={changePassword}
                 onChange={(e) => {}}
+              />
+              <label htmlFor="file-upload">Escolha uma foto de perfil</label>
+              <label htmlFor="file-upload" class="custom-file-upload">
+                Escolher imagem
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                id="file-upload"
+                onChange={(e) => handleUpload(e.target.files[0])}
               />
               <a
                 href="#"
