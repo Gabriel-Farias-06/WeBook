@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}?sslmode=require&connectTimeout=5000&socketTimeout=30000
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
     username: ${PGUSER}
     password: ${PGPASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -17,20 +17,3 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
-      connection.provider_disables_autocommit: true
-    properties:
-      hibernate:
-        jdbc.batch_size: 20
-        order_inserts: true
-        order_updates: true
-        generate_statistics: false
-management:
-  health:
-    defaults:
-      enabled: true
-    livenessstate:
-      enabled: true
-    readinessstate:
-      enabled: true
-    db:
-      enabled: true
