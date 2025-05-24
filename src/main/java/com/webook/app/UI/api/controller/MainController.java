@@ -1,5 +1,5 @@
 @RestController
-public class HealthController {
+public class MainController {
     @GetMapping("/")
     public String health() {
         return "UP";
