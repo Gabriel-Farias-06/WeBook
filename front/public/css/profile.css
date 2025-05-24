@@ -109,6 +109,21 @@ input:disabled {
   cursor: not-allowed;
 }
 
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  display: inline-block;
+  background-color: var(--r9);
+  width: 14ch;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-family: "Roboto";
+}
+
 .config {
   background-color: rgba(0, 0, 0, 0);
 }

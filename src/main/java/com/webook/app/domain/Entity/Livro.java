@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class Livro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private UUID livro_id;
 
     @Column(nullable = false, unique = true)
@@ -65,6 +67,19 @@ public class Livro {
         this.autor = autor;
         this.editora = editora;
         this.usuarios = usuarios;
+        this.generos = generos;
+    }
+
+    public Livro(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Genero> generos) {
+        this.isbn = isbn;
+        this.titulo = titulo;
+        this.sinopse = sinopse;
+        this.numeroPaginas = numeroPaginas;
+        this.preco = preco;
+        this.caminhoLivro = caminhoLivro;
+        this.classificacaoIndicativa = classificacaoIndicativa;
+        this.autor = autor;
+        this.editora = editora;
         this.generos = generos;
     }
 

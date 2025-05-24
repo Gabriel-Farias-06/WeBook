@@ -1,7 +1,9 @@
 package com.webook.app.application.UseCase.Usuario;
 
+import com.webook.app.application.DTOs.UsuarioDTO;
 import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Interfaces.UsuarioRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,12 +16,13 @@ public class FindByEmailUsuarioUseCase {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Optional<Usuario> execute(String email, String senha) throws IllegalArgumentException {
-        var usuarioEncontrado = usuarioRepository.findByEmail(email);
+    public ResponseEntity<UsuarioDTO> execute(String email, String senha) throws IllegalArgumentException {
+        Optional<Usuario> usuarioEncontrado = usuarioRepository.findByEmail(email);
         if(usuarioEncontrado.isEmpty())
-            throw new IllegalArgumentException("Usuário não encontrado / não cadastrado");
+            return ResponseEntity.status(404).body(null);
         else if(!usuarioEncontrado.get().getSenha().equals(senha))
-            throw new IllegalArgumentException("Senha incorreta");
-        return usuarioEncontrado;
+            return ResponseEntity.status(401).body(null);
+
+        return ResponseEntity.ok(UsuarioDTO.toDTO(usuarioEncontrado.get()));
     }
 }

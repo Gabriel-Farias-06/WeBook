@@ -9,6 +9,7 @@ import java.util.UUID;
 public interface AutorRepository  {
     Autor create(Autor autor);
     Optional<Autor> findById(UUID id);
+    Optional<Autor> findByNomeAndSobrenome(String nome, String sobrenome);
     Autor update(Autor autor);
     void delete(UUID id);
 }

@@ -50,7 +50,9 @@ function Home() {
   }
 
   async function loginUser() {
-    const login = await fetch(`webook/api/usuario/${email}/${senha}`);
+    const login = await fetch(
+      `webook-8d4j.onrender.com/api/usuario/${email}/${senha}`
+    );
     if (login.status != 200) return setModalAberto("login-failed");
     setUsuarioLogado(await login.json());
   }
@@ -68,10 +70,8 @@ function Home() {
             placeholder="pesquise seu livro"
             autoComplete="on"
             onKeyUp={(e) => {
-              if (e.key == "Enter") {
-                const termo = e.currentTarget.value.toLowerCase();
-                filterFilms(generoAtivo.genero_id, termo);
-              }
+              const termo = e.currentTarget.value.toLowerCase();
+              filterFilms(generoAtivo.genero_id, termo);
             }}
           />
           <img

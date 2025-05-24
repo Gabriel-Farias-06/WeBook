@@ -1,11 +1,13 @@
 package com.webook.app.UI.api.controller;
 
+import com.webook.app.application.DTOs.Request.UsuarioRequest;
 import com.webook.app.application.DTOs.UsuarioDTO;
 import com.webook.app.application.UseCase.Usuario.*;
 import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Exceptions.EmailAlreadyExistsException;
 import com.webook.app.domain.Exceptions.EmailInvalidoException;
 import com.webook.app.domain.Exceptions.SenhaInvalidaException;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,43 +24,56 @@ public class UsuarioController {
     private final FindByIdUsuarioUseCase findByIdUsuarioUseCase;
     private final FindByEmailUsuarioUseCase findByEmailUsuarioUseCase;
     private final AddRelationshipUsuarioLivroUseCase addRelationshipUsuarioLivroUseCase;
+    private final LoginUsuarioUseCase loginUsuarioUseCase;
 
-    public UsuarioController(CreateUsuarioUseCase createUsuarioUseCase, UpdateUsuarioUseCase updateUsuarioUseCase, DeleteUsuarioUseCase deleteUsuarioUseCase, FindByIdUsuarioUseCase findByIdUsuarioUseCase, FindByEmailUsuarioUseCase findByEmailUsuarioUseCase, AddRelationshipUsuarioLivroUseCase addRelationshipUsuarioLivroUseCase) {
+    public UsuarioController(CreateUsuarioUseCase createUsuarioUseCase, UpdateUsuarioUseCase updateUsuarioUseCase, DeleteUsuarioUseCase deleteUsuarioUseCase, FindByIdUsuarioUseCase findByIdUsuarioUseCase, FindByEmailUsuarioUseCase findByEmailUsuarioUseCase, AddRelationshipUsuarioLivroUseCase addRelationshipUsuarioLivroUseCase, LoginUsuarioUseCase loginUsuarioUseCase) {
         this.createUsuarioUseCase = createUsuarioUseCase;
         this.updateUsuarioUseCase = updateUsuarioUseCase;
         this.deleteUsuarioUseCase = deleteUsuarioUseCase;
         this.findByIdUsuarioUseCase = findByIdUsuarioUseCase;
         this.findByEmailUsuarioUseCase = findByEmailUsuarioUseCase;
         this.addRelationshipUsuarioLivroUseCase = addRelationshipUsuarioLivroUseCase;
+        this.loginUsuarioUseCase = loginUsuarioUseCase;
     }
 
-    @PostMapping
-    public ResponseEntity<UsuarioDTO> create(@RequestBody Usuario usuario) throws EmailAlreadyExistsException {
+    @PostMapping("/signup")
+    public ResponseEntity<Usuario> create(@RequestBody UsuarioRequest usuarioRequest) throws EmailAlreadyExistsException, EmailInvalidoException, SenhaInvalidaException {
+        Usuario usuario = new Usuario(usuarioRequest.getEmail(), usuarioRequest.getSenha());
         Usuario usuarioCriado = createUsuarioUseCase.execute(usuario);
         URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuarioCriado.getUsuario_id()).toUri();
-        return ResponseEntity.created(localizacao).body(UsuarioDTO.toDTO(usuarioCriado));
+        return ResponseEntity.created(localizacao).body(usuarioCriado);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> login(@RequestBody UsuarioRequest usuarioRequest, HttpSession session) {
+        return loginUsuarioUseCase.execute(usuarioRequest, session);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Boolean> logout(HttpSession session) {
+        if(session.getAttribute("usuario") == null)
+            return ResponseEntity.status(404).body(false);
+
+        session.invalidate();
+        return ResponseEntity.ok(true);
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody Usuario usuario) {
+    public ResponseEntity<Boolean> update(@RequestBody UsuarioRequest usuarioRequest) throws EmailInvalidoException, SenhaInvalidaException {
+        Usuario usuario = new Usuario(usuarioRequest.getEmail(), usuarioRequest.getSenha());
         updateUsuarioUseCase.execute(usuario);
         return ResponseEntity.ok(true);
     }
 
     @DeleteMapping("/{email}/{senha}")
     public ResponseEntity<Boolean> delete(@PathVariable String email, @PathVariable String senha) {
-        deleteUsuarioUseCase.execute(findByEmailUsuarioUseCase.execute(email, senha).get().getUsuario_id());
+        deleteUsuarioUseCase.execute(email, senha);
         return ResponseEntity.ok(true);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> findById(@PathVariable UUID id) throws EmailInvalidoException, SenhaInvalidaException {
         return ResponseEntity.ok(UsuarioDTO.toDTO(findByIdUsuarioUseCase.execute(id).get()));
-    }
-
-    @GetMapping("/{email}/{senha}")
-    public ResponseEntity<UsuarioDTO> findByIsbn(@PathVariable String email, @PathVariable String senha) {
-        return ResponseEntity.ok(UsuarioDTO.toDTO(findByEmailUsuarioUseCase.execute(email, senha).get()));
     }
 
     @PostMapping("/{usuario_id}/livros/{livro_id}")

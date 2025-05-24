@@ -16,10 +16,6 @@ public class FindByIsbnLivroUseCase {
     }
 
     public Optional<Livro> execute(String id) throws IllegalArgumentException {
-        var livroEncontrado = livroRepository.findByIsbn(id);
-        if(livroEncontrado.isEmpty())
-            throw new IllegalArgumentException("Usuário não encontrado / não cadastrado");
-
-        return livroEncontrado;
+        return livroRepository.findByIsbn(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.webook.app.UI.api.controller;
 
 import com.webook.app.application.DTOs.AutorDTO;
+import com.webook.app.application.DTOs.Response.AutorResponse;
 import com.webook.app.application.UseCase.Autor.*;
 import com.webook.app.domain.Entity.Autor;
 import org.springframework.http.ResponseEntity;
@@ -26,31 +27,22 @@ public class AutorController {
     }
 
     @PostMapping
-    public ResponseEntity<AutorDTO> create(@RequestBody Autor autor) {
-        Autor autorCriado = createAutorUseCase.execute(autor);
-        URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(autorCriado.getAutor_id()).toUri();
-        return ResponseEntity.created(localizacao).body(AutorDTO.toDTO(autorCriado));
+    public ResponseEntity<AutorResponse> create(@RequestBody Autor autor) {
+        return createAutorUseCase.execute(autor);
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody Autor autor) {
-        updateAutorUseCase.execute(autor);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<AutorResponse> update(@RequestBody Autor autor) {
+        return updateAutorUseCase.execute(autor);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
-        if(findByIdAutorUseCase.execute(id).isPresent()) {
-            deleteAutorUseCase.execute(findByIdAutorUseCase.execute(id).get().getAutor_id());
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.notFound().build();
+    @DeleteMapping("/{nome}/{sobrenome}")
+    public ResponseEntity<Boolean> delete(@PathVariable String nome, @PathVariable String sobrenome) {
+        return deleteAutorUseCase.execute(nome, sobrenome);
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<AutorDTO> findById(@PathVariable UUID id) {
-        if(findByIdAutorUseCase.execute(id).isPresent())
-            return ResponseEntity.ok(AutorDTO.toDTO(findByIdAutorUseCase.execute(id).get()));
-        return ResponseEntity.notFound().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<Autor> findById(@PathVariable UUID id) {
+            return ResponseEntity.of(findByIdAutorUseCase.execute(id));
     }
 }
