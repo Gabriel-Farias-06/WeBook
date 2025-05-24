@@ -24,3 +24,13 @@ spring:
         order_inserts: true
         order_updates: true
         generate_statistics: false
+management:
+  health:
+    defaults:
+      enabled: true
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    db:
+      enabled: true
