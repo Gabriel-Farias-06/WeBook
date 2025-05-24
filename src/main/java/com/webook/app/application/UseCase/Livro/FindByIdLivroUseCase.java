@@ -16,9 +16,6 @@ public class FindByIdLivroUseCase {
     }
 
     public Optional<Livro> execute(UUID id) throws IllegalArgumentException {
-        var livroEncontrado = livroRepository.findById(id);
-        if(livroEncontrado.isEmpty())
-            throw new IllegalArgumentException("Usuário não encontrado / não cadastrado");
-        return livroEncontrado;
+        return livroRepository.findById(id);
     }
 }

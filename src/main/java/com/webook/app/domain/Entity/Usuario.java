@@ -5,6 +5,7 @@ import com.webook.app.domain.Exceptions.EmailInvalidoException;
 import com.webook.app.domain.Exceptions.SenhaInvalidaException;
 import com.webook.app.domain.Validators.EmailValidator;
 import com.webook.app.domain.Validators.SenhaValidator;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private UUID usuario_id;
 
     private String nome;
@@ -43,10 +45,7 @@ public class Usuario {
         this.livros = livros;
     }
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Usuario(@JsonProperty("usuario_id") UUID usuario_id, @JsonProperty("nome") String nome, @JsonProperty("email") String email, @JsonProperty("senha") String senha) throws EmailInvalidoException, SenhaInvalidaException {
-        this.usuario_id = usuario_id;
-        this.nome = nome;
+    public Usuario(String email, String senha) throws EmailInvalidoException, SenhaInvalidaException {
         EmailValidator.validarEmail(email);
         this.email = email;
         SenhaValidator.validarSenha(senha);

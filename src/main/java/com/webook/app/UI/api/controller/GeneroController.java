@@ -1,6 +1,7 @@
 package com.webook.app.UI.api.controller;
 
 import com.webook.app.application.DTOs.GeneroDTO;
+import com.webook.app.application.DTOs.Request.GeneroRequest;
 import com.webook.app.application.DTOs.UsuarioDTO;
 import com.webook.app.application.UseCase.Genero.*;
 import com.webook.app.domain.Entity.Genero;
@@ -30,14 +31,16 @@ public class GeneroController {
     }
 
     @PostMapping
-    public ResponseEntity<GeneroDTO> create(@RequestBody Genero genero) {
+    public ResponseEntity<GeneroDTO> create(@RequestBody GeneroRequest generoRequest) {
+        Genero genero = new Genero(generoRequest.getNome());
         Genero generoCriado = createGeneroUseCase.execute(genero);
         URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(generoCriado.getGenero_id()).toUri();
         return ResponseEntity.created(localizacao).body(GeneroDTO.toDTO(generoCriado));
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody Genero genero) {
+    public ResponseEntity<Boolean> update(@RequestBody GeneroRequest generoRequest) {
+        Genero genero = new Genero(generoRequest.getNome());
         updateGeneroUseCase.execute(genero);
         return ResponseEntity.ok(true);
     }

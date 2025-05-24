@@ -1,6 +1,7 @@
 package com.webook.app.domain.Entity;
 
 import com.fasterxml.jackson.annotation.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public class Genero {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private UUID genero_id;
 
     @Column(nullable = false, unique = true)
@@ -27,9 +29,7 @@ public class Genero {
         this.livros = livros;
     }
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Genero(@JsonProperty("genero_id") UUID genero_id, @JsonProperty("nome") String nome) {
-        this.genero_id = genero_id;
+    public Genero(String nome) {
         this.nome = nome;
     }
 

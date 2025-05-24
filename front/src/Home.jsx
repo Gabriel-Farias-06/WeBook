@@ -50,7 +50,9 @@ function Home() {
   }
 
   async function loginUser() {
-    const login = await fetch(`webook/api/usuario/${email}/${senha}`);
+    const login = await fetch(
+      `webook-8d4j.onrender.com/api/usuario/${email}/${senha}`
+    );
     if (login.status != 200) return setModalAberto("login-failed");
     setUsuarioLogado(await login.json());
   }
@@ -111,7 +113,7 @@ function Home() {
           to="/profile"
           id="userLogin"
           onClick={(e) => {
-            if (usuarioLogado) {
+            if (!usuarioLogado) {
               e.preventDefault();
               setModalAberto("login");
             }

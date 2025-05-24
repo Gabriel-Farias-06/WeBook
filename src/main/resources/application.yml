@@ -17,3 +17,11 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
+
+server:
+  servlet:
+    session:
+      timeout: 120m
+      cookie:
+        name: JSESSIONID
+        secure: false

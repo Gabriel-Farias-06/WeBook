@@ -1,5 +1,6 @@
 package com.webook.app.domain.Entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -9,6 +10,7 @@ public class Autor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private UUID autor_id;
 
     @Column(nullable = false)
