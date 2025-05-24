@@ -4,14 +4,6 @@ spring:
     username: ${PGUSER}
     password: ${PGPASSWORD}
     driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 5
-      minimum-idle: 1
-      connection-timeout: 30000
-      max-lifetime: 600000
-      leak-detection-threshold: 60000 
-      pool-name: RailwayHikariPool
-
   jpa:
     open-in-view: false
     show-sql: false
