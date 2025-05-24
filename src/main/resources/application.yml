@@ -9,7 +9,13 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: validate
-
+      connection.provider_disables_autocommit: true
+    properties:
+      hibernate:
+        jdbc.batch_size: 20
+        order_inserts: true
+        order_updates: true
+        generate_statistics: false
 server:
   port: ${PORT:8080}
   shutdown: graceful
