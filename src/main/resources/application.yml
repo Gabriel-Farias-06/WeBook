@@ -1,24 +1,26 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}?sslmode=require&connectTimeout=5000&socketTimeout=30000
     username: ${PGUSER}
     password: ${PGPASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 30000
+      max-lifetime: 600000
+      leak-detection-threshold: 60000 
+      pool-name: RailwayHikariPool
+
   jpa:
     open-in-view: false
+    show-sql: false
     hibernate:
       ddl-auto: validate
-server:
-  port: ${PORT:8080}
-management:
-  endpoint:
-    health:
-      probes:
-        enabled: true
-  health:
-    livenessstate:
-      enabled: true
-    readinessstate:
-      enabled: true
-    db:
-      enabled: true
+      connection.provider_disables_autocommit: true
+    properties:
+      hibernate:
+        jdbc.batch_size: 20
+        order_inserts: true
+        order_updates: true
+        generate_statistics: false
