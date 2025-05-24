@@ -19,6 +19,8 @@ spring:
       ddl-auto: validate
 
 server:
+  port: ${PORT:8080}
+  shutdown: graceful
   servlet:
     session:
       timeout: 120m
