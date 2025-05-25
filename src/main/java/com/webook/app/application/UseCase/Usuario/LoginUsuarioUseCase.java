@@ -18,17 +18,18 @@ public class LoginUsuarioUseCase {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public ResponseEntity<Boolean> execute(UsuarioRequest usuarioRequest, HttpSession session) {
+    public ResponseEntity<?> execute(UsuarioRequest usuarioRequest, HttpSession session) {
         Optional<Usuario> usuarioEncontrado = usuarioRepository.findByEmail(usuarioRequest.getEmail());
-        if(usuarioEncontrado.isEmpty())
-            return ResponseEntity.status(404).body(false);
-        else if(!usuarioEncontrado.get().getSenha().equals(usuarioRequest.getSenha())) {
-            System.out.println(usuarioEncontrado.get().getSenha());
-            System.out.println(usuarioRequest.getSenha());
-            return ResponseEntity.status(401).body(false);
-        }
 
-        session.setAttribute("usuario", UsuarioDTO.toDTO(usuarioEncontrado.get()));
-        return ResponseEntity.ok(true);
-    }
+        if (usuarioEncontrado.isEmpty())
+            return ResponseEntity.status(404).body("Usuário não encontrado");
+
+        if (!usuarioEncontrado.get().getSenha().equals(usuarioRequest.getSenha()))
+            return ResponseEntity.status(401).body("Senha incorreta");
+
+        UsuarioDTO usuarioDTO = UsuarioDTO.toDTO(usuarioEncontrado.get());
+        session.setAttribute("usuario", usuarioDTO);
+
+        return ResponseEntity.ok(usuarioDTO);
+    } 
 }

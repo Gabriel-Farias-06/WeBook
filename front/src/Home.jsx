@@ -5,6 +5,7 @@ import { useGeneros } from "./GenerosProvider";
 import { useLivros } from "./LivrosProvider";
 import Footer from "./Footer";
 import Links from "./Links";
+import { useUsuario } from "./UsuarioProvider";
 
 function Home() {
   const [generosMock] = useGeneros();
@@ -15,7 +16,7 @@ function Home() {
   const [modalAberto, setModalAberto] = useState(null);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [usuarioLogado, setUsuarioLogado] = useState(null);
+  const [usuarioLogado, setUsuarioLogado] = useUsuario();
   const [modalLivro, setModalLivro] = useState(null);
 
   function filterFilms(genero_id, termo = "") {
@@ -41,6 +42,10 @@ function Home() {
       `https://webook-8d4j.onrender.com/api/usuario/signup`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
         body: JSON.stringify({
           email,
           senha,
@@ -48,7 +53,8 @@ function Home() {
       }
     );
 
-    if (response.status != 200) return setModalAberto("create-user-failed");
+    if (response.status != 201) return setModalAberto("create-user-failed");
+    setModalAberto(null);
     setUsuarioLogado(await response.json());
   }
 
@@ -68,6 +74,7 @@ function Home() {
       }
     );
     if (login.status != 200) return setModalAberto("login-failed");
+    setModalAberto(null);
     setUsuarioLogado(await login.json());
   }
 
@@ -181,9 +188,11 @@ function Home() {
               />
               <a
                 href="#"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
-                  loginUser();
+                  e.target.classList.add("inative");
+                  await loginUser();
+                  e.target.classList.remove("inative");
                 }}
               >
                 Entrar
@@ -242,9 +251,11 @@ function Home() {
               />
               <a
                 href="#"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
-                  createUser();
+                  e.target.classList.add("inative");
+                  await createUser();
+                  e.target.classList.remove("inative");
                 }}
               >
                 Fazer Cadastro
