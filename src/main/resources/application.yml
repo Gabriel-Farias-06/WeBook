@@ -19,9 +19,3 @@ spring:
 server:
   port: ${PORT:8080}
   shutdown: graceful
-  servlet:
-    session:
-      timeout: 120m
-      cookie:
-        name: JSESSIONID
-        secure: false
