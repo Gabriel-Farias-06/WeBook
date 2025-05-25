@@ -37,20 +37,36 @@ function Home() {
   }
 
   async function createUser() {
-    const response = await fetch(`webook/api/usuario`, {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        senha,
-      }),
-    });
+    const response = await fetch(
+      `https://webook-8d4j.onrender.com/api/usuario/signup`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          senha,
+        }),
+      }
+    );
 
     if (response.status != 200) return setModalAberto("create-user-failed");
     setUsuarioLogado(await response.json());
   }
 
   async function loginUser() {
-    const login = await fetch(`webook/api/usuario/${email}/${senha}`);
+    const login = await fetch(
+      `https://webook-8d4j.onrender.com/api/usuario/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          senha,
+        }),
+      }
+    );
     if (login.status != 200) return setModalAberto("login-failed");
     setUsuarioLogado(await login.json());
   }
