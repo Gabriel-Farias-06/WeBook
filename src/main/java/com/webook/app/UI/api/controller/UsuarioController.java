@@ -45,7 +45,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody UsuarioRequest usuarioRequest, HttpSession session) {
+    public ResponseEntity<?> login(@RequestBody UsuarioRequest usuarioRequest, HttpSession session) {
         return loginUsuarioUseCase.execute(usuarioRequest, session);
     }
 
