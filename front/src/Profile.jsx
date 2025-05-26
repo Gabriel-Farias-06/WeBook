@@ -46,7 +46,7 @@ function Profile() {
   }
 
   async function updateUser() {
-    if (!usuarioLogado.senha.equals(actualPassword)) return;
+    if (usuarioLogado.senha !== actualPassword) return;
     usuarioLogado.nome = newUsername ? newUsername : usuarioLogado.nome;
     usuarioLogado.senha = newPassword ? newPassword : usuarioLogado.senha;
     if (newProfilePhoto) {
@@ -57,15 +57,14 @@ function Profile() {
     const res = await fetch("https://webook-8d4j.onrender.com/api/usuario/", {
       method: "PUT",
       body: JSON.stringify({
-        nome: newUsername,
+        nome: usuarioLogado.nome,
         email: usuarioLogado.email,
-        senha: newPassword,
-        caminhoFoto: newProfilePhoto,
+        senha: usuarioLogado.senha,
+        caminhoFoto: usuarioLogado.caminhoFoto,
       }),
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
     });
 
     setModalAberto(null);
