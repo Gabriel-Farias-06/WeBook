@@ -4,7 +4,6 @@ import { useLivrosUsuario } from "./providers/LivrosUsuarioProvider";
 import "../public/css/profile.css";
 import Footer from "./Footer";
 import Links from "./Links";
-import { v4 as uuidv4 } from "uuid";
 
 function Profile() {
   const [modalAberto, setModalAberto] = useState(null);
@@ -12,7 +11,7 @@ function Profile() {
   const [changeUsername, setChangeUsername] = useState(false);
   const [actualPassword, setActualPassword] = useState(null);
   const [newPassword, setNewPassword] = useState(null);
-  const [newUsername, setUsername] = useState(null);
+  const [newUsername, setNewUsername] = useState(null);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
   const [usuarioLogado] = useUsuario();
   const [livrosUsuarioMock] = useLivrosUsuario();
@@ -26,23 +25,52 @@ function Profile() {
     );
   }
 
-  async function handleUpload(file) {
+  async function handleUpload() {
     const formData = new FormData();
-    const uuid = uuidv4();
-    formData.append("image-" + file.url, file);
+    formData.append("image-" + newProfilePhoto.url, newProfilePhoto);
 
     const res = await fetch(
-      "https://api.imgbb.com/ " +
-        uuid +
-        "/upload?key=02649a0bafaed4123cfcc89e63003b10",
+      "https://api.imgbb.com/1/upload?key=02649a0bafaed4123cfcc89e63003b10",
       {
         method: "POST",
         body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
       }
     );
 
     const data = await res.json();
     return data;
+  }
+
+  async function updateUser() {
+    if (!usuarioLogado.senha.equals(actualPassword)) return;
+    usuarioLogado.nome = newUsername ? newUsername : usuarioLogado.nome;
+    usuarioLogado.senha = newPassword ? newPassword : usuarioLogado.senha;
+    if (newProfilePhoto) {
+      const data = await handleUpload();
+      usuarioLogado.caminhoFoto = data.data.url;
+    }
+
+    const res = await fetch("https://webook-8d4j.onrender.com/api/usuario/", {
+      method: "PUT",
+      body: JSON.stringify({
+        nome: newUsername,
+        email: usuarioLogado.email,
+        senha: newPassword,
+        caminhoFoto: newProfilePhoto,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    setModalAberto(null);
+
+    return await res.json();
   }
 
   return (
@@ -152,12 +180,12 @@ function Profile() {
                 Insira seu novo nome de usuário
               </label>
               <input
-                type="password"
-                id="password"
+                type="text"
+                id="newUsername"
                 autoComplete="newUsername"
                 disabled={!changeUsername}
                 onChange={(e) => {
-                  setChangeUsername(e.target.value);
+                  setNewUsername(e.target.value);
                 }}
               />
               <div id="checkbox-wrapper">
@@ -182,27 +210,30 @@ function Profile() {
               <label htmlFor="newPassword">Insira sua nova senha</label>
               <input
                 type="password"
-                id="password"
+                id="newPassword"
                 autoComplete="newPassword"
                 disabled={changePassword}
                 onChange={(e) => {
-                  setChangePassword(e.target.value);
+                  setNewPassword(e.target.value);
                 }}
               />
               <label htmlFor="file-upload">Escolha uma foto de perfil</label>
-              <label htmlFor="file-upload" class="custom-file-upload">
+              <label htmlFor="file-upload" className="custom-file-upload">
                 Escolher imagem
               </label>
               <input
                 type="file"
                 accept="image/*"
                 id="file-upload"
-                onChange={(e) => handleUpload(e.target.files[0])}
+                onChange={(e) => setNewProfilePhoto(e.target.files[0])}
               />
               <a
                 href="#"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
+                  e.target.classList.add("inative");
+                  await updateUser();
+                  e.target.classList.remove("inative");
                 }}
               >
                 Atualizar os dados

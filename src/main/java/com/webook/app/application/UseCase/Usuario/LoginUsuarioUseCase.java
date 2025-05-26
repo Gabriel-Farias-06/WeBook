@@ -27,9 +27,8 @@ public class LoginUsuarioUseCase {
         if (!usuarioEncontrado.get().getSenha().equals(usuarioRequest.getSenha()))
             return ResponseEntity.status(401).body("Senha incorreta");
 
-        UsuarioDTO usuarioDTO = UsuarioDTO.toDTO(usuarioEncontrado.get());
-        session.setAttribute("usuario", usuarioDTO);
+        session.setAttribute("usuario", usuarioEncontrado);
 
-        return ResponseEntity.ok(usuarioDTO);
+        return ResponseEntity.ok(usuarioEncontrado);
     } 
 }
