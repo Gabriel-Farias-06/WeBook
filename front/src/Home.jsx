@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "../public/css/style.css";
 import { Link } from "react-router-dom";
-import { useGeneros } from "./GenerosProvider";
-import { useLivros } from "./LivrosProvider";
+import { useGeneros } from "./providers/GenerosProvider";
+import { useLivros } from "./providers/LivrosProvider";
 import Footer from "./Footer";
 import Links from "./Links";
-import { useUsuario } from "./UsuarioProvider";
+import { useUsuario } from "./providers/UsuarioProvider";
 
 function Home() {
   const [generosMock] = useGeneros();

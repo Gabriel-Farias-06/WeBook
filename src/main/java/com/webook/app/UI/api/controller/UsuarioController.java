@@ -1,6 +1,7 @@
 package com.webook.app.UI.api.controller;
 
 import com.webook.app.application.DTOs.Request.UsuarioRequest;
+import com.webook.app.application.DTOs.Request.UsuarioUpdateRequest;
 import com.webook.app.application.DTOs.UsuarioDTO;
 import com.webook.app.application.UseCase.Usuario.*;
 import com.webook.app.domain.Entity.Usuario;
@@ -59,9 +60,8 @@ public class UsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody UsuarioRequest usuarioRequest) throws EmailInvalidoException, SenhaInvalidaException {
-        Usuario usuario = new Usuario(usuarioRequest.getEmail(), usuarioRequest.getSenha());
-        updateUsuarioUseCase.execute(usuario);
+    public ResponseEntity<Boolean> update(@RequestBody UsuarioUpdateRequest usuarioUpdateRequest) throws EmailInvalidoException, SenhaInvalidaException {
+        updateUsuarioUseCase.execute(usuarioUpdateRequest);
         return ResponseEntity.ok(true);
     }
 

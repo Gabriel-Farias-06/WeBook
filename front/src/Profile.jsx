@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useUsuario } from "./UsuarioProvider";
-import { useLivrosUsuario } from "./LivrosUsuarioProvider";
+import { useUsuario } from "./providers/UsuarioProvider";
+import { useLivrosUsuario } from "./providers/LivrosUsuarioProvider";
 import "../public/css/profile.css";
 import Footer from "./Footer";
 import Links from "./Links";
@@ -10,6 +10,10 @@ function Profile() {
   const [modalAberto, setModalAberto] = useState(null);
   const [changePassword, setChangePassword] = useState(false);
   const [changeUsername, setChangeUsername] = useState(false);
+  const [actualPassword, setActualPassword] = useState(null);
+  const [newPassword, setNewPassword] = useState(null);
+  const [newUsername, setUsername] = useState(null);
+  const [newProfilePhoto, setNewProfilePhoto] = useState(null);
   const [usuarioLogado] = useUsuario();
   const [livrosUsuarioMock] = useLivrosUsuario();
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuarioMock);
@@ -38,6 +42,7 @@ function Profile() {
     );
 
     const data = await res.json();
+    return data;
   }
 
   return (
@@ -75,10 +80,8 @@ function Profile() {
             src="/img/Cart.svg"
             alt="Carrinho"
             onClick={() => {
-              if (usuarioLogado) {
-                document.body.style.overflow = "hidden";
-                setModalAberto("shopping");
-              } else setModalAberto("login");
+              document.body.style.overflow = "hidden";
+              setModalAberto("shopping");
             }}
           />
         </a>
@@ -87,10 +90,8 @@ function Profile() {
             src="/img/Notification.svg"
             alt="Notificações"
             onClick={() => {
-              if (usuarioLogado) {
-                document.body.style.overflow = "hidden";
-                setModalAberto("notifications");
-              } else setModalAberto("login");
+              document.body.style.overflow = "hidden";
+              setModalAberto("notifications");
             }}
           />
         </a>
@@ -124,7 +125,9 @@ function Profile() {
                 type="password"
                 id="pastPassword"
                 autoComplete="current-password"
-                onChange={(e) => {}}
+                onChange={(e) => {
+                  setActualPassword(e.target.value);
+                }}
               />
               <div id="checkbox-wrapper">
                 <input
@@ -153,7 +156,9 @@ function Profile() {
                 id="password"
                 autoComplete="newUsername"
                 disabled={!changeUsername}
-                onChange={(e) => {}}
+                onChange={(e) => {
+                  setChangeUsername(e.target.value);
+                }}
               />
               <div id="checkbox-wrapper">
                 <input
@@ -180,7 +185,9 @@ function Profile() {
                 id="password"
                 autoComplete="newPassword"
                 disabled={changePassword}
-                onChange={(e) => {}}
+                onChange={(e) => {
+                  setChangePassword(e.target.value);
+                }}
               />
               <label htmlFor="file-upload">Escolha uma foto de perfil</label>
               <label htmlFor="file-upload" class="custom-file-upload">
@@ -277,8 +284,14 @@ function Profile() {
         )}
       </header>
       <main>
-        <img src={usuarioLogado.caminhoFoto} />
-        <h2>{usuarioLogado.nome}</h2>
+        <img
+          src={
+            usuarioLogado.caminhoFoto
+              ? usuarioLogado.caminhoFoto
+              : "/img/UserDefaultBigger.png"
+          }
+        />
+        <h2>{usuarioLogado.nome ? usuarioLogado.nome : "userDeafultName"}</h2>
         <p>{usuarioLogado.email}</p>
         <a
           href="#"
