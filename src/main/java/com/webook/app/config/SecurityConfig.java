@@ -1,11 +1,3 @@
-package com.webook.app.config;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-
 @Configuration
 public class SecurityConfig {
 
@@ -19,8 +11,8 @@ public class SecurityConfig {
                     .policyDirectives(
                         "default-src 'self'; " +
                         "script-src 'self' https://js.stripe.com; " +
-                        "style-src 'self' 'unsafe-inline' https://js.stripe.com; " +
-                        "font-src 'self' https://js.stripe.com https://fonts.gstatic.com; " +
+                        "style-src 'self' 'unsafe-inline' https://js.stripe.com https://fonts.googleapis.com; " +
+                        "font-src 'self' https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com data:; " +
                         "connect-src 'self' https://api.stripe.com https://api.imgbb.com; " +
                         "img-src 'self' data: https://i.ibb.co;"
                     )
