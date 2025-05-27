@@ -252,7 +252,8 @@ function Home() {
                 onChange={(e) => {
                   const regexp =
                     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=[\]{}|;:'",.<>?/`~-])(?!.*\s).{8,}$/;
-                  if (regexp.test(e.target.value)) setAlarmPassword(true);
+                  if (!regexp.test(e.target.value)) setAlarmPassword(true);
+                  else setAlarmPassword(false);
                   setSenha(e.target.value);
                 }}
               />
@@ -487,18 +488,20 @@ function Home() {
                   href="#"
                   onClick={async (e) => {
                     e.preventDefault();
+                    e.target.classList.add("inative");
                     const response = await fetch(
                       "https://webook-8d4j.onrender.com/api/pagamento",
                       {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(modalLivro.preco),
+                        body: JSON.stringify({ valor: modalLivro.preco }),
                       }
                     );
 
                     const data = await response.json();
                     setClientSecret(data.clientSecret);
                     setModalAberto("payment");
+                    e.target.classList.remove("inative");
                   }}
                 >
                   Comprar agora

@@ -20,8 +20,7 @@ public class PagamentoController {
     private PagamentoService pagamentoService;
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> criarPagamento(@RequestBody Map<String, Object> body) throws Exception {
-        Long valor = Long.valueOf(body.get("valor").toString());
+    public ResponseEntity<Map<String, String>> criarPagamento(@RequestBody Long valor) throws Exception {
         PaymentIntent intent = pagamentoService.criarPagamento(valor);
 
         Map<String, String> response = new HashMap<>();
