@@ -6,10 +6,12 @@ import { useLivros } from "./providers/LivrosProvider";
 import Footer from "./Footer";
 import Links from "./Links";
 import { useUsuario } from "./providers/UsuarioProvider";
+import StripeContainer from "./components/StripeContainer";
 
 function Home() {
   const [generosMock] = useGeneros();
   const [livrosMock] = useLivros();
+  const [clientSecret, setClientSecret] = useState(null);
 
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosMock);
   const [generoAtivo, setGeneroAtivo] = useState(generosMock.at(0));
@@ -471,12 +473,34 @@ function Home() {
                   </li>
                 </ul>
                 <a href="#">Adicionar ao carrinho</a>
-                <a href="#">Comprar agora</a>
+                <a
+                  href="#"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    const response = await fetch(
+                      "https://webook-8d4j.onrender.com/api/pagamento",
+                      {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(modalLivro.preco),
+                      }
+                    );
+
+                    const data = await response.json();
+                    setClientSecret(data.clientSecret);
+                    setModalAberto("payment");
+                  }}
+                >
+                  Comprar agora
+                </a>
                 <h5>Formas de Pagamento</h5>
                 <img src="/img/Payments.png" alt="Formas de pagamento" />
               </div>
             </div>
           </div>
+        )}
+        {modalAberto == "payment" && clientSecret && (
+          <StripeContainer clientSecret={clientSecret} />
         )}
       </header>
 

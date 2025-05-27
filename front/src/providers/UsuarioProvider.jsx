@@ -3,10 +3,34 @@ import { createContext, useContext, useEffect, useState } from "react";
 const UsuarioContext = createContext();
 
 export function UsuarioProvider({ children }) {
-  const [usuario, setUsuario] = useState(() => {
+  const [usuario, setUsuario] = useState(null);
+
+  useEffect(() => {
     const salvo = localStorage.getItem("usuario");
-    return salvo ? JSON.parse(salvo) : null;
-  });
+    if (!salvo) return;
+    const data = JSON.parse(salvo);
+
+    async function loginUser() {
+      const login = await fetch(
+        `https://webook-8d4j.onrender.com/api/usuario/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email: data.email,
+            senha: data.senha,
+          }),
+        }
+      );
+      if (login.status != 200) return;
+      setUsuario(await login.json());
+    }
+
+    loginUser();
+  }, []);
 
   useEffect(() => {
     if (usuario) {

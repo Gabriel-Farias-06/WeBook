@@ -19,7 +19,7 @@ public class UpdateUsuarioUseCase {
     public void execute(UsuarioUpdateRequest usuarioUpdateRequest) throws IllegalArgumentException {
         Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioUpdateRequest.getEmail());
         if(usuario.isEmpty())
-            throw new IllegalArgumentException("Email já cadastrado");
+            throw new IllegalArgumentException("Email não encontrado");
         if(usuarioUpdateRequest.getNome() != null)
             usuario.get().setNome(usuarioUpdateRequest.getNome());
         if(usuarioUpdateRequest.getSenha() != null)
