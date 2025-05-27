@@ -2,9 +2,9 @@ package com.webook.app.UI.api.controller;
 
 import com.stripe.model.PaymentIntent;
 import com.webook.app.application.UseCase.PagamentoService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
