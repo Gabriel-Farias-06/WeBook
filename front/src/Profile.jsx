@@ -16,6 +16,7 @@ function Profile() {
   const [usuarioLogado, setUsuarioLogado] = useUsuario();
   const [livrosUsuarioMock] = useLivrosUsuario();
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuarioMock);
+  const [alarmPassword, setAlarmPassword] = useState(false);
 
   function filterFilms(termo = "") {
     setLivrosFiltrados(
@@ -31,20 +32,19 @@ function Profile() {
     const formData = new FormData();
     formData.append("image", newProfilePhoto);
     formData.append("key", "02649a0bafaed4123cfcc89e63003b10");
-  
+
     try {
       const res = await fetch("https://api.imgbb.com/1/upload", {
         method: "POST",
         body: formData,
       });
-  
+
       const data = await res.json();
       return data;
-
-  } catch (err) {
-    console.error("Erro de rede:", err);
+    } catch (err) {
+      console.error("Erro de rede:", err);
+    }
   }
-}
 
   async function updateUser() {
     if (usuarioLogado.senha !== actualPassword) return;
@@ -71,11 +71,11 @@ function Profile() {
       },
     });
 
-    setUsuarioLogado({        
+    setUsuarioLogado({
       nome,
       email: usuarioLogado.email,
       senha,
-      caminhoFoto
+      caminhoFoto,
     });
     setModalAberto(null);
 
@@ -223,9 +223,20 @@ function Profile() {
                 autoComplete="newPassword"
                 disabled={changePassword}
                 onChange={(e) => {
+                  const regexp =
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=[\]{}|;:'",.<>?/`~-])(?!.*\s).{8,}$/;
+                  if (!regexp.test(e.target.value)) setAlarmPassword(true);
+                  else setAlarmPassword(false);
                   setNewPassword(e.target.value);
                 }}
               />
+              {alarmPassword && (
+                <p>
+                  A senha deve conter 8 caracteres, maiúsculas, minúsculas,
+                  números e símbolos!
+                </p>
+              )}
+
               <label htmlFor="file-upload">Escolha uma foto de perfil</label>
               <label htmlFor="file-upload" className="custom-file-upload">
                 Escolher imagem

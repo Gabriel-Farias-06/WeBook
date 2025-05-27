@@ -20,6 +20,7 @@ function Home() {
   const [senha, setSenha] = useState("");
   const [usuarioLogado, setUsuarioLogado] = useUsuario();
   const [modalLivro, setModalLivro] = useState(null);
+  const [alarmPassword, setAlarmPassword] = useState(false);
 
   function filterFilms(genero_id, termo = "") {
     if (genero_id == "0000-zzzz")
@@ -249,9 +250,18 @@ function Home() {
                 id="senha"
                 autoComplete="new-password"
                 onChange={(e) => {
+                  const regexp =
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=[\]{}|;:'",.<>?/`~-])(?!.*\s).{8,}$/;
+                  if (regexp.test(e.target.value)) setAlarmPassword(true);
                   setSenha(e.target.value);
                 }}
               />
+              {alarmPassword && (
+                <p>
+                  A senha deve conter 8 caracteres, maiúsculas, minúsculas,
+                  números e símbolos!
+                </p>
+              )}
               <a
                 href="#"
                 onClick={async (e) => {

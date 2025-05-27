@@ -18,9 +18,11 @@ public class SecurityConfig {
                 .contentSecurityPolicy(csp -> csp
                     .policyDirectives(
                         "default-src 'self'; " +
-                            "script-src 'self' https://js.stripe.com; " +
-                            "style-src 'self' 'unsafe-inline' https://js.stripe.com; " +
-                            "font-src 'self' https://js.stripe.com;"
+                        "script-src 'self' https://js.stripe.com; " +
+                        "style-src 'self' 'unsafe-inline' https://js.stripe.com; " +
+                        "font-src 'self' https://js.stripe.com https://fonts.gstatic.com; " +
+                        "connect-src 'self' https://api.stripe.com https://api.imgbb.com; " +
+                        "img-src 'self' data: https://i.ibb.co;"
                     )
                 )
             );
