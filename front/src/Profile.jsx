@@ -36,8 +36,7 @@ function Profile() {
         body: formData,
         headers: {
           "Content-Type": "application/json",
-        },
-        credentials: "include",
+        }
       }
     );
 
@@ -54,7 +53,9 @@ function Profile() {
       usuarioLogado.caminhoFoto = data.data.url;
     }
 
-    const res = await fetch("https://webook-8d4j.onrender.com/api/usuario/", {
+    console.log(usuarioLogado);
+
+    const res = await fetch("https://webook-8d4j.onrender.com/api/usuario", {
       method: "PUT",
       body: JSON.stringify({
         nome: usuarioLogado.nome,
