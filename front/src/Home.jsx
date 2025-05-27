@@ -143,6 +143,7 @@ function Home() {
           }}
         >
           <img
+            id="profilePhoto"
             src={
               usuarioLogado && usuarioLogado.caminhoFoto
                 ? usuarioLogado.caminhoFoto

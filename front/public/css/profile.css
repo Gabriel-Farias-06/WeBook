@@ -26,6 +26,7 @@ main img {
   width: 200px;
   bottom: -100px;
   left: 6%;
+  border-radius: 120px;
 }
 
 main h2 {

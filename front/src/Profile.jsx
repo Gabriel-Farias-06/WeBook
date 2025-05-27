@@ -13,7 +13,7 @@ function Profile() {
   const [newPassword, setNewPassword] = useState(null);
   const [newUsername, setNewUsername] = useState(null);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
-  const [usuarioLogado] = useUsuario();
+  const [usuarioLogado, setUsuarioLogado] = useUsuario();
   const [livrosUsuarioMock] = useLivrosUsuario();
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuarioMock);
 
@@ -26,31 +26,34 @@ function Profile() {
   }
 
   async function handleUpload() {
-    const formData = new FormData();
-    formData.append("image-" + newProfilePhoto.url, newProfilePhoto);
+    if (!newProfilePhoto) return;
 
-    const res = await fetch(
-      "https://api.imgbb.com/1/upload?key=02649a0bafaed4123cfcc89e63003b10",
-      {
+    const formData = new FormData();
+    formData.append("image", newProfilePhoto);
+    formData.append("key", "02649a0bafaed4123cfcc89e63003b10");
+  
+    try {
+      const res = await fetch("https://api.imgbb.com/1/upload", {
         method: "POST",
         body: formData,
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }
-    );
+      });
+  
+      const data = await res.json();
+      return data;
 
-    const data = await res.json();
-    return data;
+  } catch (err) {
+    console.error("Erro de rede:", err);
   }
+}
 
   async function updateUser() {
     if (usuarioLogado.senha !== actualPassword) return;
-    usuarioLogado.nome = newUsername ? newUsername : usuarioLogado.nome;
-    usuarioLogado.senha = newPassword ? newPassword : usuarioLogado.senha;
+    const nome = newUsername ? newUsername : usuarioLogado.nome;
+    const senha = newPassword ? newPassword : usuarioLogado.senha;
+    let caminhoFoto;
     if (newProfilePhoto) {
       const data = await handleUpload();
-      usuarioLogado.caminhoFoto = data.data.url;
+      caminhoFoto = data.data.url;
     }
 
     console.log(usuarioLogado);
@@ -58,16 +61,22 @@ function Profile() {
     const res = await fetch("https://webook-8d4j.onrender.com/api/usuario", {
       method: "PUT",
       body: JSON.stringify({
-        nome: usuarioLogado.nome,
+        nome,
         email: usuarioLogado.email,
-        senha: usuarioLogado.senha,
-        caminhoFoto: usuarioLogado.caminhoFoto,
+        senha,
+        caminhoFoto,
       }),
       headers: {
         "Content-Type": "application/json",
       },
     });
 
+    setUsuarioLogado({        
+      nome,
+      email: usuarioLogado.email,
+      senha,
+      caminhoFoto
+    });
     setModalAberto(null);
 
     return await res.json();

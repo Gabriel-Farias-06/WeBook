@@ -58,6 +58,12 @@
   cursor: pointer;
 }
 
+#profilePhoto {
+  display: inline-block;
+  width: 40px;
+  border-radius: 20px;
+}
+
 .modal {
   z-index: 1;
   position: fixed;
