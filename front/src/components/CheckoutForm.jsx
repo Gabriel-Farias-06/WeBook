@@ -3,9 +3,10 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import "../../public/css/payments.css";
 import { useState } from "react";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ aoClique, idLivro, idUsuario }) {
   const stripe = useStripe();
   const elements = useElements();
   const [carregando, setCarregando] = useState(false);
@@ -29,18 +30,28 @@ export default function CheckoutForm() {
       setMensagem(error.message);
     } else if (paymentIntent.status === "succeeded") {
       setMensagem("Pagamento confirmado com sucesso!");
+      const response = await fetch(
+        `https://webook-8d4j.onrender.com/api/usuario/${idUsuario}/livros/${idLivro}`,
+        {
+          method: "POST",
+        }
+      );
+
+      console.log(await response.json());
     }
 
     setCarregando(false);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <PaymentElement />
-      <button type="submit" disabled={!stripe || carregando}>
-        {carregando ? "Processando..." : "Pagar"}
-      </button>
-      {mensagem && <div>{mensagem}</div>}
-    </form>
+    <div className="modal" onClick={aoClique}>
+      <form onSubmit={handleSubmit} className="modal-content">
+        <PaymentElement />
+        <button type="submit" disabled={!stripe || carregando}>
+          {carregando ? "Processando..." : "Pagar"}
+        </button>
+        {mensagem && <div>{mensagem}</div>}
+      </form>
+    </div>
   );
 }

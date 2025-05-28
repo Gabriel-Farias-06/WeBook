@@ -21,6 +21,7 @@ function Home() {
   const [usuarioLogado, setUsuarioLogado] = useUsuario();
   const [modalLivro, setModalLivro] = useState(null);
   const [alarmPassword, setAlarmPassword] = useState(false);
+  const [livro, setLivro] = useState(null);
 
   function filterFilms(genero_id, termo = "") {
     if (genero_id == "0000-zzzz")
@@ -195,6 +196,7 @@ function Home() {
                 onClick={async (e) => {
                   e.preventDefault();
                   e.target.classList.add("inative");
+                  e.currentTarget.innerText = "Carregando";
                   await loginUser();
                   e.target.classList.remove("inative");
                 }}
@@ -252,12 +254,12 @@ function Home() {
                 onChange={(e) => {
                   const regexp =
                     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=[\]{}|;:'",.<>?/`~-])(?!.*\s).{8,}$/;
-                  if (!regexp.test(e.target.value)) setAlarmPassword(true);
-                  else setAlarmPassword(false);
+                  if (!regexp.test(e.target.value)) setAlarmPassword(2);
+                  else setAlarmPassword(0);
                   setSenha(e.target.value);
                 }}
               />
-              {alarmPassword && (
+              {alarmPassword == 2 && (
                 <p>
                   A senha deve conter 8 caracteres, maiúsculas, minúsculas,
                   números e símbolos!
@@ -268,6 +270,7 @@ function Home() {
                 onClick={async (e) => {
                   e.preventDefault();
                   e.target.classList.add("inative");
+                  e.currentTarget.innerText = "Carregando";
                   await createUser();
                   e.target.classList.remove("inative");
                 }}
@@ -489,18 +492,21 @@ function Home() {
                   onClick={async (e) => {
                     e.preventDefault();
                     e.target.classList.add("inative");
+                    e.currentTarget.innerText = "Carregando";
                     const response = await fetch(
                       "https://webook-8d4j.onrender.com/api/pagamento",
                       {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ valor: modalLivro.preco }),
+                        body: JSON.stringify(modalLivro.preco * 100),
                       }
                     );
 
                     const data = await response.json();
                     setClientSecret(data.clientSecret);
                     setModalAberto("payment");
+                    setLivro(modalLivro.livro_id);
+                    setModalLivro(null);
                     e.target.classList.remove("inative");
                   }}
                 >
@@ -513,7 +519,12 @@ function Home() {
           </div>
         )}
         {modalAberto == "payment" && clientSecret && (
-          <StripeContainer clientSecret={clientSecret} />
+          <StripeContainer
+            clientSecret={clientSecret}
+            aoClique={() => setModalAberto(null)}
+            idLivro={livro}
+            idUsuario={usuarioLogado.usuario_id}
+          />
         )}
       </header>
 

@@ -1,0 +1,11 @@
+button[type="submit"] {
+  margin-top: 12px;
+  background: linear-gradient(var(--r8) 0%, var(--r11) 100%);
+  display: block;
+  text-align: center;
+  font: 500 1.2rem/1.2 "Roboto";
+  color: var(--c1);
+  width: 20%;
+  padding: 8px 4px;
+  border-radius: 4px;
+}

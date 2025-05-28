@@ -4,6 +4,7 @@ import { useLivrosUsuario } from "./providers/LivrosUsuarioProvider";
 import "../public/css/profile.css";
 import Footer from "./Footer";
 import Links from "./Links";
+import { useGeneros } from "./providers/GenerosProvider";
 
 function Profile() {
   const [modalAberto, setModalAberto] = useState(null);
@@ -15,8 +16,10 @@ function Profile() {
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
   const [usuarioLogado, setUsuarioLogado] = useUsuario();
   const [livrosUsuarioMock] = useLivrosUsuario();
+  const [generosMock] = useGeneros();
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuarioMock);
   const [alarmPassword, setAlarmPassword] = useState(false);
+  const [generosOptions, setGenerosOptions] = useState(null);
 
   function filterFilms(termo = "") {
     setLivrosFiltrados(
@@ -230,7 +233,7 @@ function Profile() {
                   setNewPassword(e.target.value);
                 }}
               />
-              {alarmPassword && (
+              {alarmPassword && !changePassword && (
                 <p>
                   A senha deve conter 8 caracteres, maiúsculas, minúsculas,
                   números e símbolos!
@@ -238,9 +241,12 @@ function Profile() {
               )}
 
               <label htmlFor="file-upload">Escolha uma foto de perfil</label>
-              <label htmlFor="file-upload" className="custom-file-upload">
-                Escolher imagem
-              </label>
+              <div id="flex-upload">
+                <label htmlFor="file-upload" className="custom-file-upload">
+                  Escolher imagem
+                </label>
+                {newProfilePhoto && <p>{newProfilePhoto.name}</p>}
+              </div>
               <input
                 type="file"
                 accept="image/*"
@@ -252,6 +258,7 @@ function Profile() {
                 onClick={async (e) => {
                   e.preventDefault();
                   e.target.classList.add("inative");
+                  e.currentTarget.innerText = "Carregando";
                   await updateUser();
                   e.target.classList.remove("inative");
                 }}
@@ -268,10 +275,96 @@ function Profile() {
             onClick={() => setModalAberto(null)}
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <span
+                onClick={() => {
+                  setModalAberto("cadastro-livro");
+                  document.body.style.overflow = "hidden";
+                }}
+              >
+                <img src="/img/Logout.svg" alt="" />
+                <p>adicionar livro</p>
+              </span>
               <span>
                 <img src="/img/Logout.svg" alt="" />
                 <p>sair </p>
               </span>
+            </div>
+          </div>
+        )}
+        {modalAberto == "cadastro-livro" && (
+          <div
+            className="modal"
+            id="cadastro-bg"
+            onClick={() => {
+              setModalAberto(null);
+              document.body.style.overflow = "auto";
+            }}
+          >
+            <div
+              className="modal-content"
+              id="cadastro"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3>Cadastrar livros</h3>
+              <div id="container-flex">
+                <p className="protect">Dados pessoais criptografados.</p>
+              </div>
+              <label htmlFor="isbn">Preencha a isbn</label>
+              <input type="text" id="isbn" />
+              <label htmlFor="titulo">Preencha o título</label>
+              <input type="text" id="titulo" />
+              <label htmlFor="sinopse">Preencha a sinopse</label>
+              <input type="text" id="sinopse" />
+              <label htmlFor="numeroPaginas">
+                Preencha o número de páginas
+              </label>
+              <input type="number" id="numeroPaginas" />
+              <label htmlFor="preco">Preencha o preço</label>
+              <input type="text" id="preco" />
+              <label htmlFor="capa">Envie a foto da capa</label>
+              <input type="file" id="capa" />
+              <label htmlFor="classificacao">
+                Preencha a classificação indicativa
+              </label>
+              <select value="" name="classificacao" id="classificacao">
+                <option value="LIVRE">Livre</option>
+                <option value="DEZ">10+</option>
+                <option value="DOZE">12+</option>
+                <option value="QUATORZE">14+</option>
+                <option value="DEZESSEIS">16+</option>
+                <option value="DEZOITO">18+</option>
+              </select>
+              <label htmlFor="autor">
+                Preencha o nome e sobrenome do autor
+              </label>
+              <input type="text" id="autor" />
+              <label htmlFor="generos">Selecione os gêneros do livro</label>
+              <div id="flex-generos">
+                {generosMock.map((genero) =>
+                  genero == generosMock[0] ? null : (
+                    <label className="generos">
+                      <input
+                        type="checkbox"
+                        value={genero.nome}
+                        onChange={(e) => {
+                          if (e.target.checked)
+                            setGenerosOptions(
+                              ...generosOptions,
+                              e.target.value
+                            );
+                          else
+                            setGenerosOptions(
+                              generosOptions.filter(
+                                (genero) => genero != e.target.value
+                              )
+                            );
+                        }}
+                      />
+                      {genero.nome}
+                    </label>
+                  )
+                )}
+              </div>
             </div>
           </div>
         )}

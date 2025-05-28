@@ -81,6 +81,9 @@
   border-radius: 4px;
   width: 30%;
   position: relative;
+  max-height: 80vh;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .modal-content label {

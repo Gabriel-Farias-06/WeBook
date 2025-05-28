@@ -116,6 +116,7 @@ input[type="file"] {
 
 .custom-file-upload {
   display: inline-block;
+  white-space: nowrap;
   background-color: var(--r9);
   width: 14ch;
   color: white;
@@ -125,13 +126,26 @@ input[type="file"] {
   font-family: "Roboto";
 }
 
+.custom-file-upload + p {
+  display: inline;
+  color: var(--c14);
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+#flex-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .config {
   background-color: rgba(0, 0, 0, 0);
 }
 
 .config .modal-content {
-  margin: 8% 89%;
-  width: 7%;
+  margin: 8% 80%;
+  width: 17%;
   padding: 12px 4px;
   background-color: var(--c1);
 }
@@ -150,4 +164,25 @@ input[type="file"] {
 .config p {
   font: 500 1.2rem/1.1 "Poppins";
   color: var(--r11);
+}
+
+.modal-content {
+  margin: 3% auto;
+}
+
+.modal-content .generos {
+  display: flex;
+  justify-items: start;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-content .generos input {
+  width: 32px;
+}
+
+#flex-generos {
+  display: grid;
+  column-gap: 12px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
