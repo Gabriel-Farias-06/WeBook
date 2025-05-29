@@ -114,11 +114,11 @@ input[type="file"] {
   display: none;
 }
 
-.custom-file-upload {
+.modal-content .custom-file-upload {
   display: inline-block;
   white-space: nowrap;
   background-color: var(--r9);
-  width: 14ch;
+  width: 16ch;
   color: white;
   padding: 8px 12px;
   cursor: pointer;
@@ -133,7 +133,7 @@ input[type="file"] {
   flex-wrap: wrap;
 }
 
-#flex-upload {
+.flex-upload {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -185,4 +185,12 @@ input[type="file"] {
   display: grid;
   column-gap: 12px;
   grid-template-columns: 1fr 1fr 1fr;
+}
+
+#classificacao {
+  width: 40%;
+  font: 500 0.9rem/1.2 "Roboto";
+  background-color: #f6eaff;
+  border: 2px solid var(--r12);
+  border-radius: 2px;
 }

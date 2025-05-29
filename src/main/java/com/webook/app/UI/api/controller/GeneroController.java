@@ -31,11 +31,9 @@ public class GeneroController {
     }
 
     @PostMapping
-    public ResponseEntity<GeneroDTO> create(@RequestBody GeneroRequest generoRequest) {
+    public ResponseEntity<Genero> create(@RequestBody GeneroRequest generoRequest) {
         Genero genero = new Genero(generoRequest.getNome());
-        Genero generoCriado = createGeneroUseCase.execute(genero);
-        URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(generoCriado.getGenero_id()).toUri();
-        return ResponseEntity.created(localizacao).body(GeneroDTO.toDTO(generoCriado));
+        return createGeneroUseCase.execute(genero);
     }
 
     @PutMapping

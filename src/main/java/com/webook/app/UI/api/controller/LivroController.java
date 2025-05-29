@@ -35,17 +35,13 @@ public class LivroController {
     }
 
     @PostMapping
-    public ResponseEntity<LivroResponse> create(@RequestBody LivroRequest livroRequest) {
-        Livro livro = new Livro(livroRequest.getIsbn(), livroRequest.getTitulo(), livroRequest.getSinopse(),livroRequest.getNumeroPaginas(), livroRequest.getPreco(), livroRequest.getCaminhoLivro(), livroRequest.getClassificacaoIndicativa(), livroRequest.getAutor(), livroRequest.getEditora(), livroRequest.getGeneros());
-        return createLivroUseCase.execute(livro);
+    public ResponseEntity<Livro> create(@RequestBody LivroRequest livroRequest) {
+        return createLivroUseCase.execute(livroRequest);
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody LivroRequest livroRequest) {
-        Livro livro = new Livro(livroRequest.getIsbn(), livroRequest.getTitulo(), livroRequest.getSinopse(),livroRequest.getNumeroPaginas(), livroRequest.getPreco(), livroRequest.getCaminhoLivro(), livroRequest.getClassificacaoIndicativa(), livroRequest.getAutor(), livroRequest.getEditora(), livroRequest.getGeneros());
-
-        updateLivroUseCase.execute(livro);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<Livro> update(@RequestBody LivroRequest livroRequest) {
+        return updateLivroUseCase.execute(livroRequest);
     }
 
     @DeleteMapping("/{isbn}")

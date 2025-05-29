@@ -5,7 +5,9 @@ button[type="submit"] {
   text-align: center;
   font: 500 1.2rem/1.2 "Roboto";
   color: var(--c1);
-  width: 20%;
+  width: 16ch;
   padding: 8px 4px;
   border-radius: 4px;
+  cursor: pointer;
+  border: none;
 }

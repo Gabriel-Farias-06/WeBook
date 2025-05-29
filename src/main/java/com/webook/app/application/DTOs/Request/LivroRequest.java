@@ -1,11 +1,9 @@
 package com.webook.app.application.DTOs.Request;
 
-import com.webook.app.domain.Entity.Autor;
-import com.webook.app.domain.Entity.Editora;
-import com.webook.app.domain.Entity.Genero;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
 
 import java.util.List;
+import java.util.UUID;
 
 public class LivroRequest {
     String isbn;
@@ -15,11 +13,11 @@ public class LivroRequest {
     Double preco;
     String caminhoLivro;
     ClassificacaoIndicativa classificacaoIndicativa;
-    Autor autor;
-    Editora editora;
-    List<Genero> generos;
+    UUID autor_id;
+    UUID editora_id;
+    List<UUID> generos_id;
 
-    public LivroRequest(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Genero> generos) {
+    public LivroRequest(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, UUID autor_id, UUID editora_id, List<UUID> generos_id) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.sinopse = sinopse;
@@ -27,9 +25,9 @@ public class LivroRequest {
         this.preco = preco;
         this.caminhoLivro = caminhoLivro;
         this.classificacaoIndicativa = classificacaoIndicativa;
-        this.autor = autor;
-        this.editora = editora;
-        this.generos = generos;
+        this.autor_id = autor_id;
+        this.editora_id = editora_id;
+        this.generos_id = generos_id;
     }
 
     public LivroRequest() {}
@@ -90,27 +88,27 @@ public class LivroRequest {
         this.classificacaoIndicativa = classificacaoIndicativa;
     }
 
-    public Autor getAutor() {
-        return autor;
+    public UUID getAutor_id() {
+        return autor_id;
     }
 
-    public void setAutor(Autor autor) {
-        this.autor = autor;
+    public void setAutor_id(UUID autor_id) {
+        this.autor_id = autor_id;
     }
 
-    public Editora getEditora() {
-        return editora;
+    public UUID getEditora_id() {
+        return editora_id;
     }
 
-    public void setEditora(Editora editora) {
-        this.editora = editora;
+    public void setEditora_id(UUID editora_id) {
+        this.editora_id = editora_id;
     }
 
-    public List<Genero> getGeneros() {
-        return generos;
+    public List<UUID> getGeneros_id() {
+        return generos_id;
     }
 
-    public void setGeneros(List<Genero> generos) {
-        this.generos = generos;
+    public void setGeneros_id(List<UUID> generos_id) {
+        this.generos_id = generos_id;
     }
 }

@@ -5,6 +5,7 @@ import "../public/css/profile.css";
 import Footer from "./Footer";
 import Links from "./Links";
 import { useGeneros } from "./providers/GenerosProvider";
+import { IMaskInput } from "react-imask";
 
 function Profile() {
   const [modalAberto, setModalAberto] = useState(null);
@@ -14,6 +15,9 @@ function Profile() {
   const [newPassword, setNewPassword] = useState(null);
   const [newUsername, setNewUsername] = useState(null);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
+  const [newBookPhoto, setNewBookPhoto] = useState(null);
+  const [newBook, setNewBook] = useState(null);
+  const [isbn, setIsbn] = useState("");
   const [usuarioLogado, setUsuarioLogado] = useUsuario();
   const [livrosUsuarioMock] = useLivrosUsuario();
   const [generosMock] = useGeneros();
@@ -29,7 +33,7 @@ function Profile() {
     );
   }
 
-  async function handleUpload() {
+  async function handleUploadProfilePhoto() {
     if (!newProfilePhoto) return;
 
     const formData = new FormData();
@@ -55,7 +59,7 @@ function Profile() {
     const senha = newPassword ? newPassword : usuarioLogado.senha;
     let caminhoFoto;
     if (newProfilePhoto) {
-      const data = await handleUpload();
+      const data = await handleUploadProfilePhoto();
       caminhoFoto = data.data.url;
     }
 
@@ -83,6 +87,87 @@ function Profile() {
     setModalAberto(null);
 
     return await res.json();
+  }
+
+  function handleChangeNewBook(e) {
+    const { name, value } = e.target;
+    setNewBook((rest) => ({
+      ...rest,
+      [name]: value,
+    }));
+  }
+
+  async function uploadNewBookPhoto() {
+    if (!newBookPhoto) return;
+
+    const formData = new FormData();
+    formData.append("image", newBookPhoto);
+    formData.append("key", "02649a0bafaed4123cfcc89e63003b10");
+
+    try {
+      const res = await fetch("https://api.imgbb.com/1/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Erro de rede: ", err);
+    }
+  }
+
+  async function createBook() {
+    const data = uploadNewBookPhoto();
+
+    const nomeAutor = newBook.autor.trim().split(" ")[0];
+    const sobrenomeAutor = newBook.autor.trim().split(" ").slice(1).join(" ");
+
+    const newAutor = await fetch(`https://webook-8d4j.onrender.com/api/autor`, {
+      method: "POST",
+      body: JSON.stringify({
+        nome: nomeAutor.toUpperCase(),
+        sobrenome: sobrenomeAutor.toUpperCase(),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const autor_id = await newAutor.json().autor_id;
+
+    const editoraResponse = await fetch(
+      `https://webook-8d4j.onrender.com/api/editora`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          nome: newBook.editora.toUpperCase(),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const editora_id = await editoraResponse.json().editora_id;
+
+    try {
+      const res = await fetch("https://webook-8d4j.onrender.com/api/usuario", {
+        method: "POST",
+        body: JSON.stringify({
+          newBook,
+          caminhoLivro: data.data.url,
+          generos: generosOptions,
+          autor_id,
+          editora_id,
+        }),
+      });
+
+      if (res.status == 201) setModalAberto("livro-criado");
+      else setModalAberto("livro-error");
+    } catch (e) {
+      console.error("Erro de rede: ", e);
+    }
   }
 
   return (
@@ -150,7 +235,7 @@ function Profile() {
             id="cadastro-bg"
             onClick={() => setModalAberto(null)}
           >
-            <div
+            <form
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
@@ -241,7 +326,7 @@ function Profile() {
               )}
 
               <label htmlFor="file-upload">Escolha uma foto de perfil</label>
-              <div id="flex-upload">
+              <div className="flex-upload">
                 <label htmlFor="file-upload" className="custom-file-upload">
                   Escolher imagem
                 </label>
@@ -253,9 +338,9 @@ function Profile() {
                 id="file-upload"
                 onChange={(e) => setNewProfilePhoto(e.target.files[0])}
               />
-              <a
-                href="#"
-                onClick={async (e) => {
+              <button
+                type="submit"
+                onSubmit={async (e) => {
                   e.preventDefault();
                   e.target.classList.add("inative");
                   e.currentTarget.innerText = "Carregando";
@@ -264,8 +349,8 @@ function Profile() {
                 }}
               >
                 Atualizar os dados
-              </a>
-            </div>
+              </button>
+            </form>
           </div>
         )}
         {modalAberto == "config" && (
@@ -281,7 +366,7 @@ function Profile() {
                   document.body.style.overflow = "hidden";
                 }}
               >
-                <img src="/img/Logout.svg" alt="" />
+                <img src="/img/ConfigBook.svg" alt="" />
                 <p>adicionar livro</p>
               </span>
               <span>
@@ -300,33 +385,95 @@ function Profile() {
               document.body.style.overflow = "auto";
             }}
           >
-            <div
+            <form
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
+              onSubmit={async (e) => {
+                e.preventDefault();
+                e.target.classList.add("inative");
+                e.currentTarget.innerText = "Carregando";
+                await createBook();
+                e.target.classList.remove("inative");
+              }}
             >
               <h3>Cadastrar livros</h3>
               <div id="container-flex">
                 <p className="protect">Dados pessoais criptografados.</p>
               </div>
               <label htmlFor="isbn">Preencha a isbn</label>
-              <input type="text" id="isbn" />
+              <IMaskInput
+                mask="000-0-00-000000-0"
+                definitions={{
+                  0: /[0-9]/,
+                }}
+                value={isbn}
+                unmask={false}
+                id="isbn"
+                onAccept={(val) => setIsbn(val)}
+                onChange={handleChangeNewBook}
+                name="isbn"
+                maxLength={17}
+                required
+              />
               <label htmlFor="titulo">Preencha o título</label>
-              <input type="text" id="titulo" />
+              <input
+                type="text"
+                id="titulo"
+                onChange={handleChangeNewBook}
+                name="titulo"
+                required
+              />
               <label htmlFor="sinopse">Preencha a sinopse</label>
-              <input type="text" id="sinopse" />
+              <input
+                type="text"
+                id="sinopse"
+                onChange={handleChangeNewBook}
+                name="sinopse"
+                required
+              />
               <label htmlFor="numeroPaginas">
                 Preencha o número de páginas
               </label>
-              <input type="number" id="numeroPaginas" />
+              <input
+                type="number"
+                id="numeroPaginas"
+                onChange={handleChangeNewBook}
+                name="numeroPaginas"
+                required
+              />
               <label htmlFor="preco">Preencha o preço</label>
-              <input type="text" id="preco" />
-              <label htmlFor="capa">Envie a foto da capa</label>
-              <input type="file" id="capa" />
+              <input
+                type="text"
+                id="preco"
+                onChange={handleChangeNewBook}
+                name="preco"
+                required
+              />
+              <div className="flex-upload">
+                <label htmlFor="capa" className="custom-file-upload">
+                  Envie a foto da capa
+                </label>
+                {newBookPhoto && <p>{newBookPhoto.name}</p>}
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                id="capa"
+                name="caminhoFoto"
+                onChange={(e) => setNewBookPhoto(e.target.files[0])}
+                required
+              />
               <label htmlFor="classificacao">
                 Preencha a classificação indicativa
               </label>
-              <select value="" name="classificacao" id="classificacao">
+              <select
+                defaultValue=""
+                name="classificacaoIndicativa"
+                id="classificacao"
+                onChange={handleChangeNewBook}
+                required
+              >
                 <option value="LIVRE">Livre</option>
                 <option value="DEZ">10+</option>
                 <option value="DOZE">12+</option>
@@ -337,15 +484,29 @@ function Profile() {
               <label htmlFor="autor">
                 Preencha o nome e sobrenome do autor
               </label>
-              <input type="text" id="autor" />
+              <input
+                type="text"
+                id="autor"
+                name="autor"
+                onChange={handleChangeNewBook}
+                required
+              />
+              <label htmlFor="editora">Preencha o nome da editora</label>
+              <input
+                type="text"
+                id="editora"
+                name="editora"
+                onChange={handleChangeNewBook}
+                required
+              />
               <label htmlFor="generos">Selecione os gêneros do livro</label>
               <div id="flex-generos">
                 {generosMock.map((genero) =>
                   genero == generosMock[0] ? null : (
-                    <label className="generos">
+                    <label className="generos" key={genero.genero_id}>
                       <input
                         type="checkbox"
-                        value={genero.nome}
+                        value={genero.genero_id}
                         onChange={(e) => {
                           if (e.target.checked)
                             setGenerosOptions(
@@ -365,7 +526,8 @@ function Profile() {
                   )
                 )}
               </div>
-            </div>
+              <button type="submit">Cadastrar livro</button>
+            </form>
           </div>
         )}
         {modalAberto == "shopping" && (

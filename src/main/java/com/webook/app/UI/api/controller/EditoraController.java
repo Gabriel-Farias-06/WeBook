@@ -29,10 +29,8 @@ public class EditoraController {
     }
 
     @PostMapping
-    public ResponseEntity<EditoraDTO> create(@RequestBody Editora editora) {
-        Editora editoraCriado = createEditoraUseCase.execute(editora);
-        URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(editoraCriado.getEditora_id()).toUri();
-        return ResponseEntity.created(localizacao).body(EditoraDTO.toDTO(editoraCriado));
+    public ResponseEntity<Editora> create(@RequestBody Editora editora) {
+        return createEditoraUseCase.execute(editora);
     }
 
     @PutMapping
