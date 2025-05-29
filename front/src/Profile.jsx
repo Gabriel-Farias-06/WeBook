@@ -23,7 +23,7 @@ function Profile() {
   const [generosMock] = useGeneros();
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuarioMock);
   const [alarmPassword, setAlarmPassword] = useState(false);
-  const [generosOptions, setGenerosOptions] = useState(null);
+  const [generosOptions, setGenerosOptions] = useState([]);
 
   function filterFilms(termo = "") {
     setLivrosFiltrados(
@@ -62,8 +62,6 @@ function Profile() {
       const data = await handleUploadProfilePhoto();
       caminhoFoto = data.data.url;
     }
-
-    console.log(usuarioLogado);
 
     const res = await fetch("https://webook-8d4j.onrender.com/api/usuario", {
       method: "PUT",
@@ -118,7 +116,7 @@ function Profile() {
   }
 
   async function createBook() {
-    const data = uploadNewBookPhoto();
+    const data = await uploadNewBookPhoto();
 
     const nomeAutor = newBook.autor.trim().split(" ")[0];
     const sobrenomeAutor = newBook.autor.trim().split(" ").slice(1).join(" ");
@@ -150,18 +148,30 @@ function Profile() {
     );
 
     const editora_id = await editoraResponse.json().editora_id;
+    console.log(newBook);
 
     try {
-      const res = await fetch("https://webook-8d4j.onrender.com/api/usuario", {
+      const res = await fetch("https://webook-8d4j.onrender.com/api/livro", {
         method: "POST",
         body: JSON.stringify({
-          newBook,
+          isbn: newBook.isbn,
+          titulo: newBook.titulo,
+          sinopse: newBook.sinopse,
+          numeroPaginas: parseInt(newBook.numeroPaginas),
+          preco: parseFloat(newBook.preco),
+          classificacaoIndicativa: newBook.classificacaoIndicativa,
           caminhoLivro: data.data.url,
           generos: generosOptions,
           autor_id,
           editora_id,
         }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      console.log(newBook);
+      console.log(generosOptions);
 
       if (res.status == 201) setModalAberto("livro-criado");
       else setModalAberto("livro-error");
@@ -392,7 +402,7 @@ function Profile() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 e.target.classList.add("inative");
-                e.currentTarget.innerText = "Carregando";
+                e.target.innerText = "Carregando";
                 await createBook();
                 e.target.classList.remove("inative");
               }}
@@ -460,9 +470,8 @@ function Profile() {
                 type="file"
                 accept="image/*"
                 id="capa"
-                name="caminhoFoto"
+                name="capa"
                 onChange={(e) => setNewBookPhoto(e.target.files[0])}
-                required
               />
               <label htmlFor="classificacao">
                 Preencha a classificação indicativa

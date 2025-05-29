@@ -42,11 +42,14 @@ public class Livro {
     @Enumerated(EnumType.STRING)
     private ClassificacaoIndicativa classificacaoIndicativa;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "autor_id", nullable = false)
     private Autor autor;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "editora_id", nullable = false)
     private Editora editora;
+
 
     @ManyToMany(mappedBy = "livros", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private List<Usuario> usuarios;
