@@ -3,8 +3,9 @@ import "../public/css/style.css";
 import { Link } from "react-router-dom";
 import { useGeneros } from "./providers/GenerosProvider";
 import { useLivros } from "./providers/LivrosProvider";
-import Footer from "./Footer";
-import Links from "./Links";
+import Footer from "./components/Footer";
+import Links from "./components/Links";
+import Loading from "./components/Loading";
 import { useUsuario } from "./providers/UsuarioProvider";
 import StripeContainer from "./components/StripeContainer";
 
@@ -18,7 +19,7 @@ function Home() {
   const [modalAberto, setModalAberto] = useState(null);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [usuarioLogado, setUsuarioLogado] = useUsuario();
+  const { usuario, loading, setUsuario } = useUsuario();
   const [modalLivro, setModalLivro] = useState(null);
   const [alarmPassword, setAlarmPassword] = useState(false);
   const [livro, setLivro] = useState(null);
@@ -59,7 +60,7 @@ function Home() {
 
     if (response.status != 201) return setModalAberto("create-user-failed");
     setModalAberto(null);
-    setUsuarioLogado(await response.json());
+    setUsuario(await response.json());
   }
 
   async function loginUser() {
@@ -79,8 +80,10 @@ function Home() {
     );
     if (login.status != 200) return setModalAberto("login-failed");
     setModalAberto(null);
-    setUsuarioLogado(await login.json());
+    setUsuario(await login.json());
   }
+
+  if (loading) return <Loading />;
 
   return (
     <div>
@@ -117,7 +120,7 @@ function Home() {
             src="/img/Cart.svg"
             alt="Carrinho"
             onClick={() => {
-              if (usuarioLogado) {
+              if (usuario) {
                 document.body.style.overflow = "hidden";
                 setModalAberto("shopping");
               } else setModalAberto("login");
@@ -129,7 +132,7 @@ function Home() {
             src="/img/Notification.svg"
             alt="Notificações"
             onClick={() => {
-              if (usuarioLogado) {
+              if (usuario) {
                 document.body.style.overflow = "hidden";
                 setModalAberto("notifications");
               } else setModalAberto("login");
@@ -140,7 +143,7 @@ function Home() {
           to="/profile"
           id="userLogin"
           onClick={(e) => {
-            if (!usuarioLogado) {
+            if (!usuario) {
               e.preventDefault();
               setModalAberto("login");
             }
@@ -149,8 +152,8 @@ function Home() {
           <img
             id="profilePhoto"
             src={
-              usuarioLogado && usuarioLogado.caminhoFoto
-                ? usuarioLogado.caminhoFoto
+              usuario && usuario.caminhoFoto
+                ? usuario.caminhoFoto
                 : "./img/UserDefault.png"
             }
             alt="Usuário"
@@ -523,7 +526,7 @@ function Home() {
             clientSecret={clientSecret}
             aoClique={() => setModalAberto(null)}
             idLivro={livro}
-            idUsuario={usuarioLogado.usuario_id}
+            idUsuario={usuario.usuario_id}
           />
         )}
       </header>

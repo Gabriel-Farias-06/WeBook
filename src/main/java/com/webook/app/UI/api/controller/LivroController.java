@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,13 +26,15 @@ public class LivroController {
     private final DeleteLivroUseCase deleteLivroUseCase;
     private final FindByIdLivroUseCase findByIdLivroUseCase;
     private final FindByIsbnLivroUseCase findByIsbnLivroUseCase;
+    private final FindAllLivroUseCase findAllLivroUseCase;
 
-    public LivroController(CreateLivroUseCase createLivroUseCase, UpdateLivroUseCase updateLivroUseCase, DeleteLivroUseCase deleteLivroUseCase, FindByIdLivroUseCase findByIdLivroUseCase, FindByIsbnLivroUseCase findByIsbnLivroUseCase) {
+    public LivroController(CreateLivroUseCase createLivroUseCase, UpdateLivroUseCase updateLivroUseCase, DeleteLivroUseCase deleteLivroUseCase, FindByIdLivroUseCase findByIdLivroUseCase, FindByIsbnLivroUseCase findByIsbnLivroUseCase, FindAllLivroUseCase findAllLivroUseCase) {
         this.createLivroUseCase = createLivroUseCase;
         this.updateLivroUseCase = updateLivroUseCase;
         this.deleteLivroUseCase = deleteLivroUseCase;
         this.findByIdLivroUseCase = findByIdLivroUseCase;
         this.findByIsbnLivroUseCase = findByIsbnLivroUseCase;
+        this.findAllLivroUseCase = findAllLivroUseCase;
     }
 
     @PostMapping
@@ -58,5 +61,10 @@ public class LivroController {
     @GetMapping("/isbn/{isbn}")
     public ResponseEntity<Livro> findByIsbn(@PathVariable String isbn) {
         return ResponseEntity.of(findByIsbnLivroUseCase.execute(isbn));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Livro>> findAll() {
+        return findAllLivroUseCase.execute();
     }
 }

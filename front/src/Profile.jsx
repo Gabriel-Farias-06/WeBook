@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useUsuario } from "./providers/UsuarioProvider";
 import { useLivrosUsuario } from "./providers/LivrosUsuarioProvider";
 import "../public/css/profile.css";
-import Footer from "./Footer";
-import Links from "./Links";
+import Footer from "./components/Footer";
+import Links from "./components/Links";
+import Loading from "./components/Loading";
 import { useGeneros } from "./providers/GenerosProvider";
 import { IMaskInput } from "react-imask";
+import { Navigate } from "react-router-dom";
 
 function Profile() {
   const [modalAberto, setModalAberto] = useState(null);
@@ -18,7 +20,7 @@ function Profile() {
   const [newBookPhoto, setNewBookPhoto] = useState(null);
   const [newBook, setNewBook] = useState(null);
   const [isbn, setIsbn] = useState("");
-  const [usuarioLogado, setUsuarioLogado] = useUsuario();
+  const { usuario, loading, setUsuario } = useUsuario();
   const [livrosUsuarioMock] = useLivrosUsuario();
   const [generosMock] = useGeneros();
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuarioMock);
@@ -54,9 +56,9 @@ function Profile() {
   }
 
   async function updateUser() {
-    if (usuarioLogado.senha !== actualPassword) return;
-    const nome = newUsername ? newUsername : usuarioLogado.nome;
-    const senha = newPassword ? newPassword : usuarioLogado.senha;
+    if (usuario.senha != actualPassword) return;
+    const nome = newUsername ? newUsername : usuario.nome;
+    const senha = newPassword ? newPassword : usuario.senha;
     let caminhoFoto;
     if (newProfilePhoto) {
       const data = await handleUploadProfilePhoto();
@@ -67,7 +69,7 @@ function Profile() {
       method: "PUT",
       body: JSON.stringify({
         nome,
-        email: usuarioLogado.email,
+        email: usuario.email,
         senha,
         caminhoFoto,
       }),
@@ -76,14 +78,14 @@ function Profile() {
       },
     });
 
-    setUsuarioLogado({
+    setUsuario({
       nome,
-      email: usuarioLogado.email,
+      email: usuario.email,
       senha,
       caminhoFoto,
     });
     setModalAberto(null);
-
+    if (res.status == 200 || res.status == 201) console.log("Tá indo o método");
     return await res.json();
   }
 
@@ -179,6 +181,10 @@ function Profile() {
       console.error("Erro de rede: ", e);
     }
   }
+
+  if (loading) <Loading />;
+
+  if (!usuario) return <Navigate to="/" />;
 
   return (
     <div>
@@ -344,13 +350,13 @@ function Profile() {
               </div>
               <input
                 type="file"
-                accept="image/*"
+                accept=".jpg, .jpeg, .png, .gif, .bmp, .webp, .tiff, .ico"
                 id="file-upload"
                 onChange={(e) => setNewProfilePhoto(e.target.files[0])}
               />
               <button
                 type="submit"
-                onSubmit={async (e) => {
+                onClick={async (e) => {
                   e.preventDefault();
                   e.target.classList.add("inative");
                   e.currentTarget.innerText = "Carregando";
@@ -399,13 +405,6 @@ function Profile() {
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
-              onSubmit={async (e) => {
-                e.preventDefault();
-                e.target.classList.add("inative");
-                e.target.innerText = "Carregando";
-                await createBook();
-                e.target.classList.remove("inative");
-              }}
             >
               <h3>Cadastrar livros</h3>
               <div id="container-flex">
@@ -468,7 +467,7 @@ function Profile() {
               </div>
               <input
                 type="file"
-                accept="image/*"
+                accept=".jpg, .jpeg, .png, .gif, .bmp, .webp, .tiff, .ico"
                 id="capa"
                 name="capa"
                 onChange={(e) => setNewBookPhoto(e.target.files[0])}
@@ -535,7 +534,18 @@ function Profile() {
                   )
                 )}
               </div>
-              <button type="submit">Cadastrar livro</button>
+              <button
+                type="submit"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.target.classList.add("inative");
+                  e.target.innerText = "Carregando";
+                  await createBook();
+                  e.target.classList.remove("inative");
+                }}
+              >
+                Cadastrar livro
+              </button>
             </form>
           </div>
         )}
@@ -601,13 +611,13 @@ function Profile() {
       <main>
         <img
           src={
-            usuarioLogado.caminhoFoto
-              ? usuarioLogado.caminhoFoto
+            usuario.caminhoFoto
+              ? usuario.caminhoFoto
               : "/img/UserDefaultBigger.png"
           }
         />
-        <h2>{usuarioLogado.nome ? usuarioLogado.nome : "userDeafultName"}</h2>
-        <p>{usuarioLogado.email}</p>
+        <h2>{usuario.nome ? usuario.nome : "userDeafultName"}</h2>
+        <p>{usuario.email}</p>
         <a
           href="#"
           onClick={(e) => {

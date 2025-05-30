@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,13 +22,15 @@ public class GeneroController {
     private final DeleteGeneroUseCase deleteGeneroUseCase;
     private final FindByIdGeneroUseCase findByIdGeneroUseCase;
     private final FindByNomeGeneroUseCase findByNomeGeneroUseCase;
+    private final FindAllGeneroUseCase findAllGeneroUseCase;
 
-    public GeneroController(CreateGeneroUseCase createGeneroUseCase, UpdateGeneroUseCase updateGeneroUseCase, DeleteGeneroUseCase deleteGeneroUseCase, FindByIdGeneroUseCase findByIdGeneroUseCase, FindByNomeGeneroUseCase findByNomeGeneroUseCase) {
+    public GeneroController(CreateGeneroUseCase createGeneroUseCase, UpdateGeneroUseCase updateGeneroUseCase, DeleteGeneroUseCase deleteGeneroUseCase, FindByIdGeneroUseCase findByIdGeneroUseCase, FindByNomeGeneroUseCase findByNomeGeneroUseCase, FindAllGeneroUseCase findAllGeneroUseCase) {
         this.createGeneroUseCase = createGeneroUseCase;
         this.updateGeneroUseCase = updateGeneroUseCase;
         this.deleteGeneroUseCase = deleteGeneroUseCase;
         this.findByIdGeneroUseCase = findByIdGeneroUseCase;
         this.findByNomeGeneroUseCase = findByNomeGeneroUseCase;
+        this.findAllGeneroUseCase = findAllGeneroUseCase;
     }
 
     @PostMapping
@@ -57,5 +60,10 @@ public class GeneroController {
     @GetMapping("/name/{name}")
     public ResponseEntity<Optional<Genero>> findById(@PathVariable String name) {
         return ResponseEntity.ok(findByNomeGeneroUseCase.execute(name));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Genero>> findAll() {
+        return findAllGeneroUseCase.execute();
     }
 }

@@ -32,6 +32,9 @@ public class GeneroRepositoryImpl implements GeneroRepository {
     public Optional<Genero> findByNome(String name) {return generoJpaRepository.findByNome(name);}
 
     @Override
+    public List<Genero> findAll() { return generoJpaRepository.findAll(); }
+
+    @Override
     public Genero update(Genero genero) {
         return generoJpaRepository.save(genero);
     }
