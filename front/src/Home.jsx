@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../public/css/style.css";
 import { Link } from "react-router-dom";
 import { useGeneros } from "./providers/GenerosProvider";
@@ -10,28 +10,37 @@ import { useUsuario } from "./providers/UsuarioProvider";
 import StripeContainer from "./components/StripeContainer";
 
 function Home() {
-  const [generosMock] = useGeneros();
-  const [livrosMock] = useLivros();
-  const [clientSecret, setClientSecret] = useState(null);
+  const { generos, generosLoading } = useGeneros();
+  const { livros, livrosLoading } = useLivros();
+  const { usuario, setUsuario, loading } = useUsuario();
 
-  const [livrosFiltrados, setLivrosFiltrados] = useState(livrosMock);
-  const [generoAtivo, setGeneroAtivo] = useState(generosMock.at(0));
-  const [modalAberto, setModalAberto] = useState(null);
+  const [generoAtivo, setGeneroAtivo] = useState();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const { usuario, loading, setUsuario } = useUsuario();
-  const [modalLivro, setModalLivro] = useState(null);
   const [alarmPassword, setAlarmPassword] = useState(false);
+  const [modalAberto, setModalAberto] = useState(null);
+  const [clientSecret, setClientSecret] = useState(null);
+  const [modalLivro, setModalLivro] = useState(null);
   const [livro, setLivro] = useState(null);
+  const [livrosFiltrados, setLivrosFiltrados] = useState(null);
 
-  function filterFilms(genero_id, termo = "") {
-    if (genero_id == "0000-zzzz")
+  useEffect(() => {
+    if (generos) setGeneroAtivo(generos.at(0));
+  }, [generos]);
+
+  useEffect(() => {
+    if (livros) setLivrosFiltrados(livros);
+  }, [livros]);
+
+  function filterFilms(genero, termo = "") {
+    console.log(livros);
+    if (genero.nome == "Todos")
       setLivrosFiltrados(
-        livrosMock.filter((livro) => livro.titulo.toLowerCase().includes(termo))
+        livros.filter((livro) => livro.titulo.toLowerCase().includes(termo))
       );
     else {
-      const filter = livrosMock.filter((livro) =>
-        livro.generos.includes(genero_id)
+      const filter = livros.filter((livro) =>
+        livro.generos.includes(genero.genero_id)
       );
 
       setLivrosFiltrados(
@@ -83,7 +92,7 @@ function Home() {
     setUsuario(await login.json());
   }
 
-  if (loading) return <Loading />;
+  if (loading || generosLoading || livrosLoading) return <Loading />;
 
   return (
     <div>
@@ -100,7 +109,7 @@ function Home() {
             onKeyUp={(e) => {
               if (e.key == "Enter") {
                 const termo = e.currentTarget.value.toLowerCase();
-                filterFilms(generoAtivo.genero_id, termo);
+                filterFilms(generoAtivo, termo);
               }
             }}
           />
@@ -111,7 +120,7 @@ function Home() {
               const termo = document
                 .getElementById("searchInput")
                 .value.toLowerCase();
-              filterFilms(generoAtivo.genero_id, termo);
+              filterFilms(generoAtivo, termo);
             }}
           />
         </div>
@@ -340,7 +349,7 @@ function Home() {
               <p>Produtos adicionados recentemente</p>
               <div>
                 <ul>
-                  {livrosMock.map((livro) => (
+                  {livros.map((livro) => (
                     <li key={livro.livro_id}>
                       <img
                         src={"/img/" + livro.caminhoLivro}
@@ -369,7 +378,7 @@ function Home() {
               <p>Notificações recebidas recentemente</p>
               <div>
                 <ul>
-                  {livrosMock.map((livro) => (
+                  {livros.map((livro) => (
                     <li key={livro.livro_id}>
                       <img
                         src={"/img/" + livro.caminhoLivro}
@@ -531,61 +540,64 @@ function Home() {
         )}
       </header>
 
-      <article
-        aria-labelledby="categorias"
-        id="categories"
-        className="container"
-      >
-        <ul>
-          {generosMock.map((genero) => {
-            return (
-              <li
-                key={genero.genero_id}
-                className={
-                  generoAtivo.genero_id == genero.genero_id ? "active" : ""
-                }
-                onClick={() => {
-                  document.getElementById("searchInput").value = "";
-                  setGeneroAtivo(genero);
-                  filterFilms(genero.genero_id);
-                }}
-              >
-                <a href="#">{genero.nome}</a>
-              </li>
-            );
-          })}
-        </ul>
-      </article>
+      {generos && (
+        <article
+          aria-labelledby="categorias"
+          id="categories"
+          className="container"
+        >
+          <ul>
+            {generos.map((genero) => {
+              return (
+                <li
+                  key={genero.genero_id}
+                  className={
+                    generoAtivo?.genero_id == genero.genero_id ? "active" : ""
+                  }
+                  onClick={() => {
+                    document.getElementById("searchInput").value = "";
+                    setGeneroAtivo(genero);
+                    filterFilms(genero);
+                  }}
+                >
+                  <a href="#">{genero.nome}</a>
+                </li>
+              );
+            })}
+          </ul>
+        </article>
+      )}
 
-      {livrosFiltrados.length == 0 ? (
+      {livrosFiltrados && livrosFiltrados.length == 0 ? (
         <h2 id="naoEncontrou">Não há resultados para sua pesquisa</h2>
       ) : (
         <article aria-labelledby="books" id="books" className="container">
           <ul>
-            {livrosFiltrados.map((livro) => (
-              <li key={livro.livro_id} onClick={() => setModalLivro(livro)}>
-                <a href="#">
-                  <img src={"/img/" + livro.caminhoLivro} />
-                  <h2>
-                    {livro.titulo.length > 21
-                      ? livro.titulo.substring(0, 21) + "..."
-                      : livro.titulo}
-                  </h2>
-                  <div>
-                    <p>{"R$ " + livro.preco.toFixed(2)}</p>
-                    <img src="/img/Star.svg" />
-                    <p id="avaliacao">
-                      {(
-                        livro.usuarios.reduce(
-                          (soma, usuario) => soma + usuario.nota,
-                          0
-                        ) / livro.usuarios.length
-                      ).toFixed(1)}
-                    </p>
-                  </div>
-                </a>
-              </li>
-            ))}
+            {livrosFiltrados &&
+              livrosFiltrados.map((livro) => (
+                <li key={livro.livro_id} onClick={() => setModalLivro(livro)}>
+                  <a href="#">
+                    <img src={livro.caminhoLivro} />
+                    <h2>
+                      {livro.titulo.length > 21
+                        ? livro.titulo.substring(0, 21) + "..."
+                        : livro.titulo}
+                    </h2>
+                    <div>
+                      <p>{"R$ " + livro.preco.toFixed(2)}</p>
+                      <img src="/img/Star.svg" />
+                      <p id="avaliacao">
+                        {(
+                          livro.usuarios.reduce(
+                            (soma, usuario) => soma + usuario.nota,
+                            0
+                          ) / livro.usuarios.length
+                        ).toFixed(1)}
+                      </p>
+                    </div>
+                  </a>
+                </li>
+              ))}
           </ul>
         </article>
       )}

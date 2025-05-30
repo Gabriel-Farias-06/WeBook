@@ -21,15 +21,18 @@ function Profile() {
   const [newBook, setNewBook] = useState(null);
   const [isbn, setIsbn] = useState("");
   const { usuario, loading, setUsuario } = useUsuario();
-  const [livrosUsuarioMock] = useLivrosUsuario();
-  const [generosMock] = useGeneros();
-  const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuarioMock);
+  const { generos, generosLoading } = useGeneros();
   const [alarmPassword, setAlarmPassword] = useState(false);
   const [generosOptions, setGenerosOptions] = useState([]);
 
+  if (loading || generosLoading) <Loading />;
+
+  const [livrosUsuario] = useLivrosUsuario();
+  const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuario);
+
   function filterFilms(termo = "") {
     setLivrosFiltrados(
-      livrosUsuarioMock.filter((livroFiltrado) =>
+      livrosUsuario.filter((livroFiltrado) =>
         livroFiltrado.titulo.toLowerCase().includes(termo)
       )
     );
@@ -59,10 +62,10 @@ function Profile() {
     if (usuario.senha != actualPassword) return;
     const nome = newUsername ? newUsername : usuario.nome;
     const senha = newPassword ? newPassword : usuario.senha;
-    let caminhoFoto;
+    let caminhoFoto = usuario.caminhoFoto;
     if (newProfilePhoto) {
-      const data = await handleUploadProfilePhoto();
-      caminhoFoto = data.data.url;
+      const resul = await handleUploadProfilePhoto();
+      caminhoFoto = resul.data.url;
     }
 
     const res = await fetch("https://webook-8d4j.onrender.com/api/usuario", {
@@ -85,7 +88,6 @@ function Profile() {
       caminhoFoto,
     });
     setModalAberto(null);
-    if (res.status == 200 || res.status == 201) console.log("Tá indo o método");
     return await res.json();
   }
 
@@ -163,7 +165,7 @@ function Profile() {
           preco: parseFloat(newBook.preco),
           classificacaoIndicativa: newBook.classificacaoIndicativa,
           caminhoLivro: data.data.url,
-          generos: generosOptions,
+          generos_id: generosOptions,
           autor_id,
           editora_id,
         }),
@@ -181,8 +183,6 @@ function Profile() {
       console.error("Erro de rede: ", e);
     }
   }
-
-  if (loading) <Loading />;
 
   if (!usuario) return <Navigate to="/" />;
 
@@ -509,18 +509,18 @@ function Profile() {
               />
               <label htmlFor="generos">Selecione os gêneros do livro</label>
               <div id="flex-generos">
-                {generosMock.map((genero) =>
-                  genero == generosMock[0] ? null : (
+                {generos.map((genero) =>
+                  genero == generos[0] ? null : (
                     <label className="generos" key={genero.genero_id}>
                       <input
                         type="checkbox"
                         value={genero.genero_id}
                         onChange={(e) => {
                           if (e.target.checked)
-                            setGenerosOptions(
+                            setGenerosOptions([
                               ...generosOptions,
-                              e.target.value
-                            );
+                              e.target.value,
+                            ]);
                           else
                             setGenerosOptions(
                               generosOptions.filter(
@@ -562,7 +562,7 @@ function Profile() {
               <p>Produtos adicionados recentemente</p>
               <div>
                 <ul>
-                  {livrosUsuarioMock.map((livro) => (
+                  {livrosUsuario.map((livro) => (
                     <li key={livro.livro_id}>
                       <img
                         src={"/img/" + livro.caminhoLivro}
@@ -591,7 +591,7 @@ function Profile() {
               <p>Notificações recebidas recentemente</p>
               <div>
                 <ul>
-                  {livrosUsuarioMock.map((livro) => (
+                  {livrosUsuario.map((livro) => (
                     <li key={livro.livro_id}>
                       <img
                         src={"/img/" + livro.caminhoLivro}
