@@ -100,7 +100,7 @@ function Profile() {
   }
 
   async function uploadNewBookPhoto() {
-    if (!newBookPhoto) return;
+    if (!newBookPhoto) return false;
 
     const formData = new FormData();
     formData.append("image", newBookPhoto);
@@ -121,6 +121,7 @@ function Profile() {
 
   async function createBook() {
     const data = await uploadNewBookPhoto();
+    if (!data) return;
 
     const nomeAutor = newBook.autor.trim().split(" ")[0];
     const sobrenomeAutor = newBook.autor.trim().split(" ").slice(1).join(" ");
@@ -136,7 +137,8 @@ function Profile() {
       },
     });
 
-    const autor_id = await newAutor.json().autor_id;
+    const autor = await newAutor.json();
+    const autor_id = autor.autor_id;
 
     const editoraResponse = await fetch(
       `https://webook-8d4j.onrender.com/api/editora`,
@@ -151,8 +153,8 @@ function Profile() {
       }
     );
 
-    const editora_id = await editoraResponse.json().editora_id;
-    console.log(newBook);
+    const editora = await editoraResponse.json();
+    const editora_id = editora.editora_id;
 
     try {
       const res = await fetch("https://webook-8d4j.onrender.com/api/livro", {
@@ -464,6 +466,7 @@ function Profile() {
                   Envie a foto da capa
                 </label>
                 {newBookPhoto && <p>{newBookPhoto.name}</p>}
+                {!newBookPhoto && <p>Escolha a imagem do livro</p>}
               </div>
               <input
                 type="file"
@@ -538,6 +541,7 @@ function Profile() {
                 type="submit"
                 onClick={async (e) => {
                   e.preventDefault();
+                  if (!newBookPhoto) return;
                   e.target.classList.add("inative");
                   e.target.innerText = "Carregando";
                   await createBook();

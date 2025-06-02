@@ -25,22 +25,22 @@ function Home() {
   const [livrosFiltrados, setLivrosFiltrados] = useState(null);
 
   useEffect(() => {
-    if (generos) setGeneroAtivo(generos.at(0));
+    if (generos) setGeneroAtivo({ nome: "Todos", genero_id: "unique" });
   }, [generos]);
 
   useEffect(() => {
     if (livros) setLivrosFiltrados(livros);
   }, [livros]);
 
-  function filterFilms(genero, termo = "") {
+  function filterFilms(termo = "") {
     console.log(livros);
-    if (genero.nome == "Todos")
+    if (generoAtivo.nome == "Todos")
       setLivrosFiltrados(
         livros.filter((livro) => livro.titulo.toLowerCase().includes(termo))
       );
     else {
       const filter = livros.filter((livro) =>
-        livro.generos.includes(genero.genero_id)
+        livro.generos.includes(generoAtivo.genero_id)
       );
 
       setLivrosFiltrados(
@@ -109,7 +109,7 @@ function Home() {
             onKeyUp={(e) => {
               if (e.key == "Enter") {
                 const termo = e.currentTarget.value.toLowerCase();
-                filterFilms(generoAtivo, termo);
+                filterFilms(termo);
               }
             }}
           />
@@ -120,7 +120,7 @@ function Home() {
               const termo = document
                 .getElementById("searchInput")
                 .value.toLowerCase();
-              filterFilms(generoAtivo, termo);
+              filterFilms(termo);
             }}
           />
         </div>
@@ -547,6 +547,17 @@ function Home() {
           className="container"
         >
           <ul>
+            <li
+              key="unique"
+              className={generoAtivo?.genero_id == "unique" ? "active" : ""}
+              onClick={() => {
+                document.getElementById("searchInput").value = "";
+                setGeneroAtivo({ nome: "Todos", genero_id: "unique" });
+                filterFilms();
+              }}
+            >
+              <a href="#">Todos</a>
+            </li>
             {generos.map((genero) => {
               return (
                 <li
@@ -557,7 +568,7 @@ function Home() {
                   onClick={() => {
                     document.getElementById("searchInput").value = "";
                     setGeneroAtivo(genero);
-                    filterFilms(genero);
+                    filterFilms();
                   }}
                 >
                   <a href="#">{genero.nome}</a>

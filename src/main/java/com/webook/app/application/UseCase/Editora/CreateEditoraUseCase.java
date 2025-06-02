@@ -1,7 +1,9 @@
 package com.webook.app.application.UseCase.Editora;
 
+import com.webook.app.application.DTOs.EditoraDTO;
 import com.webook.app.domain.Entity.Editora;
 import com.webook.app.domain.Interfaces.EditoraRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ public class CreateEditoraUseCase {
         this.editoraRepository = editoraRepository;
     }
 
+    @Transactional
     public ResponseEntity<Editora> execute(Editora editora) throws IllegalArgumentException {
         Optional<Editora> editoraOptional = editoraRepository.findByNome(editora.getNome());
         if(editoraOptional.isPresent())

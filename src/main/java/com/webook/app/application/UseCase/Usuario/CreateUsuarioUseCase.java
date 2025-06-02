@@ -4,6 +4,7 @@ import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Exceptions.EmailAlreadyExistsException;
 import com.webook.app.domain.Interfaces.UsuarioRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateUsuarioUseCase {
@@ -13,6 +14,7 @@ public class CreateUsuarioUseCase {
         this.usuarioRepository = usuarioRepository;
     }
 
+    @Transactional
     public Usuario execute(Usuario usuario) throws EmailAlreadyExistsException {
         if(usuarioRepository.findByEmail(usuario.getEmail()).isPresent())
             throw new EmailAlreadyExistsException();

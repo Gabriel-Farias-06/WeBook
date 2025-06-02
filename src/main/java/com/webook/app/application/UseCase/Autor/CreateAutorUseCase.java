@@ -1,8 +1,10 @@
 package com.webook.app.application.UseCase.Autor;
 
+import com.webook.app.application.DTOs.AutorDTO;
 import com.webook.app.application.DTOs.Response.AutorResponse;
 import com.webook.app.domain.Entity.Autor;
 import com.webook.app.domain.Interfaces.AutorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ public class CreateAutorUseCase {
         this.autorRepository = autorRepository;
     }
 
+    @Transactional
     public ResponseEntity<Autor> execute(Autor autor) {
         Optional<Autor> autorOptional =  autorRepository.findByNomeAndSobrenome(autor.getNome(), autor.getSobrenome());
         if(autorOptional.isPresent())
