@@ -23,26 +23,24 @@ public class UsuarioController {
     private final UpdateUsuarioUseCase updateUsuarioUseCase;
     private final DeleteUsuarioUseCase deleteUsuarioUseCase;
     private final FindByIdUsuarioUseCase findByIdUsuarioUseCase;
-    private final FindByEmailUsuarioUseCase findByEmailUsuarioUseCase;
     private final AddRelationshipUsuarioLivroUseCase addRelationshipUsuarioLivroUseCase;
     private final LoginUsuarioUseCase loginUsuarioUseCase;
 
-    public UsuarioController(CreateUsuarioUseCase createUsuarioUseCase, UpdateUsuarioUseCase updateUsuarioUseCase, DeleteUsuarioUseCase deleteUsuarioUseCase, FindByIdUsuarioUseCase findByIdUsuarioUseCase, FindByEmailUsuarioUseCase findByEmailUsuarioUseCase, AddRelationshipUsuarioLivroUseCase addRelationshipUsuarioLivroUseCase, LoginUsuarioUseCase loginUsuarioUseCase) {
+    public UsuarioController(CreateUsuarioUseCase createUsuarioUseCase, UpdateUsuarioUseCase updateUsuarioUseCase, DeleteUsuarioUseCase deleteUsuarioUseCase, FindByIdUsuarioUseCase findByIdUsuarioUseCase, AddRelationshipUsuarioLivroUseCase addRelationshipUsuarioLivroUseCase, LoginUsuarioUseCase loginUsuarioUseCase) {
         this.createUsuarioUseCase = createUsuarioUseCase;
         this.updateUsuarioUseCase = updateUsuarioUseCase;
         this.deleteUsuarioUseCase = deleteUsuarioUseCase;
         this.findByIdUsuarioUseCase = findByIdUsuarioUseCase;
-        this.findByEmailUsuarioUseCase = findByEmailUsuarioUseCase;
         this.addRelationshipUsuarioLivroUseCase = addRelationshipUsuarioLivroUseCase;
         this.loginUsuarioUseCase = loginUsuarioUseCase;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Usuario> create(@RequestBody UsuarioRequest usuarioRequest) throws EmailAlreadyExistsException, EmailInvalidoException, SenhaInvalidaException {
+    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioRequest usuarioRequest) throws EmailAlreadyExistsException, EmailInvalidoException, SenhaInvalidaException {
         Usuario usuario = new Usuario(usuarioRequest.getEmail(), usuarioRequest.getSenha());
         Usuario usuarioCriado = createUsuarioUseCase.execute(usuario);
         URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuarioCriado.getUsuario_id()).toUri();
-        return ResponseEntity.created(localizacao).body(usuarioCriado);
+        return ResponseEntity.created(localizacao).body(UsuarioDTO.toDTO(usuarioCriado));
     }
 
     @PostMapping("/login")

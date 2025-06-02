@@ -43,7 +43,7 @@ public class LivroController {
     }
 
     @PutMapping
-    public ResponseEntity<Livro> update(@RequestBody LivroRequest livroRequest) {
+    public ResponseEntity<LivroResponse> update(@RequestBody LivroRequest livroRequest) {
         return updateLivroUseCase.execute(livroRequest);
     }
 
@@ -54,17 +54,17 @@ public class LivroController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Livro> findById(@PathVariable UUID id) {
-        return ResponseEntity.of(findByIdLivroUseCase.execute(id));
+    public ResponseEntity<LivroResponse> findById(@PathVariable UUID id) {
+        return findByIdLivroUseCase.execute(id);
     }
 
     @GetMapping("/isbn/{isbn}")
-    public ResponseEntity<Livro> findByIsbn(@PathVariable String isbn) {
-        return ResponseEntity.of(findByIsbnLivroUseCase.execute(isbn));
+    public ResponseEntity<LivroResponse> findByIsbn(@PathVariable String isbn) {
+        return findByIsbnLivroUseCase.execute(isbn);
     }
 
     @GetMapping
-    public ResponseEntity<List<Livro>> findAll() {
+    public ResponseEntity<List<LivroResponse>> findAll() {
         return findAllLivroUseCase.execute();
     }
 }

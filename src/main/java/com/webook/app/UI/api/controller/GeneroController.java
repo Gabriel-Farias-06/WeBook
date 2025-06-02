@@ -34,7 +34,7 @@ public class GeneroController {
     }
 
     @PostMapping
-    public ResponseEntity<Genero> create(@RequestBody GeneroRequest generoRequest) {
+    public ResponseEntity<GeneroDTO> create(@RequestBody GeneroRequest generoRequest) {
         Genero genero = new Genero(generoRequest.getNome());
         return createGeneroUseCase.execute(genero);
     }

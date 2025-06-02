@@ -46,12 +46,14 @@ public class EditoraController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Optional<Editora>> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(findByIdEditoraUseCase.execute(id));
+    public ResponseEntity<EditoraDTO> findById(@PathVariable UUID id) {
+        Optional<Editora> editora = findByIdEditoraUseCase.execute(id);
+        return editora.map(value -> ResponseEntity.ok(EditoraDTO.toDTO(value))).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Optional<Editora>> findById(@PathVariable String name) {
-        return ResponseEntity.ok(findByNomeEditoraUseCase.execute(name));
+    public ResponseEntity<EditoraDTO> findById(@PathVariable String name) {
+        Optional<Editora> editora = findByNomeEditoraUseCase.execute(name);
+        return editora.map(value -> ResponseEntity.ok(EditoraDTO.toDTO(value))).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 }

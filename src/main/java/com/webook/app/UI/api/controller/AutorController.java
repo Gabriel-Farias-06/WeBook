@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -42,7 +43,8 @@ public class AutorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Autor> findById(@PathVariable UUID id) {
-            return ResponseEntity.of(findByIdAutorUseCase.execute(id));
+    public ResponseEntity<AutorDTO> findById(@PathVariable UUID id) {
+        Optional<Autor> autor = findByIdAutorUseCase.execute(id);
+        return autor.map(value -> ResponseEntity.ok(AutorDTO.toDTO(value))).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 }

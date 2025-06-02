@@ -1,5 +1,6 @@
 package com.webook.app.application.UseCase.Genero;
 
+import com.webook.app.application.DTOs.GeneroDTO;
 import com.webook.app.domain.Entity.Genero;
 import com.webook.app.domain.Interfaces.GeneroRepository;
 import jakarta.transaction.Transactional;
@@ -16,9 +17,9 @@ public class CreateGeneroUseCase {
     }
 
     @Transactional
-    public ResponseEntity<Genero> execute(Genero genero) {
+    public ResponseEntity<GeneroDTO> execute(Genero genero) {
         if(generoRepository.findByNome(genero.getNome()).isPresent())
             return ResponseEntity.status(400).body(null);
-        return ResponseEntity.status(200).body(generoRepository.create(genero));
+        return ResponseEntity.status(200).body(GeneroDTO.toDTO(generoRepository.create(genero)));
     }
 }

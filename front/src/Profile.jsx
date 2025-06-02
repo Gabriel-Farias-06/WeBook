@@ -162,21 +162,25 @@ function Profile() {
     console.log(autor_id);
     console.log(data.data.url);
 
+    const book = {
+      isbn: newBook.isbn,
+      titulo: newBook.titulo,
+      sinopse: newBook.sinopse,
+      numeroPaginas: parseInt(newBook.numeroPaginas),
+      preco: parseFloat(newBook.preco),
+      classificacaoIndicativa: newBook.classificacaoIndicativa,
+      caminhoLivro: data.data.url,
+      generos_id: generosOptions,
+      autor_id,
+      editora_id,
+    };
+
+    console.log(book);
+
     try {
       const res = await fetch("https://webook-8d4j.onrender.com/api/livro", {
         method: "POST",
-        body: JSON.stringify({
-          isbn: newBook.isbn,
-          titulo: newBook.titulo,
-          sinopse: newBook.sinopse,
-          numeroPaginas: parseInt(newBook.numeroPaginas),
-          preco: parseFloat(newBook.preco),
-          classificacaoIndicativa: newBook.classificacaoIndicativa,
-          caminhoLivro: data.data.url,
-          generos_id: generosOptions,
-          autor_id,
-          editora_id,
-        }),
+        body: JSON.stringify(book),
         headers: {
           "Content-Type": "application/json",
         },
@@ -482,12 +486,18 @@ function Profile() {
                 Preencha a classificação indicativa
               </label>
               <select
-                defaultValue=""
+                default=""
                 name="classificacaoIndicativa"
                 id="classificacao"
-                onChange={handleChangeNewBook}
+                onChange={(e) => {
+                  document
+                    .getElementById("defaultClassification")
+                    .setAttribute("disabled", true);
+                  handleChangeNewBook(e);
+                }}
                 required
               >
+                <option value="" id="defaultClassification"></option>
                 <option value="LIVRE">Livre</option>
                 <option value="DEZ">10+</option>
                 <option value="DOZE">12+</option>
