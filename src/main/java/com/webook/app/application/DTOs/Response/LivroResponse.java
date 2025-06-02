@@ -1,5 +1,7 @@
 package com.webook.app.application.DTOs.Response;
 
+import com.webook.app.application.DTOs.EditoraDTO;
+import com.webook.app.application.DTOs.GeneroDTO;
 import com.webook.app.domain.Entity.Autor;
 import com.webook.app.domain.Entity.Editora;
 import com.webook.app.domain.Entity.Genero;
@@ -18,9 +20,9 @@ public class LivroResponse {
     Double preco;
     String caminhoLivro;
     ClassificacaoIndicativa classificacaoIndicativa;
-    Autor autor;
-    Editora editora;
-    List<Genero> generos;
+    AutorResponse autor;
+    EditoraDTO editora;
+    List<GeneroDTO> generos;
 
     public LivroResponse(Livro livro) {
         this.livro_id = livro.getLivro_id();
@@ -31,9 +33,9 @@ public class LivroResponse {
         this.preco = livro.getPreco();
         this.caminhoLivro = livro.getCaminhoLivro();
         this.classificacaoIndicativa = livro.getClassificacaoIndicativa();
-        this.autor = livro.getAutor();
-        this.editora = livro.getEditora();
-        this.generos = livro.getGeneros();
+        this.autor = new AutorResponse(livro.getAutor().getNome(), livro.getAutor().getSobrenome());
+        this.editora = EditoraDTO.toDTO(livro.getEditora());
+        this.generos = livro.getGeneros().stream().map(GeneroDTO::toDTO).toList();
     }
 
     public LivroResponse() {}
@@ -94,27 +96,27 @@ public class LivroResponse {
         this.classificacaoIndicativa = classificacaoIndicativa;
     }
 
-    public Autor getAutor() {
+    public AutorResponse getAutor() {
         return autor;
     }
 
-    public void setAutor(Autor autor) {
+    public void setAutor(AutorResponse autor) {
         this.autor = autor;
     }
 
-    public Editora getEditora() {
+    public EditoraDTO getEditora() {
         return editora;
     }
 
-    public void setEditora(Editora editora) {
+    public void setEditora(EditoraDTO editora) {
         this.editora = editora;
     }
 
-    public List<Genero> getGeneros() {
+    public List<GeneroDTO> getGeneros() {
         return generos;
     }
 
-    public void setGeneros(List<Genero> generos) {
+    public void setGeneros(List<GeneroDTO> generos) {
         this.generos = generos;
     }
 }

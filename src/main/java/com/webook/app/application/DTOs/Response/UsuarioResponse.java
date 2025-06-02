@@ -1,8 +1,8 @@
 package com.webook.app.application.DTOs.Response;
 
 public class UsuarioResponse {
-    public String email;
-    public String senha;
+    private String email;
+    private String senha;
 
     public UsuarioResponse(String email, String senha) {
         this.email = email;
