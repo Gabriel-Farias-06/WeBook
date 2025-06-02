@@ -38,7 +38,7 @@ public class LivroController {
     }
 
     @PostMapping
-    public ResponseEntity<Livro> create(@RequestBody LivroRequest livroRequest) {
+    public ResponseEntity<LivroResponse> create(@RequestBody LivroRequest livroRequest) {
         return createLivroUseCase.execute(livroRequest);
     }
 
