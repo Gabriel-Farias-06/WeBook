@@ -48,22 +48,22 @@ public class GeneroController {
 
     @DeleteMapping("/{name}")
     public ResponseEntity<Boolean> delete(@PathVariable String name) {
-        deleteGeneroUseCase.execute(findByNomeGeneroUseCase.execute(name).get().getGenero_id());
+        deleteGeneroUseCase.execute(findByNomeGeneroUseCase.execute(name).getBody().getGenero_id());
         return ResponseEntity.ok(true);
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Optional<Genero>> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(findByIdGeneroUseCase.execute(id));
+    public ResponseEntity<GeneroDTO> findById(@PathVariable UUID id) {
+        return findByIdGeneroUseCase.execute(id);
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Optional<Genero>> findById(@PathVariable String name) {
-        return ResponseEntity.ok(findByNomeGeneroUseCase.execute(name));
+    public ResponseEntity<GeneroDTO> findById(@PathVariable String name) {
+        return findByNomeGeneroUseCase.execute(name);
     }
 
     @GetMapping
-    public ResponseEntity<List<Genero>> findAll() {
+    public ResponseEntity<List<GeneroDTO>> findAll() {
         return findAllGeneroUseCase.execute();
     }
 }
