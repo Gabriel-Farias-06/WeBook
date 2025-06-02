@@ -156,6 +156,12 @@ function Profile() {
     const editora = await editoraResponse.json();
     const editora_id = editora.editora_id;
 
+    console.log(newBook);
+    console.log(generosOptions);
+    console.log(editora_id);
+    console.log(autor_id);
+    console.log(data.data.url);
+
     try {
       const res = await fetch("https://webook-8d4j.onrender.com/api/livro", {
         method: "POST",
@@ -175,9 +181,6 @@ function Profile() {
           "Content-Type": "application/json",
         },
       });
-
-      console.log(newBook);
-      console.log(generosOptions);
 
       if (res.status == 201) setModalAberto("livro-criado");
       else setModalAberto("livro-error");

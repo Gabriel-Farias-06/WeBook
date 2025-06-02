@@ -7,8 +7,10 @@ import com.webook.app.domain.Entity.Livro;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
 
 import java.util.List;
+import java.util.UUID;
 
 public class LivroResponse {
+    UUID livro_id;
     String isbn;
     String titulo;
     String sinopse;
@@ -21,6 +23,7 @@ public class LivroResponse {
     List<Genero> generos;
 
     public LivroResponse(Livro livro) {
+        this.livro_id = livro.getLivro_id();
         this.isbn = livro.getIsbn();
         this.titulo = livro.getTitulo();
         this.sinopse = livro.getSinopse();
