@@ -31,7 +31,7 @@ public class CreateLivroUseCase {
     }
 
     @Transactional
-    public ResponseEntity<Livro> execute(LivroRequest livroRequest){
+    public ResponseEntity<LivroResponse> execute(LivroRequest livroRequest){
         Optional<Autor> autor = autorRepository.findById(livroRequest.getAutor_id());
         Optional<Editora> editora = editoraRepository.findById(livroRequest.getEditora_id());
         List<Genero> generos = livroRequest.getGeneros_id().stream().map(generoRepository::findById).filter(Optional::isPresent).map(Optional::get).toList();
@@ -44,6 +44,8 @@ public class CreateLivroUseCase {
         if(livroRepository.findByIsbn(livro.getIsbn()).isPresent())
             return ResponseEntity.status(400).body(null);
 
-        return ResponseEntity.status(201).body(livroRepository.create(livro));
+        LivroResponse livroResponse = new LivroResponse(livroRepository.create(livro));
+
+        return ResponseEntity.status(201).body(livroResponse);
     }
 }

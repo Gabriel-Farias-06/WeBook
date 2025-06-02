@@ -3,6 +3,7 @@ package com.webook.app.application.DTOs.Response;
 import com.webook.app.domain.Entity.Autor;
 import com.webook.app.domain.Entity.Editora;
 import com.webook.app.domain.Entity.Genero;
+import com.webook.app.domain.Entity.Livro;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
 
 import java.util.List;
@@ -19,17 +20,17 @@ public class LivroResponse {
     Editora editora;
     List<Genero> generos;
 
-    public LivroResponse(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Genero> generos) {
-        this.isbn = isbn;
-        this.titulo = titulo;
-        this.sinopse = sinopse;
-        this.numeroPaginas = numeroPaginas;
-        this.preco = preco;
-        this.caminhoLivro = caminhoLivro;
-        this.classificacaoIndicativa = classificacaoIndicativa;
-        this.autor = autor;
-        this.editora = editora;
-        this.generos = generos;
+    public LivroResponse(Livro livro) {
+        this.isbn = livro.getIsbn();
+        this.titulo = livro.getTitulo();
+        this.sinopse = livro.getSinopse();
+        this.numeroPaginas = livro.getNumeroPaginas();
+        this.preco = livro.getPreco();
+        this.caminhoLivro = livro.getCaminhoLivro();
+        this.classificacaoIndicativa = livro.getClassificacaoIndicativa();
+        this.autor = livro.getAutor();
+        this.editora = livro.getEditora();
+        this.generos = livro.getGeneros();
     }
 
     public LivroResponse() {}
