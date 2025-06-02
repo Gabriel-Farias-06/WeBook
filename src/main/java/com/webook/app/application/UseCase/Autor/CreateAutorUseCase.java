@@ -20,11 +20,11 @@ public class CreateAutorUseCase {
     }
 
     @Transactional
-    public ResponseEntity<Autor> execute(Autor autor) {
-        Optional<Autor> autorOptional =  autorRepository.findByNomeAndSobrenome(autor.getNome(), autor.getSobrenome());
-        if(autorOptional.isPresent())
-            return ResponseEntity.status(200).body(autorOptional.get());
+    public ResponseEntity<AutorDTO> execute(Autor autor) {
+        Optional<Autor> autorOptional = autorRepository.findByNomeAndSobrenome(autor.getNome(), autor.getSobrenome());
+        if (autorOptional.isPresent())
+            return ResponseEntity.status(200).body(AutorDTO.toDTO(autorOptional.get()));
         Autor newAutor = autorRepository.create(autor);
-        return ResponseEntity.status(201).body(newAutor);
+        return ResponseEntity.status(201).body(AutorDTO.toDTO(newAutor));
     }
 }

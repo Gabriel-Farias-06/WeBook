@@ -27,7 +27,7 @@ public class AutorController {
     }
 
     @PostMapping
-    public ResponseEntity<Autor> create(@RequestBody Autor autor) {
+    public ResponseEntity<AutorDTO> create(@RequestBody Autor autor) {
         return createAutorUseCase.execute(autor);
     }
 
