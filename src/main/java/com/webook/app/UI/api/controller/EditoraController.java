@@ -29,7 +29,7 @@ public class EditoraController {
     }
 
     @PostMapping
-    public ResponseEntity<Editora> create(@RequestBody Editora editora) {
+    public ResponseEntity<EditoraDTO> create(@RequestBody Editora editora) {
         return createEditoraUseCase.execute(editora);
     }
 

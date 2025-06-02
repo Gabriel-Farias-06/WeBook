@@ -1,5 +1,6 @@
 package com.webook.app.application.UseCase.Editora;
 
+import com.webook.app.application.DTOs.AutorDTO;
 import com.webook.app.application.DTOs.EditoraDTO;
 import com.webook.app.domain.Entity.Editora;
 import com.webook.app.domain.Interfaces.EditoraRepository;
@@ -18,11 +19,11 @@ public class CreateEditoraUseCase {
     }
 
     @Transactional
-    public ResponseEntity<Editora> execute(Editora editora) throws IllegalArgumentException {
+    public ResponseEntity<EditoraDTO> execute(Editora editora) throws IllegalArgumentException {
         Optional<Editora> editoraOptional = editoraRepository.findByNome(editora.getNome());
         if(editoraOptional.isPresent())
-            return ResponseEntity.status(200).body(editoraOptional.get());
+            return ResponseEntity.status(200).body(EditoraDTO.toDTO(editoraOptional.get()));
         Editora newEditora = editoraRepository.create(editora);
-        return ResponseEntity.status(201).body(newEditora);
+        return ResponseEntity.status(201).body(EditoraDTO.toDTO(newEditora));
     }
 }
