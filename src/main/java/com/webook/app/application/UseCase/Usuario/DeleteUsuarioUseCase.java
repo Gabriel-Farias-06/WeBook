@@ -1,6 +1,7 @@
 package com.webook.app.application.UseCase.Usuario;
 
 import com.webook.app.application.DTOs.Response.UsuarioResponse;
+import com.webook.app.domain.Entity.Livro;
 import com.webook.app.domain.Interfaces.UsuarioRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,11 @@ public class DeleteUsuarioUseCase {
         else if(!usuarioEncontrado.get().getSenha().equals(senha))
             return ResponseEntity.status(401).body(false);
 
-        usuarioEncontrado.get().setLivros(new ArrayList<>());
+        for (Livro livro: usuarioEncontrado.get().getLivros()) {
+            livro.getUsuarios().remove(usuarioEncontrado.get());
+        }
 
-        usuarioRepository.update(usuarioEncontrado.get());
+        usuarioEncontrado.get().setLivros(new ArrayList<>());
 
         usuarioRepository.delete(usuarioEncontrado.get().getUsuario_id());
 

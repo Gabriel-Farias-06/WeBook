@@ -3,6 +3,8 @@ package com.webook.app.domain.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +20,9 @@ public class Autor {
 
     @Column(nullable = false)
     private String sobrenome;
+
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Livro> livros = new ArrayList<>();
 
 
     public Autor(UUID autor_id, String nome, String sobrenome) {
@@ -52,5 +57,13 @@ public class Autor {
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
+    }
+
+    public List<Livro> getLivros() {
+        return livros;
+    }
+
+    public void setLivros(List<Livro> livros) {
+        this.livros = livros;
     }
 }

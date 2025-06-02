@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,6 +19,9 @@ public class Editora {
 
     @Column(nullable = false, unique = true)
     private String nome;
+
+    @OneToMany(mappedBy = "editora", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Livro> livros = new ArrayList<>();
 
     public Editora(UUID editora_id, String nome) {
         this.editora_id = editora_id;
@@ -41,5 +46,13 @@ public class Editora {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public List<Livro> getLivros() {
+        return livros;
+    }
+
+    public void setLivros(List<Livro> livros) {
+        this.livros = livros;
     }
 }

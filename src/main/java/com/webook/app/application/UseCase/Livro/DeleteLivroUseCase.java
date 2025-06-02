@@ -1,7 +1,9 @@
 package com.webook.app.application.UseCase.Livro;
 
 import com.webook.app.application.DTOs.Response.LivroResponse;
+import com.webook.app.domain.Entity.Genero;
 import com.webook.app.domain.Entity.Livro;
+import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Interfaces.LivroRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,12 +27,16 @@ public class DeleteLivroUseCase {
         if(livro.isEmpty())
             return ResponseEntity.status(404).body(false);
 
-        livro.get().setUsuarios(new ArrayList<>());
-        livro.get().setGeneros(new ArrayList<>());
-        livro.get().setAutor(null);
-        livro.get().setEditora(null);
+        for (Genero genero : livro.get().getGeneros()) {
+            genero.getLivros().remove(livro.get());
+        }
 
-        livroRepository.update(livro.get());
+        for (Usuario usuario : livro.get().getUsuarios()) {
+            usuario.getLivros().remove(livro.get());
+        }
+
+        livro.get().setGeneros(new ArrayList<>());
+        livro.get().setUsuarios(new ArrayList<>());
 
         livroRepository.delete(livro.get().getLivro_id());
 
