@@ -18,7 +18,6 @@ public class FindAllGeneroUseCase {
     }
 
     @Transactional
-<<<<<<< HEAD
     public ResponseEntity<List<GeneroDTO>> execute(){
         return  ResponseEntity.ok(generoRepository.findAll().stream().map(GeneroDTO::toDTO).toList());
     }
