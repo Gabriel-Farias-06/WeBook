@@ -55,7 +55,7 @@ function Home() {
   }, [notifications]);
 
   useEffect(() => {
-    if (usuario)
+    if (usuario && usuario.livros.length)
       addNotification(
         `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
         "/img/LivroIcone.png"

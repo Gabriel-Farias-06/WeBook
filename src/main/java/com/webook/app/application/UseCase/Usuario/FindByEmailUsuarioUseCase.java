@@ -23,7 +23,7 @@ public class FindByEmailUsuarioUseCase {
         Optional<Usuario> usuarioEncontrado = usuarioRepository.findByEmail(email);
         if(usuarioEncontrado.isEmpty())
             return ResponseEntity.status(404).body(null);
-        else if(passwordEncoder.matches(senha, usuarioEncontrado.get().getSenha()))
+        else if(!passwordEncoder.matches(senha, usuarioEncontrado.get().getSenha()))
             return ResponseEntity.status(401).body(null);
 
         return ResponseEntity.ok(UsuarioDTO.toDTO(usuarioEncontrado.get()));
