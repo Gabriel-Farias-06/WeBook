@@ -26,7 +26,7 @@ public class DeleteUsuarioUseCase {
         var usuarioEncontrado = usuarioRepository.findByEmail(email);
         if(usuarioEncontrado.isEmpty())
             return ResponseEntity.status(404).body(false);
-        else if(!usuarioEncontrado.get().getSenha().equals(passwordEncoder.encode(senha)))
+        else if(passwordEncoder.matches(senha, usuarioEncontrado.get().getSenha()))
             return ResponseEntity.status(401).body(false);
 
         for (Livro livro: usuarioEncontrado.get().getLivros()) {

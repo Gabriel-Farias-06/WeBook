@@ -28,7 +28,7 @@ public class LoginUsuarioUseCase {
         if (usuarioEncontrado.isEmpty())
             return ResponseEntity.status(404).body("Usuário não encontrado");
 
-        if (!usuarioEncontrado.get().getSenha().equals(passwordEncoder.encode(usuarioRequest.getSenha())))
+        if (!passwordEncoder.matches(usuarioRequest.getSenha(), usuarioEncontrado.get().getSenha()))
             return ResponseEntity.status(401).body("Senha incorreta");
 
         session.setAttribute("usuario", UsuarioResponse.toDTO(usuarioEncontrado.get()));
