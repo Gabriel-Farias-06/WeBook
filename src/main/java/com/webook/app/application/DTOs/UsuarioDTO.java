@@ -5,6 +5,7 @@ import com.webook.app.domain.Exceptions.EmailInvalidoException;
 import com.webook.app.domain.Exceptions.SenhaInvalidaException;
 import com.webook.app.domain.Validators.EmailValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public class UsuarioDTO {
     private List<LivroDTO> livros;
 
     public static UsuarioDTO toDTO(Usuario usuario) {
-        return new UsuarioDTO(usuario.getUsuario_id(), usuario.getNome(), usuario.getEmail(), usuario.getLivros().stream().map(LivroDTO::toDTO).toList());
+        return new UsuarioDTO(usuario.getUsuario_id(), usuario.getNome(), usuario.getEmail(), usuario.getLivros() == null ? new ArrayList<>() : usuario.getLivros().stream().map(LivroDTO::toDTO).toList());
     }
 
     public UsuarioDTO(UUID usuario_id, String nome, String email, List<LivroDTO> livros) {
