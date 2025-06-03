@@ -16,18 +16,21 @@ public class UsuarioResponse {
 
     private String senha;
 
+    private String caminhoFoto;
+
     private List<LivroDTO> livros;
 
     public static UsuarioResponse toDTO(Usuario usuario) {
-        return new UsuarioResponse(usuario.getUsuario_id(), usuario.getNome(), usuario.getEmail(), usuario.getSenha(), usuario.getLivros().stream().map(LivroDTO::toDTO).toList());
+        return new UsuarioResponse(usuario.getUsuario_id(), usuario.getNome(), usuario.getEmail(), usuario.getSenha(), usuario.getCaminhoFoto(), usuario.getLivros().stream().map(LivroDTO::toDTO).toList());
     }
 
-    public UsuarioResponse(UUID usuario_id, String nome, String email, String senha, List<LivroDTO> livros) {
+    public UsuarioResponse(UUID usuario_id, String nome, String email, String senha, String caminhoFoto, List<LivroDTO> livros) {
         this.usuario_id = usuario_id;
         this.nome = nome;
         this.livros = livros;
         this.email = email;
         this.senha = senha;
+        this.caminhoFoto = caminhoFoto;
     }
 
     public UUID getUsuario_id() {
@@ -60,6 +63,14 @@ public class UsuarioResponse {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getCaminhoFoto() {
+        return caminhoFoto;
+    }
+
+    public void setCaminhoFoto(String caminhoFoto) {
+        this.caminhoFoto = caminhoFoto;
     }
 
     public List<LivroDTO> getLivros() {
