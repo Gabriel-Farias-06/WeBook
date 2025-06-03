@@ -23,6 +23,8 @@ function Home() {
   const [modalLivro, setModalLivro] = useState(null);
   const [livro, setLivro] = useState(null);
   const [livrosFiltrados, setLivrosFiltrados] = useState(null);
+  const [carrinho, setCarrinho] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     if (generos) setGeneroAtivo({ nome: "Todos", genero_id: "unique" });
@@ -32,8 +34,51 @@ function Home() {
     if (livros) setLivrosFiltrados(livros);
   }, [livros]);
 
+  useEffect(() => {
+    const salvo = localStorage.getItem("carrinho");
+    if (salvo) {
+      setCarrinho(JSON.parse(salvo));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  }, [carrinho]);
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => setNotifications((prev) => prev.slice(1)),
+      60000 * 60
+    );
+
+    return () => clearTimeout(timeout);
+  }, [notifications]);
+
+  useEffect(() => {
+    if (usuario)
+      addNotification(
+        `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
+        "/img/LivroIcone.png"
+      );
+  }, [usuario]);
+
+  useEffect(() => {
+    if (livros)
+      addNotification(
+        "Livros novos chegando na área, venha conferir os lançamentos da semana.",
+        "/img/NewIcone.png"
+      );
+  }, [livros]);
+
+  function addNotification(message, typePhoto) {
+    setNotifications((prev) => {
+      if (prev.some((notification) => notification.message === message))
+        return prev;
+      return [...prev, { message_id: Date.now(), message, typePhoto }];
+    });
+  }
+
   function filterFilms(termo = "") {
-    console.log(livros);
     if (generoAtivo.nome == "Todos")
       setLivrosFiltrados(
         livros.filter((livro) => livro.titulo.toLowerCase().includes(termo))
@@ -345,22 +390,44 @@ function Home() {
             }}
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <p>Produtos adicionados recentemente</p>
+              <p>
+                {carrinho.length
+                  ? "Produtos adicionados recentemente"
+                  : "O carrinho está vazio"}
+              </p>
               <div>
-                <ul>
-                  {livros.map((livro) => (
-                    <li key={livro.livro_id}>
-                      <img
-                        src={"/img/" + livro.caminhoLivro}
-                        alt={"Capa do livro " + livro.titulo}
-                      />
-                      <p id="titulo">{livro.titulo}</p>
-                      <p>{livro.preco.toFixed(2)}</p>
-                    </li>
-                  ))}
-                </ul>
+                {carrinho.length != 0 && (
+                  <ul>
+                    {carrinho.map((livro) => (
+                      <li key={livro.livro_id}>
+                        <img
+                          src={livro.caminhoLivro}
+                          alt={"Capa do livro " + livro.titulo}
+                        />
+                        <p id="titulo">{livro.titulo}</p>
+                        <p>{livro.preco.toFixed(2)}</p>
+                        <img
+                          id="remove"
+                          src="/img/Remove.svg"
+                          alt="Remover livro"
+                          onClick={() => {
+                            setCarrinho((prev) =>
+                              prev.filter(
+                                (item) => item.livro_id != livro.livro_id
+                              )
+                            );
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              <p id="more">Ver tudo</p>
+              <a id="more">
+                {carrinho.length
+                  ? "Comprar agora"
+                  : "Adicione produtos ao carrinho"}
+              </a>
             </div>
           </div>
         )}
@@ -374,22 +441,21 @@ function Home() {
             }}
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <p>Notificações recebidas recentemente</p>
+              <p>
+                {notifications.length
+                  ? "Notificações recebidas recentemente"
+                  : "Você não tem notificações recentes"}
+              </p>
               <div>
                 <ul>
-                  {livros.map((livro) => (
-                    <li key={livro.livro_id}>
-                      <img
-                        src={"/img/" + livro.caminhoLivro}
-                        alt={"Capa do livro " + livro.titulo}
-                      />
-                      <p id="titulo">{livro.titulo}</p>
-                      <p>{livro.sinopse}</p>
+                  {notifications.map((message) => (
+                    <li key={message.message_id}>
+                      <img src={message.typePhoto} alt="Ícone de mensagem" />
+                      <p>{message.message}</p>
                     </li>
                   ))}
                 </ul>
               </div>
-              <p id="more">Ver tudo</p>
             </div>
           </div>
         )}
@@ -507,7 +573,32 @@ function Home() {
                     </ul>
                   </li>
                 </ul>
-                <a href="#">Adicionar ao carrinho</a>
+                <a
+                  className={
+                    carrinho.some(
+                      (item) => item.livro_id === modalLivro.livro_id
+                    )
+                      ? "inative"
+                      : ""
+                  }
+                  href="#"
+                  onClick={() => {
+                    if (
+                      !carrinho.some(
+                        (item) => item.livro_id === modalLivro.livro_id
+                      )
+                    )
+                      setCarrinho((prev) => {
+                        return [...prev, modalLivro];
+                      });
+                  }}
+                >
+                  {carrinho.some(
+                    (item) => item.livro_id === modalLivro.livro_id
+                  )
+                    ? "Produto no carrinho"
+                    : "Adicionar ao carrinho"}
+                </a>
                 <a
                   href="#"
                   onClick={async (e) => {

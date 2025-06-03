@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUsuario } from "./providers/UsuarioProvider";
-import { useLivrosUsuario } from "./providers/LivrosUsuarioProvider";
 import "../public/css/profile.css";
 import Footer from "./components/Footer";
 import Links from "./components/Links";
@@ -24,11 +23,31 @@ function Profile() {
   const { generos, generosLoading } = useGeneros();
   const [alarmPassword, setAlarmPassword] = useState(false);
   const [generosOptions, setGenerosOptions] = useState([]);
+  const [carrinho, setCarrinho] = useState([]);
+
+  useEffect(() => {
+    const salvo = localStorage.getItem("carrinho");
+    if (salvo) {
+      setCarrinho(JSON.parse(salvo));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  }, [carrinho]);
 
   if (loading || generosLoading) <Loading />;
 
-  const [livrosUsuario] = useLivrosUsuario();
+  const [livrosUsuario, setLivrosUsuario] = useState([]);
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuario);
+
+  useEffect(() => {
+    if (usuario) setLivrosUsuario(usuario.livros);
+  }, [usuario]);
+
+  useEffect(() => {
+    if (livrosUsuario) setLivrosFiltrados(livrosUsuario);
+  }, [livrosUsuario]);
 
   function filterFilms(termo = "") {
     setLivrosFiltrados(
@@ -156,12 +175,6 @@ function Profile() {
     const editora = await editoraResponse.json();
     const editora_id = editora.editora_id;
 
-    console.log(newBook);
-    console.log(generosOptions);
-    console.log(editora_id);
-    console.log(autor_id);
-    console.log(data.data.url);
-
     const book = {
       isbn: newBook.isbn,
       titulo: newBook.titulo,
@@ -174,8 +187,6 @@ function Profile() {
       autor_id,
       editora_id,
     };
-
-    console.log(book);
 
     try {
       const res = await fetch("https://webook-8d4j.onrender.com/api/livro", {
@@ -576,22 +587,42 @@ function Profile() {
             }}
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <p>Produtos adicionados recentemente</p>
+              <p>
+                {carrinho.length
+                  ? "Produtos adicionados recentemente"
+                  : "O carrinho está vazio"}
+              </p>
               <div>
-                <ul>
-                  {livrosUsuario.map((livro) => (
-                    <li key={livro.livro_id}>
-                      <img
-                        src={"/img/" + livro.caminhoLivro}
-                        alt={"Capa do livro " + livro.titulo}
-                      />
-                      <p id="titulo">{livro.titulo}</p>
-                      <p>{livro.preco.toFixed(2)}</p>
-                    </li>
-                  ))}
-                </ul>
+                {carrinho.length != 0 && (
+                  <ul>
+                    {carrinho.map((livro) => (
+                      <li key={livro.livro_id}>
+                        <img
+                          src={livro.caminhoLivro}
+                          alt={"Capa do livro " + livro.titulo}
+                        />
+                        <p id="titulo">{livro.titulo}</p>
+                        <p>{livro.preco.toFixed(2)}</p>
+                        <img
+                          id="remove"
+                          src="/img/Remove.svg"
+                          alt="Remover livro"
+                          onClick={() => {
+                            setCarrinho((prev) =>
+                              prev.filter(
+                                (item) => item.livro_id != livro.livro_id
+                              )
+                            );
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              <p id="more">Ver tudo</p>
+              <p id="more">
+                {carrinho.length ? "Ver tudo" : "Adicione produtos ao carrinho"}
+              </p>
             </div>
           </div>
         )}
@@ -648,15 +679,19 @@ function Profile() {
       <article aria-labelledby="livros" id="booksUser">
         <h2>Minha Coleção</h2>
         <p>Livros comprados</p>
-        <ul>
-          {livrosFiltrados.map((livro) => (
-            <li key={livro.livro_id}>
-              <a href="#">
-                <img src={"/img/" + livro.caminhoLivro} />
-              </a>
-            </li>
-          ))}
-        </ul>
+        {livrosFiltrados.length ? (
+          <ul>
+            {livrosFiltrados.map((livro) => (
+              <li key={livro.livro_id}>
+                <a href="#">
+                  <img src={livro.caminhoLivro} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <h2 id="no-books">Seus livros estarão disponíveis aqui</h2>
+        )}
       </article>
 
       <Links />

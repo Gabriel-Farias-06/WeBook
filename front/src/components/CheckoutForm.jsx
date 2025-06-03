@@ -35,7 +35,7 @@ export default function CheckoutForm({ idLivro, idUsuario, setModalAberto }) {
         }
       );
 
-      setModalAberto("sucesso");
+      setModalAberto("sucess");
     }
 
     setCarregando(false);

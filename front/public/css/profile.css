@@ -194,3 +194,8 @@ input[type="file"] {
   border: 2px solid var(--r12);
   border-radius: 2px;
 }
+
+#no-books {
+  text-align: center;
+  padding-bottom: 80px;
+}

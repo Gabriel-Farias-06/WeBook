@@ -7,6 +7,7 @@ import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Interfaces.UsuarioRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,9 +15,11 @@ import java.util.Optional;
 @Service
 public class LoginUsuarioUseCase {
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public LoginUsuarioUseCase(UsuarioRepository usuarioRepository) {
+    public LoginUsuarioUseCase(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ResponseEntity<?> execute(UsuarioRequest usuarioRequest, HttpSession session) {
@@ -25,7 +28,7 @@ public class LoginUsuarioUseCase {
         if (usuarioEncontrado.isEmpty())
             return ResponseEntity.status(404).body("Usuário não encontrado");
 
-        if (!usuarioEncontrado.get().getSenha().equals(usuarioRequest.getSenha()))
+        if (!usuarioEncontrado.get().getSenha().equals(passwordEncoder.encode(usuarioRequest.getSenha())))
             return ResponseEntity.status(401).body("Senha incorreta");
 
         session.setAttribute("usuario", UsuarioResponse.toDTO(usuarioEncontrado.get()));
