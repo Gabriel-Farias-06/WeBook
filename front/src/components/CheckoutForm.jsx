@@ -45,7 +45,20 @@ export default function CheckoutForm({ aoClique, idLivro, idUsuario }) {
 
   return (
     <div className="modal" onClick={aoClique}>
-      <form onSubmit={handleSubmit} className="modal-content">
+      <form
+        onSubmit={async (e) => {
+          const response = await fetch(
+            `https://webook-8d4j.onrender.com/api/usuario/${idUsuario}/livros/${idLivro}`,
+            {
+              method: "POST",
+            }
+          );
+
+          console.log(await response.json());
+          handleSubmit(e);
+        }}
+        className="modal-content"
+      >
         <PaymentElement />
         <button type="submit" disabled={!stripe || carregando}>
           {carregando ? "Processando..." : "Pagar"}

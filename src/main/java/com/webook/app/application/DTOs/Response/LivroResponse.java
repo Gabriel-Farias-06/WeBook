@@ -40,6 +40,14 @@ public class LivroResponse {
 
     public LivroResponse() {}
 
+    public UUID getLivro_id() {
+        return livro_id;
+    }
+
+    public void setLivro_id(UUID livro_id) {
+        this.livro_id = livro_id;
+    }
+
     public String getIsbn() {
         return isbn;
     }

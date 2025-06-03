@@ -1,7 +1,6 @@
 package com.webook.app.application.UseCase.Livro;
 
 import com.webook.app.application.DTOs.Response.LivroResponse;
-import com.webook.app.domain.Entity.Livro;
 import com.webook.app.domain.Interfaces.LivroRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;

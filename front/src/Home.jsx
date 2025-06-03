@@ -174,7 +174,7 @@ function Home() {
             id="login-bg"
             onClick={() => setModalAberto(null)}
           >
-            <div
+            <form
               className="modal-content"
               id="login"
               onClick={(e) => e.stopPropagation()}
@@ -230,7 +230,7 @@ function Home() {
                 Ao continuar você afirma que é maior de idade e que leu e aceita
                 os termos da nossa <a href="/terms">política de privacidade.</a>
               </p>
-            </div>
+            </form>
           </div>
         )}
         {modalAberto == "cadastro" && (
@@ -406,30 +406,35 @@ function Home() {
                 id="close"
                 onClick={() => setModalLivro(null)}
               />
-              <img src={"/img/" + modalLivro.caminhoLivro} />
+              <img src={modalLivro.caminhoLivro} />
               <div id="livro-meio">
                 <h2>{modalLivro.titulo}</h2>
                 <div id="first-avaliation">
                   <p>
-                    {(
-                      modalLivro.usuarios.reduce(
-                        (soma, usuario) => soma + usuario.nota,
-                        0
-                      ) / modalLivro.usuarios.length
-                    ).toFixed(1)}
+                    {modalLivro.usuarios
+                      ? (
+                          modalLivro.usuarios.reduce(
+                            (soma, usuario) => soma + usuario.nota,
+                            0
+                          ) / modalLivro.usuarios.length
+                        ).toFixed(1)
+                      : "0.0"}
                   </p>
                   <img src="/img/Stars.svg" alt="Avaliações" />
-                  <p>{modalLivro.usuarios.length} avaliações</p>
+                  <p>
+                    {modalLivro.usuarios ? modalLivro.usuarios.length : "0"}{" "}
+                    avaliações
+                  </p>
                 </div>
                 <p id="sinopse">{modalLivro.sinopse}</p>
                 <ul id="extra-info">
                   <li>
-                    <p>Idade de leitura</p>
-                    <p>{modalLivro.idadeLeitura}+</p>
+                    <p>Idade para Leitura</p>
+                    <p>{modalLivro.classificacaoIndicativa}</p>
                   </li>
                   <li>
                     <p>Nº de páginas</p>
-                    <p>{modalLivro.numeroPaginas}+</p>
+                    <p>{modalLivro.numeroPaginas}</p>
                   </li>
                   <li>
                     <p>Autor</p>
@@ -442,14 +447,19 @@ function Home() {
                 </ul>
                 <div id="avaliacao">
                   <div>
-                    <h3>Avaliações ({modalLivro.usuarios.length})</h3>
+                    <h3>
+                      Avaliações (
+                      {modalLivro.usuarios ? modalLivro.usuarios.length : "0"})
+                    </h3>
                     <p>
-                      {(
-                        modalLivro.usuarios.reduce(
-                          (soma, usuario) => soma + usuario.nota,
-                          0
-                        ) / modalLivro.usuarios.length
-                      ).toFixed(1)}
+                      {modalLivro.usuarios
+                        ? (
+                            modalLivro.usuarios.reduce(
+                              (soma, usuario) => soma + usuario.nota,
+                              0
+                            ) / modalLivro.usuarios.length
+                          ).toFixed(1)
+                        : "0.0"}
                     </p>
                     <img src="/img/Stars.svg" alt="Avaliações" />
                   </div>
@@ -459,11 +469,11 @@ function Home() {
                         <p>{i} estrelas</p>
                         <img src="/img/Bar.svg" alt="Barra de estrelas" />
                         <p>
-                          {
-                            modalLivro.usuarios.filter(
-                              (usuario) => usuario.nota === i
-                            ).length
-                          }
+                          {modalLivro.usuarios
+                            ? modalLivro.usuarios.filter(
+                                (usuario) => usuario.nota === i
+                              ).length
+                            : "0"}
                         </p>
                       </li>
                     ))}
@@ -503,6 +513,11 @@ function Home() {
                   href="#"
                   onClick={async (e) => {
                     e.preventDefault();
+                    if (!usuario) {
+                      setModalLivro(null);
+                      setModalAberto("login");
+                      return;
+                    }
                     e.target.classList.add("inative");
                     e.currentTarget.innerText = "Carregando";
                     const response = await fetch(
@@ -516,8 +531,8 @@ function Home() {
 
                     const data = await response.json();
                     setClientSecret(data.clientSecret);
-                    setModalAberto("payment");
                     setLivro(modalLivro.livro_id);
+                    setModalAberto("payment");
                     setModalLivro(null);
                     e.target.classList.remove("inative");
                   }}
@@ -598,12 +613,14 @@ function Home() {
                       <p>{"R$ " + livro.preco.toFixed(2)}</p>
                       <img src="/img/Star.svg" />
                       <p id="avaliacao">
-                        {(
-                          livro.usuarios.reduce(
-                            (soma, usuario) => soma + usuario.nota,
-                            0
-                          ) / livro.usuarios.length
-                        ).toFixed(1)}
+                        {livro.usuarios
+                          ? (
+                              livro.usuarios.reduce(
+                                (soma, usuario) => soma + usuario.nota,
+                                0
+                              ) / livro.usuarios.length
+                            ).toFixed(1)
+                          : "0.0"}
                       </p>
                     </div>
                   </a>
