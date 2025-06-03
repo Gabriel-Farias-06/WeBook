@@ -6,11 +6,10 @@ import {
 import "../../public/css/payments.css";
 import { useState } from "react";
 
-export default function CheckoutForm({ aoClique, idLivro, idUsuario }) {
+export default function CheckoutForm({ idLivro, idUsuario, setModalAberto }) {
   const stripe = useStripe();
   const elements = useElements();
   const [carregando, setCarregando] = useState(false);
-  const [mensagem, setMensagem] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,43 +26,28 @@ export default function CheckoutForm({ aoClique, idLivro, idUsuario }) {
     });
 
     if (error) {
-      setMensagem(error.message);
+      setModalAberto("payment-error");
     } else if (paymentIntent.status === "succeeded") {
-      setMensagem("Pagamento confirmado com sucesso!");
-      const response = await fetch(
+      await fetch(
         `https://webook-8d4j.onrender.com/api/usuario/${idUsuario}/livros/${idLivro}`,
         {
           method: "POST",
         }
       );
 
-      console.log(await response.json());
+      setModalAberto("sucesso");
     }
 
     setCarregando(false);
   };
 
   return (
-    <div className="modal" onClick={aoClique}>
-      <form
-        onSubmit={async (e) => {
-          const response = await fetch(
-            `https://webook-8d4j.onrender.com/api/usuario/${idUsuario}/livros/${idLivro}`,
-            {
-              method: "POST",
-            }
-          );
-
-          console.log(await response.json());
-          handleSubmit(e);
-        }}
-        className="modal-content"
-      >
+    <div className="modal">
+      <form onSubmit={handleSubmit} className="modal-content">
         <PaymentElement />
         <button type="submit" disabled={!stripe || carregando}>
           {carregando ? "Processando..." : "Pagar"}
         </button>
-        {mensagem && <div>{mensagem}</div>}
       </form>
     </div>
   );

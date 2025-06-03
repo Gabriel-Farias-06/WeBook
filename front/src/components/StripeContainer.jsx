@@ -8,9 +8,9 @@ const stripePromise = loadStripe(
 
 export default function StripeContainer({
   clientSecret,
-  aoClique,
   idLivro,
   idUsuario,
+  setModalAberto,
 }) {
   const options = {
     clientSecret,
@@ -19,9 +19,9 @@ export default function StripeContainer({
   return (
     <Elements stripe={stripePromise} options={options}>
       <CheckoutForm
-        aoClique={aoClique}
         idLivro={idLivro}
         idUsuario={idUsuario}
+        setModalAberto={setModalAberto}
       />
     </Elements>
   );

@@ -1,6 +1,7 @@
 package com.webook.app.application.UseCase.Usuario;
 
 import com.webook.app.application.DTOs.Request.UsuarioRequest;
+import com.webook.app.application.DTOs.Response.UsuarioResponse;
 import com.webook.app.application.DTOs.UsuarioDTO;
 import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Interfaces.UsuarioRepository;
@@ -27,8 +28,8 @@ public class LoginUsuarioUseCase {
         if (!usuarioEncontrado.get().getSenha().equals(usuarioRequest.getSenha()))
             return ResponseEntity.status(401).body("Senha incorreta");
 
-        session.setAttribute("usuario", usuarioEncontrado);
+        session.setAttribute("usuario", new UsuarioResponse(usuarioEncontrado.get().getEmail(), usuarioEncontrado.get().getSenha()));
 
-        return ResponseEntity.ok(usuarioEncontrado);
+        return ResponseEntity.ok(new UsuarioResponse(usuarioEncontrado.get().getEmail(), usuarioEncontrado.get().getSenha()));
     } 
 }

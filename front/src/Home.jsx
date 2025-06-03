@@ -310,7 +310,6 @@ function Home() {
         {modalAberto == "login-failed" && (
           <div
             className="modal modal-error"
-            id="cadastro-bg"
             onClick={() => setModalAberto(null)}
           >
             <div
@@ -548,10 +547,39 @@ function Home() {
         {modalAberto == "payment" && clientSecret && (
           <StripeContainer
             clientSecret={clientSecret}
-            aoClique={() => setModalAberto(null)}
             idLivro={livro}
             idUsuario={usuario.usuario_id}
+            setModalAberto={setModalAberto}
           />
+        )}
+
+        {modalAberto == "payment-error" && (
+          <div
+            className="modal modal-error"
+            onClick={() => setModalAberto(null)}
+          >
+            <div
+              className="modal-content"
+              id="cadastro"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span></span>
+              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+              <img
+                src="/img/LoginError.png"
+                alt="Ícone de erro no login"
+                id="img-error"
+              />
+              <h3>Ops! Algo deu errado</h3>
+              <p>
+                Ocorreu um erro ao realizar tentar realizar o pagamento,
+                verifique seus dados e se não houver resolução, nos contate.
+              </p>
+              <a href="#" onClick={() => setModalAberto("payment")}>
+                Voltar
+              </a>
+            </div>
+          </div>
         )}
       </header>
 
