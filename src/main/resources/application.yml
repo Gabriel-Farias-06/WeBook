@@ -19,3 +19,6 @@ spring:
 server:
   port: ${PORT:8080}
   shutdown: graceful
+
+jwt:
+  secret: k7+4RgpxeqpjP9LIEZVhVtDdF0U5v4Qn3d9U7HfNQ18=
