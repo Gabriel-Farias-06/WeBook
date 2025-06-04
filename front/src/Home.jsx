@@ -8,6 +8,7 @@ import Links from "./components/Links";
 import Loading from "./components/Loading";
 import { useUsuario } from "./providers/UsuarioProvider";
 import StripeContainer from "./components/StripeContainer";
+import { jwtDecode } from "jwt-decode";
 
 function Home() {
   const { generos, generosLoading } = useGeneros();
@@ -96,6 +97,31 @@ function Home() {
     }
   }
 
+  async function getUser(token) {
+    console.log(token);
+    const decoded = jwtDecode(token);
+    console.log(decoded);
+    if (decoded.exp && decoded.exp < Date.now() / 1000) {
+      setUsuario(null);
+      return;
+    }
+
+    const response = await fetch(
+      `https://webook-8d4j.onrender.com/api/usuario/${decoded.usuario_id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data) setUsuario({ ...data, token });
+    localStorage.setItem("token", token);
+  }
+
   async function createUser() {
     const response = await fetch(
       `https://webook-8d4j.onrender.com/api/usuario/signup`,
@@ -114,7 +140,8 @@ function Home() {
 
     if (response.status != 201) return setModalAberto("create-user-failed");
     setModalAberto(null);
-    setUsuario(await response.json());
+    const json = await response.json();
+    getUser(json.token);
   }
 
   async function loginUser() {
@@ -134,7 +161,8 @@ function Home() {
     );
     if (login.status != 200) return setModalAberto("login-failed");
     setModalAberto(null);
-    setUsuario(await login.json());
+    const json = await login.json();
+    getUser(json.token);
   }
 
   if (loading || generosLoading || livrosLoading) return <Loading />;
@@ -614,7 +642,10 @@ function Home() {
                       "https://webook-8d4j.onrender.com/api/pagamento",
                       {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${usuario.token}`,
+                        },
                         body: JSON.stringify(modalLivro.preco * 100),
                       }
                     );
