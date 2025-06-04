@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import jwtDecode from "jwt-decode";
 
 const UsuarioContext = createContext();
 
@@ -7,47 +8,30 @@ export function UsuarioProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const salvo = localStorage.getItem("usuario");
-    if (!salvo) {
-      setLoading(false);
-      return;
-    }
-    const data = JSON.parse(salvo);
-
-    async function loginUser() {
+    const token = localStorage.getItem("token");
+    if (token) {
       try {
-        const login = await fetch(
-          `https://webook-8d4j.onrender.com/api/usuario/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              email: data.email,
-              senha: data.senha,
-            }),
-          }
-        );
-        if (login.status === 200) {
-          const user = await login.json();
-          setUsuario(user);
+        const decoded = jwtDecode(token);
+
+        if (decoded.exp && decoded.exp < Date.now() / 1000) {
+          localStorage.removeItem("token");
+          return;
         }
+
+        setUsuario({ ...decoded, token });
       } catch (err) {
         console.error("Erro ao logar:", err);
-      } finally {
-        setLoading(false);
+        localStorage.removeItem("token");
       }
     }
 
-    loginUser();
+    setLoading(false);
   }, []);
 
   useEffect(() => {
-    if (usuario) {
-      localStorage.setItem("usuario", JSON.stringify(usuario));
-    } else {
-      localStorage.removeItem("usuario");
-    }
+    if (!usuario) {
+      localStorage.removeItem("token");
+    } else localStorage.setItem("token", usuario.token);
   }, [usuario]);
 
   return (

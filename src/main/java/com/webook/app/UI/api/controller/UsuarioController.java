@@ -36,11 +36,9 @@ public class UsuarioController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioRequest usuarioRequest) throws EmailAlreadyExistsException, EmailInvalidoException, SenhaInvalidaException {
+    public ResponseEntity<?> create(@RequestBody UsuarioRequest usuarioRequest) throws EmailAlreadyExistsException, EmailInvalidoException, SenhaInvalidaException {
         Usuario usuario = new Usuario(usuarioRequest.getEmail(), usuarioRequest.getSenha());
-        Usuario usuarioCriado = createUsuarioUseCase.execute(usuario);
-        URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(usuarioCriado.getUsuario_id()).toUri();
-        return ResponseEntity.created(localizacao).body(UsuarioDTO.toDTO(usuarioCriado));
+        return createUsuarioUseCase.execute(usuario);
     }
 
     @PostMapping("/login")
@@ -48,17 +46,8 @@ public class UsuarioController {
         return loginUsuarioUseCase.execute(usuarioRequest);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Boolean> logout(HttpSession session) {
-        if(session.getAttribute("usuario") == null)
-            return ResponseEntity.status(404).body(false);
-
-        session.invalidate();
-        return ResponseEntity.ok(true);
-    }
-
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody UsuarioUpdateRequest usuarioUpdateRequest) throws EmailInvalidoException, SenhaInvalidaException {
+    public ResponseEntity<Boolean> update(@RequestBody UsuarioUpdateRequest usuarioUpdateRequest) {
         updateUsuarioUseCase.execute(usuarioUpdateRequest);
         return ResponseEntity.ok(true);
     }
@@ -70,8 +59,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> findById(@PathVariable UUID id) throws EmailInvalidoException, SenhaInvalidaException {
-        return ResponseEntity.ok(UsuarioDTO.toDTO(findByIdUsuarioUseCase.execute(id).get()));
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
+        return findByIdUsuarioUseCase.execute(id);
     }
 
     @PostMapping("/{usuario_id}/livros/{livro_id}")

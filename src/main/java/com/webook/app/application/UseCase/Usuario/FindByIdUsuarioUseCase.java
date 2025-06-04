@@ -2,6 +2,7 @@ package com.webook.app.application.UseCase.Usuario;
 
 import com.webook.app.domain.Entity.Usuario;
 import com.webook.app.domain.Interfaces.UsuarioRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,10 +16,10 @@ public class FindByIdUsuarioUseCase {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Optional<Usuario> execute(UUID id) throws IllegalArgumentException {
+    public ResponseEntity<?> execute(UUID id) throws IllegalArgumentException {
         var usuarioEncontrado = usuarioRepository.findById(id);
         if(usuarioEncontrado.isEmpty())
-            throw new IllegalArgumentException("Usuário não encontrado / não cadastrado");
-        return usuarioEncontrado;
+            return ResponseEntity.status(404).body("ID não encontrado no servidor");
+        return ResponseEntity.ok(usuarioEncontrado.get());
     }
 }
