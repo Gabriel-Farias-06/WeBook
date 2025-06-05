@@ -47,9 +47,8 @@ public class UsuarioController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody UsuarioUpdateRequest usuarioUpdateRequest) {
-        updateUsuarioUseCase.execute(usuarioUpdateRequest);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<?> update(@RequestBody UsuarioUpdateRequest usuarioUpdateRequest) {
+        return updateUsuarioUseCase.execute(usuarioUpdateRequest);
     }
 
     @DeleteMapping("/{email}/{senha}")

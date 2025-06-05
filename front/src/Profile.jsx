@@ -24,6 +24,7 @@ function Profile() {
   const [alarmPassword, setAlarmPassword] = useState(false);
   const [generosOptions, setGenerosOptions] = useState([]);
   const [carrinho, setCarrinho] = useState([]);
+  const [correctPassword, setCorrectPassword] = useState(true);
 
   useEffect(() => {
     const salvo = localStorage.getItem("carrinho");
@@ -78,7 +79,9 @@ function Profile() {
   }
 
   async function updateUser() {
-    if (usuario.senha != actualPassword) return;
+    console.log(usuario.senha);
+    console.log(actualPassword);
+
     const nome = newUsername ? newUsername : usuario.nome;
     const senha = newPassword ? newPassword : usuario.senha;
     let caminhoFoto = usuario.caminhoFoto;
@@ -92,22 +95,32 @@ function Profile() {
       body: JSON.stringify({
         nome,
         email: usuario.email,
-        senha,
+        senhaAtual: actualPassword,
+        senhaNova: senha,
         caminhoFoto,
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${usuario.token}`,
       },
     });
+
+    if (res.status == 401) {
+      setCorrectPassword(false);
+      return;
+    }
+
+    setCorrectPassword(true);
 
     setUsuario({
       nome,
       email: usuario.email,
       senha,
       caminhoFoto,
+      token: usuario.token,
     });
+
     setModalAberto(null);
-    return await res.json();
   }
 
   function handleChangeNewBook(e) {
@@ -194,6 +207,7 @@ function Profile() {
         body: JSON.stringify(book),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${usuario.token}`,
         },
       });
 
@@ -290,6 +304,7 @@ function Profile() {
                   setActualPassword(e.target.value);
                 }}
               />
+              {!correctPassword && <p>Senha Incorreta</p>}
               <div id="checkbox-wrapper">
                 <input
                   type="checkbox"

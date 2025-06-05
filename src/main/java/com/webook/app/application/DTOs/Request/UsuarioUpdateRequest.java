@@ -3,7 +3,8 @@ package com.webook.app.application.DTOs.Request;
 public class UsuarioUpdateRequest {
     public String nome;
     public String email;
-    public String senha;
+    public String senhaAtual;
+    public String senhaNova;
     public String caminhoFoto;
 
     public String getNome() {
@@ -18,12 +19,23 @@ public class UsuarioUpdateRequest {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getSenha() {
-        return senha;
+
+    public String getSenhaAtual() {
+        return senhaAtual;
     }
-    public void setSenha(String senha) {
-        this.senha = senha;
+
+    public void setSenhaAtual(String senhaAtual) {
+        this.senhaAtual = senhaAtual;
     }
+
+    public String getSenhaNova() {
+        return senhaNova;
+    }
+
+    public void setSenhaNova(String senhaNova) {
+        this.senhaNova = senhaNova;
+    }
+
     public String getCaminhoFoto() {
         return caminhoFoto;
     }
