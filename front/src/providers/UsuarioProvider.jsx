@@ -46,7 +46,7 @@ export function UsuarioProvider({ children }) {
 
   useEffect(() => {
     if (!usuario) localStorage.removeItem("token");
-  });
+  }, [usuario]);
 
   return (
     <UsuarioContext.Provider value={{ usuario, setUsuario, loading }}>

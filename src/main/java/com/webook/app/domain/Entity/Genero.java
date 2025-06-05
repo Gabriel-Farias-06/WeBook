@@ -19,8 +19,7 @@ public class Genero {
     @Column(nullable = false, unique = true)
     private String nome;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-    @JoinTable(name = "genero_livro", joinColumns = @JoinColumn(name = "genero_id"), inverseJoinColumns = @JoinColumn(name = "livro_id"))
+    @ManyToMany(mappedBy = "generos", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private List<Livro> livros;
 
     public Genero(UUID genero_id, String nome, List<Livro> livros) {

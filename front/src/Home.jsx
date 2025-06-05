@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../public/css/style.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGeneros } from "./providers/GenerosProvider";
 import { useLivros } from "./providers/LivrosProvider";
 import Footer from "./components/Footer";
@@ -11,6 +11,7 @@ import StripeContainer from "./components/StripeContainer";
 import { jwtDecode } from "jwt-decode";
 
 function Home() {
+  const navigate = useNavigate();
   const { generos, generosLoading } = useGeneros();
   const { livros, livrosLoading } = useLivros();
   const { usuario, setUsuario, loading } = useUsuario();
@@ -79,28 +80,33 @@ function Home() {
     });
   }
 
-  function filterFilms(termo = "") {
-    if (generoAtivo.nome == "Todos")
-      setLivrosFiltrados(
-        livros.filter((livro) => livro.titulo.toLowerCase().includes(termo))
-      );
-    else {
-      const filter = livros.filter((livro) =>
-        livro.generos.includes(generoAtivo.genero_id)
-      );
+  function filterBooks(termo = "") {
+    const termoLower = termo.toLowerCase();
 
-      setLivrosFiltrados(
-        filter.filter((livroFiltrado) =>
-          livroFiltrado.titulo.toLowerCase().includes(termo)
-        )
-      );
-    }
+    console.log("Todos:");
+    console.log(livros);
+
+    const filtrados = livros.filter((livro) => {
+      console.log(livro);
+      const porGenero =
+        generoAtivo.nome === "Todos" ||
+        livro.generos.some(
+          (genero) => genero.genero_id == generoAtivo.genero_id
+        );
+
+      const porTitulo = livro.titulo.toLowerCase().includes(termoLower);
+
+      return porGenero && porTitulo;
+    });
+
+    console.log("Filtrados:");
+    console.log(filtrados);
+
+    setLivrosFiltrados(filtrados);
   }
 
   async function getUser(token) {
-    console.log(token);
     const decoded = jwtDecode(token);
-    console.log(decoded);
     if (decoded.exp && decoded.exp < Date.now() / 1000) {
       setUsuario(null);
       return;
@@ -138,10 +144,11 @@ function Home() {
       }
     );
 
-    if (response.status != 201) return setModalAberto("create-user-failed");
+    if (response.status != 200) return setModalAberto("create-user-failed");
     setModalAberto(null);
     const json = await response.json();
-    getUser(json.token);
+    await getUser(json.token);
+    navigate("/profile");
   }
 
   async function loginUser() {
@@ -162,7 +169,8 @@ function Home() {
     if (login.status != 200) return setModalAberto("login-failed");
     setModalAberto(null);
     const json = await login.json();
-    getUser(json.token);
+    await getUser(json.token);
+    navigate("/profile");
   }
 
   if (loading || generosLoading || livrosLoading) return <Loading />;
@@ -170,9 +178,9 @@ function Home() {
   return (
     <div>
       <header className="container" id="header">
-        <a href="/" className="logo">
+        <Link to="/" className="logo">
           <span>W</span>e<span>B</span>ook
-        </a>
+        </Link>
         <div id="input-wrapper">
           <input
             type="text"
@@ -182,7 +190,7 @@ function Home() {
             onKeyUp={(e) => {
               if (e.key == "Enter") {
                 const termo = e.currentTarget.value.toLowerCase();
-                filterFilms(termo);
+                filterBooks(termo);
               }
             }}
           />
@@ -193,7 +201,7 @@ function Home() {
               const termo = document
                 .getElementById("searchInput")
                 .value.toLowerCase();
-              filterFilms(termo);
+              filterBooks(termo);
             }}
           />
         </div>
@@ -718,10 +726,10 @@ function Home() {
               onClick={() => {
                 document.getElementById("searchInput").value = "";
                 setGeneroAtivo({ nome: "Todos", genero_id: "unique" });
-                filterFilms();
+                filterBooks();
               }}
             >
-              <a href="#">Todos</a>
+              Todos
             </li>
             {generos.map((genero) => {
               return (
@@ -733,10 +741,10 @@ function Home() {
                   onClick={() => {
                     document.getElementById("searchInput").value = "";
                     setGeneroAtivo(genero);
-                    filterFilms();
+                    filterBooks();
                   }}
                 >
-                  <a href="#">{genero.nome}</a>
+                  {genero.nome}
                 </li>
               );
             })}
@@ -744,13 +752,13 @@ function Home() {
         </article>
       )}
 
-      {livrosFiltrados && livrosFiltrados.length == 0 ? (
-        <h2 id="naoEncontrou">Não há resultados para sua pesquisa</h2>
-      ) : (
-        <article aria-labelledby="books" id="books" className="container">
-          <ul>
-            {livrosFiltrados &&
-              livrosFiltrados.map((livro) => (
+      {livrosFiltrados &&
+        (livrosFiltrados.length == 0 ? (
+          <h2 id="naoEncontrou">Não há resultados para sua pesquisa</h2>
+        ) : (
+          <article aria-labelledby="books" id="books" className="container">
+            <ul>
+              {livrosFiltrados.map((livro) => (
                 <li key={livro.livro_id} onClick={() => setModalLivro(livro)}>
                   <a href="#">
                     <img src={livro.caminhoLivro} />
@@ -776,9 +784,9 @@ function Home() {
                   </a>
                 </li>
               ))}
-          </ul>
-        </article>
-      )}
+            </ul>
+          </article>
+        ))}
 
       <Links />
 

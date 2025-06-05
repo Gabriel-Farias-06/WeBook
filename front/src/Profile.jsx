@@ -6,9 +6,9 @@ import Links from "./components/Links";
 import Loading from "./components/Loading";
 import { useGeneros } from "./providers/GenerosProvider";
 import { IMaskInput } from "react-imask";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useLivros } from "./providers/UsuarioProvider";
+import { useLivros } from "./providers/LivrosProvider";
 
 function Profile() {
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ function Profile() {
   const [generosOptions, setGenerosOptions] = useState([]);
   const [carrinho, setCarrinho] = useState([]);
   const [correctPassword, setCorrectPassword] = useState(true);
+  const [deletePassword, setDeletePassword] = useState(null);
   const { livros, livrosLoading } = useLivros();
 
   useEffect(() => {
@@ -99,7 +100,7 @@ function Profile() {
   async function deleteProfile() {
     try {
       const res = await fetch(
-        `https://webook-8d4j.onrender.com/api/usuario/${usuario.email}/${usuario.senha}`,
+        `https://webook-8d4j.onrender.com/api/usuario/${usuario.email}/${deletePassword}`,
         {
           method: "DELETE",
           headers: {
@@ -108,8 +109,11 @@ function Profile() {
         }
       );
 
-      if (res.status == 200) navigate("/");
-      else setModalAberto("error-delete");
+      if (res.status == 200) {
+        setUsuario(null);
+        navigate("/");
+      } else setModalAberto("error-delete");
+      console.log(res);
     } catch (e) {
       console.error("Erro ao deletar o perfil: " + e);
     }
@@ -136,9 +140,6 @@ function Profile() {
   }
 
   async function updateUser() {
-    console.log(usuario.senha);
-    console.log(actualPassword);
-
     const nome = newUsername ? newUsername : usuario.nome;
     const senha = newPassword ? newPassword : usuario.senha;
     let caminhoFoto = usuario.caminhoFoto;
@@ -174,6 +175,7 @@ function Profile() {
       email: usuario.email,
       senha,
       caminhoFoto,
+      livros: usuario.livros,
       token: usuario.token,
     });
 
@@ -223,6 +225,7 @@ function Profile() {
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${usuario.token}`,
       },
     });
 
@@ -238,6 +241,7 @@ function Profile() {
         }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${usuario.token}`,
         },
       }
     );
@@ -268,8 +272,9 @@ function Profile() {
         },
       });
 
-      if (res.status == 201) setModalAberto("livro-criado");
-      else setModalAberto("livro-error");
+      if (res.status == 201) {
+        setModalAberto("livro-criado");
+      } else setModalAberto("livro-error");
     } catch (e) {
       console.error("Erro de rede: ", e);
     }
@@ -280,9 +285,9 @@ function Profile() {
   return (
     <div>
       <header className="container" id="header">
-        <a href="/" className="logo">
+        <Link to="/" className="logo">
           <span>W</span>e<span>B</span>ook
-        </a>
+        </Link>
         <div id="input-wrapper">
           <input
             type="text"
@@ -485,7 +490,12 @@ function Profile() {
                 <img src="/img/Logout.svg" alt="" />
                 <p>excluir conta </p>
               </span>
-              <span>
+              <span
+                onClick={() => {
+                  setUsuario(null);
+                  navigate("/");
+                }}
+              >
                 <img src="/img/Logout.svg" alt="" />
                 <p>sair </p>
               </span>
@@ -493,34 +503,42 @@ function Profile() {
           </div>
         )}
         {modalAberto == "excluir-conta" && (
-          <div
-            className="modal modal-error"
-            onClick={() => setModalAberto(null)}
-          >
+          <div className="modal" onClick={() => setModalAberto(null)}>
             <div
               className="modal-content"
-              id="cadastro"
               onClick={(e) => e.stopPropagation()}
+              id="delete-account"
             >
               <span></span>
               <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <h3>Tem certeza que deseja excluir seu perfil?</h3>
               <p>
                 Todos os dados da sua conta serão perdidos, inclusive seus
-                livros comprados.
+                livros comprados, marcados como favorito e não serão
+                reembolsados.
               </p>
-              <a href="#" onClick={() => setModalAberto(null)}>
-                Voltar
-              </a>
-              <a
-                href="#"
-                onClick={() => {
-                  deleteProfile();
-                  setModalAberto(null);
+              <label htmlFor="passwordDelete">Insira sua senha</label>
+              <input
+                type="password"
+                name="passwordDelete"
+                onChange={(e) => {
+                  setDeletePassword(e.target.value);
                 }}
-              >
-                Excluir perfil
-              </a>
+              />
+              <div>
+                <a href="#" onClick={() => setModalAberto(null)}>
+                  Voltar
+                </a>
+                <a
+                  href="#"
+                  onClick={() => {
+                    deleteProfile();
+                    setModalAberto(null);
+                  }}
+                >
+                  Excluir perfil
+                </a>
+              </div>
             </div>
           </div>
         )}
