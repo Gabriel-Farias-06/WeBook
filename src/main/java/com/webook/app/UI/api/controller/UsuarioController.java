@@ -53,8 +53,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{email}/{senha}")
     public ResponseEntity<Boolean> delete(@PathVariable String email, @PathVariable String senha) {
-        deleteUsuarioUseCase.execute(email, senha);
-        return ResponseEntity.ok(true);
+        return deleteUsuarioUseCase.execute(email, senha);
     }
 
     @GetMapping("/{id}")
