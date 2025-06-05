@@ -27,9 +27,9 @@ public class UpdateUsuarioUseCase {
         if(!passwordEncoder.matches(usuarioUpdateRequest.getSenhaAtual(), usuario.get().getSenha()))
             return ResponseEntity.status(401).body("Senha incorreta");
         if(usuarioUpdateRequest.getNome() != null)
-            usuario.get().setNome(passwordEncoder.encode(usuarioUpdateRequest.getNome()));
+            usuario.get().setNome(usuarioUpdateRequest.getNome());
         if(usuarioUpdateRequest.getSenhaNova() != null)
-            usuario.get().setSenha(usuarioUpdateRequest.getSenhaNova());
+            usuario.get().setSenha(passwordEncoder.encode(usuarioUpdateRequest.getSenhaNova()));
         if(usuarioUpdateRequest.getCaminhoFoto() != null)
             usuario.get().setCaminhoFoto(usuarioUpdateRequest.getCaminhoFoto());
 

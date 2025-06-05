@@ -7,8 +7,12 @@ import Loading from "./components/Loading";
 import { useGeneros } from "./providers/GenerosProvider";
 import { IMaskInput } from "react-imask";
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useLivros } from "./providers/UsuarioProvider";
 
 function Profile() {
+  const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
   const [modalAberto, setModalAberto] = useState(null);
   const [changePassword, setChangePassword] = useState(false);
   const [changeUsername, setChangeUsername] = useState(false);
@@ -25,6 +29,7 @@ function Profile() {
   const [generosOptions, setGenerosOptions] = useState([]);
   const [carrinho, setCarrinho] = useState([]);
   const [correctPassword, setCorrectPassword] = useState(true);
+  const { livros, livrosLoading } = useLivros();
 
   useEffect(() => {
     const salvo = localStorage.getItem("carrinho");
@@ -37,7 +42,7 @@ function Profile() {
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
   }, [carrinho]);
 
-  if (loading || generosLoading) <Loading />;
+  if (loading || generosLoading || livrosLoading) <Loading />;
 
   const [livrosUsuario, setLivrosUsuario] = useState([]);
   const [livrosFiltrados, setLivrosFiltrados] = useState(livrosUsuario);
@@ -50,12 +55,64 @@ function Profile() {
     if (livrosUsuario) setLivrosFiltrados(livrosUsuario);
   }, [livrosUsuario]);
 
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => setNotifications((prev) => prev.slice(1)),
+      60000 * 60
+    );
+
+    return () => clearTimeout(timeout);
+  }, [notifications]);
+
+  useEffect(() => {
+    if (usuario && usuario.livros.length)
+      addNotification(
+        `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
+        "/img/LivroIcone.png"
+      );
+  }, [usuario]);
+
+  useEffect(() => {
+    if (livros)
+      addNotification(
+        "Livros novos chegando na área, venha conferir os lançamentos da semana.",
+        "/img/NewIcone.png"
+      );
+  }, [livros]);
+
+  function addNotification(message, typePhoto) {
+    setNotifications((prev) => {
+      if (prev.some((notification) => notification.message === message))
+        return prev;
+      return [...prev, { message_id: Date.now(), message, typePhoto }];
+    });
+  }
+
   function filterFilms(termo = "") {
     setLivrosFiltrados(
       livrosUsuario.filter((livroFiltrado) =>
         livroFiltrado.titulo.toLowerCase().includes(termo)
       )
     );
+  }
+
+  async function deleteProfile() {
+    try {
+      const res = await fetch(
+        `https://webook-8d4j.onrender.com/api/usuario/${usuario.email}/${usuario.senha}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${usuario.token}`,
+          },
+        }
+      );
+
+      if (res.status == 200) navigate("/");
+      else setModalAberto("error-delete");
+    } catch (e) {
+      console.error("Erro ao deletar o perfil: " + e);
+    }
   }
 
   async function handleUploadProfilePhoto() {
@@ -420,10 +477,50 @@ function Profile() {
                 <img src="/img/ConfigBook.svg" alt="" />
                 <p>adicionar livro</p>
               </span>
+              <span
+                onClick={() => {
+                  setModalAberto("excluir-conta");
+                }}
+              >
+                <img src="/img/Logout.svg" alt="" />
+                <p>excluir conta </p>
+              </span>
               <span>
                 <img src="/img/Logout.svg" alt="" />
                 <p>sair </p>
               </span>
+            </div>
+          </div>
+        )}
+        {modalAberto == "excluir-conta" && (
+          <div
+            className="modal modal-error"
+            onClick={() => setModalAberto(null)}
+          >
+            <div
+              className="modal-content"
+              id="cadastro"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span></span>
+              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+              <h3>Tem certeza que deseja excluir seu perfil?</h3>
+              <p>
+                Todos os dados da sua conta serão perdidos, inclusive seus
+                livros comprados.
+              </p>
+              <a href="#" onClick={() => setModalAberto(null)}>
+                Voltar
+              </a>
+              <a
+                href="#"
+                onClick={() => {
+                  deleteProfile();
+                  setModalAberto(null);
+                }}
+              >
+                Excluir perfil
+              </a>
             </div>
           </div>
         )}
@@ -635,9 +732,11 @@ function Profile() {
                   </ul>
                 )}
               </div>
-              <p id="more">
-                {carrinho.length ? "Ver tudo" : "Adicione produtos ao carrinho"}
-              </p>
+              <a id="more">
+                {carrinho.length
+                  ? "Comprar agora"
+                  : "Adicione produtos ao carrinho"}
+              </a>
             </div>
           </div>
         )}
@@ -651,22 +750,21 @@ function Profile() {
             }}
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <p>Notificações recebidas recentemente</p>
+              <p>
+                {notifications.length
+                  ? "Notificações recebidas recentemente"
+                  : "Você não tem notificações recentes"}
+              </p>
               <div>
                 <ul>
-                  {livrosUsuario.map((livro) => (
-                    <li key={livro.livro_id}>
-                      <img
-                        src={"/img/" + livro.caminhoLivro}
-                        alt={"Capa do livro " + livro.titulo}
-                      />
-                      <p id="titulo">{livro.titulo}</p>
-                      <p>{livro.sinopse}</p>
+                  {notifications.map((message) => (
+                    <li key={message.message_id}>
+                      <img src={message.typePhoto} alt="Ícone de mensagem" />
+                      <p>{message.message}</p>
                     </li>
                   ))}
                 </ul>
               </div>
-              <p id="more">Ver tudo</p>
             </div>
           </div>
         )}
