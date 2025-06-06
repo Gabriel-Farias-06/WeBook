@@ -11,6 +11,8 @@ export default function CheckoutForm({
   idUsuario,
   setModalAberto,
   token,
+  setUpdateLivro,
+  setUpdateUsuario,
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -45,6 +47,8 @@ export default function CheckoutForm({
         );
       });
 
+      setUpdateLivro(true);
+      setUpdateUsuario(true);
       localStorage.setItem("carrinho", []);
       setModalAberto("sucess");
     }

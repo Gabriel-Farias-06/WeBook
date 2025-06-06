@@ -111,7 +111,7 @@ function Profile() {
       );
 
       if (res.status == 200) {
-        setUpdateLivro(null);
+        setUpdateLivro(true);
       } else setModalAberto("error-delete");
     } catch (e) {
       console.error("Erro ao deletar o perfil: " + e);

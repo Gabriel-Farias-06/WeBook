@@ -13,8 +13,8 @@ import { jwtDecode } from "jwt-decode";
 function Home() {
   const navigate = useNavigate();
   const { generos, generosLoading } = useGeneros();
-  const { livros, livrosLoading } = useLivros();
-  const { usuario, setUsuario, loading } = useUsuario();
+  const { livros, livrosLoading, setUpdateLivro } = useLivros();
+  const { usuario, setUsuario, loading, setUpdateUsuario } = useUsuario();
 
   const [generoAtivo, setGeneroAtivo] = useState();
   const [email, setEmail] = useState("");
@@ -99,7 +99,6 @@ function Home() {
 
   async function getUser(token) {
     const decoded = jwtDecode(token);
-    console.log(token);
     if (decoded.exp && decoded.exp < Date.now() / 1000) {
       setUsuario(null);
       return;
@@ -715,6 +714,8 @@ function Home() {
             idUsuario={usuario.usuario_id}
             setModalAberto={setModalAberto}
             token={usuario.token}
+            setUpdateLivro={setUpdateLivro}
+            setUpdateUsuario={setUpdateUsuario}
           />
         )}
 

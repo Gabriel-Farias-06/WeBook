@@ -17,17 +17,20 @@ public class UsuarioDTO {
 
     private String email;
 
+    private String caminhoFoto;
+
     private List<LivroDTO> livros;
 
     public static UsuarioDTO toDTO(Usuario usuario) {
-        return new UsuarioDTO(usuario.getUsuario_id(), usuario.getNome(), usuario.getEmail(), usuario.getLivros() == null ? new ArrayList<>() : usuario.getLivros().stream().map(LivroDTO::toDTO).toList());
+        return new UsuarioDTO(usuario.getUsuario_id(), usuario.getNome(), usuario.getEmail(), usuario.getCaminhoFoto(), usuario.getLivros() == null ? new ArrayList<>() : usuario.getLivros().stream().map(LivroDTO::toDTO).toList());
     }
 
-    public UsuarioDTO(UUID usuario_id, String nome, String email, List<LivroDTO> livros) {
+    public UsuarioDTO(UUID usuario_id, String nome, String email, String caminhoFoto, List<LivroDTO> livros) {
         this.usuario_id = usuario_id;
         this.nome = nome;
-        this.livros = livros;
         this.email = email;
+        this.caminhoFoto = caminhoFoto;
+        this.livros = livros;
     }
 
     public UUID getUsuario_id() {
@@ -52,6 +55,14 @@ public class UsuarioDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCaminhoFoto() {
+        return caminhoFoto;
+    }
+
+    public void setCaminhoFoto(String caminhoFoto) {
+        this.caminhoFoto = caminhoFoto;
     }
 
     public List<LivroDTO> getLivros() {

@@ -11,6 +11,8 @@ export default function StripeContainer({
   idLivros,
   idUsuario,
   setModalAberto,
+  setUpdateLivro,
+  setUpdateUsuario,
   token,
 }) {
   const options = {
@@ -24,6 +26,8 @@ export default function StripeContainer({
         idLivros={idLivros}
         idUsuario={idUsuario}
         setModalAberto={setModalAberto}
+        setUpdateLivro={setUpdateLivro}
+        setUpdateUsuario={setUpdateUsuario}
       />
     </Elements>
   );

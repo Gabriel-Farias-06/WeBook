@@ -8,15 +8,15 @@ import { UsuarioProvider } from "./providers/UsuarioProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <GenerosProvider>
-    <LivrosProvider>
-      <UsuarioProvider>
+    <UsuarioProvider>
+      <LivrosProvider>
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </Router>
-      </UsuarioProvider>
-    </LivrosProvider>
+      </LivrosProvider>
+    </UsuarioProvider>
   </GenerosProvider>
 );
