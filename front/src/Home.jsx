@@ -82,12 +82,7 @@ function Home() {
 
   function filterBooks(termo = "") {
     const termoLower = termo.toLowerCase();
-
-    console.log("Todos:");
-    console.log(livros);
-
     const filtrados = livros.filter((livro) => {
-      console.log(livro);
       const porGenero =
         generoAtivo.nome === "Todos" ||
         livro.generos.some(
@@ -99,15 +94,12 @@ function Home() {
       return porGenero && porTitulo;
     });
 
-    console.log("Filtrados:");
-    console.log(filtrados);
-
     setLivrosFiltrados(filtrados);
   }
 
   async function getUser(token) {
     const decoded = jwtDecode(token);
-    console.log(token);
+
     if (decoded.exp && decoded.exp < Date.now() / 1000) {
       setUsuario(null);
       return;
@@ -124,7 +116,6 @@ function Home() {
     );
 
     if (!response.ok) {
-      console.log("OH MDS");
       return;
     }
 

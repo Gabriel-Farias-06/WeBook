@@ -113,7 +113,6 @@ function Profile() {
       if (res.status == 200) {
         setUpdateLivro(null);
       } else setModalAberto("error-delete");
-      console.log(res);
     } catch (e) {
       console.error("Erro ao deletar o perfil: " + e);
     }
@@ -135,7 +134,6 @@ function Profile() {
         setUsuario(null);
         navigate("/");
       } else setModalAberto("error-delete");
-      console.log(res);
     } catch (e) {
       console.error("Erro ao deletar o perfil: " + e);
     }

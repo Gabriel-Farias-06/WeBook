@@ -34,7 +34,6 @@ export default function CheckoutForm({
       setModalAberto("payment-error");
     } else if (paymentIntent.status === "succeeded") {
       idLivros.forEach(async (livroId) => {
-        console.log(token);
         await fetch(
           `https://webook-8d4j.onrender.com/api/usuario/${idUsuario}/livros/${livroId}`,
           {
