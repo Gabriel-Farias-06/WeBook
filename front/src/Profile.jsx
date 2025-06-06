@@ -30,7 +30,8 @@ function Profile() {
   const [carrinho, setCarrinho] = useState([]);
   const [correctPassword, setCorrectPassword] = useState(true);
   const [deletePassword, setDeletePassword] = useState(null);
-  const { livros, livrosLoading } = useLivros();
+  const [deleteIsbn, setDeleteIsbn] = useState(null);
+  const { livros, livrosLoading, setUpdateLivro } = useLivros();
 
   useEffect(() => {
     const salvo = localStorage.getItem("carrinho");
@@ -97,6 +98,27 @@ function Profile() {
     );
   }
 
+  async function deleteBook() {
+    try {
+      const res = await fetch(
+        `https://webook-8d4j.onrender.com/api/livro/${deleteIsbn}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${usuario.token}`,
+          },
+        }
+      );
+
+      if (res.status == 200) {
+        setUpdateLivro(null);
+      } else setModalAberto("error-delete");
+      console.log(res);
+    } catch (e) {
+      console.error("Erro ao deletar o perfil: " + e);
+    }
+  }
+
   async function deleteProfile() {
     try {
       const res = await fetch(
@@ -141,7 +163,7 @@ function Profile() {
 
   async function updateUser() {
     const nome = newUsername ? newUsername : usuario.nome;
-    const senha = newPassword ? newPassword : usuario.senha;
+    const senha = newPassword ? newPassword : null;
     let caminhoFoto = usuario.caminhoFoto;
     if (newProfilePhoto) {
       const resul = await handleUploadProfilePhoto();
@@ -273,6 +295,7 @@ function Profile() {
       });
 
       if (res.status == 201) {
+        setUpdateLivro(true);
         setModalAberto("livro-criado");
       } else setModalAberto("livro-error");
     } catch (e) {
@@ -488,6 +511,14 @@ function Profile() {
                 }}
               >
                 <img src="/img/Logout.svg" alt="" />
+                <p>excluir livro </p>
+              </span>
+              <span
+                onClick={() => {
+                  setModalAberto("excluir-livro");
+                }}
+              >
+                <img src="/img/Logout.svg" alt="" />
                 <p>excluir conta </p>
               </span>
               <span
@@ -505,9 +536,8 @@ function Profile() {
         {modalAberto == "excluir-conta" && (
           <div className="modal" onClick={() => setModalAberto(null)}>
             <div
-              className="modal-content"
+              className="modal-content delete"
               onClick={(e) => e.stopPropagation()}
-              id="delete-account"
             >
               <span></span>
               <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
@@ -537,6 +567,50 @@ function Profile() {
                   }}
                 >
                   Excluir perfil
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+        {modalAberto == "excluir-conta" && (
+          <div className="modal" onClick={() => setModalAberto(null)}>
+            <div
+              className="modal-content delete"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span></span>
+              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+              <h3>Tem certeza que deseja excluir seu livro?</h3>
+              <p>
+                Não será possível novas compras do livro mas os leitores atuais
+                continuarão a ter acesso a ele.
+              </p>
+              <label htmlFor="isbnDelete">Insira a isbn do livro</label>
+              <IMaskInput
+                mask="000-0-00-000000-0"
+                definitions={{
+                  0: /[0-9]/,
+                }}
+                value={deleteIsbn}
+                unmask={false}
+                id="isbn"
+                onAccept={(val) => setDeleteIsbn(val)}
+                name="isbnDelete"
+                maxLength={17}
+                required
+              />
+              <div>
+                <a href="#" onClick={() => setModalAberto(null)}>
+                  Voltar
+                </a>
+                <a
+                  href="#"
+                  onClick={() => {
+                    deleteBook();
+                    setModalAberto(null);
+                  }}
+                >
+                  Excluir livro
                 </a>
               </div>
             </div>

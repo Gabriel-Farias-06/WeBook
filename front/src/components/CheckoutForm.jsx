@@ -6,7 +6,12 @@ import {
 import "../../public/css/payments.css";
 import { useState } from "react";
 
-export default function CheckoutForm({ idLivro, idUsuario, setModalAberto }) {
+export default function CheckoutForm({
+  idLivros,
+  idUsuario,
+  setModalAberto,
+  token,
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const [carregando, setCarregando] = useState(false);
@@ -28,13 +33,20 @@ export default function CheckoutForm({ idLivro, idUsuario, setModalAberto }) {
     if (error) {
       setModalAberto("payment-error");
     } else if (paymentIntent.status === "succeeded") {
-      await fetch(
-        `https://webook-8d4j.onrender.com/api/usuario/${idUsuario}/livros/${idLivro}`,
-        {
-          method: "POST",
-        }
-      );
+      idLivros.forEach(async (livroId) => {
+        console.log(token);
+        await fetch(
+          `https://webook-8d4j.onrender.com/api/usuario/${idUsuario}/livros/${livroId}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      });
 
+      localStorage.setItem("carrinho", []);
       setModalAberto("sucess");
     }
 

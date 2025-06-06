@@ -5,6 +5,7 @@ const LivrosContext = createContext();
 export function LivrosProvider({ children }) {
   const [livrosLoading, setLivrosLoading] = useState(true);
   const [livros, setLivros] = useState(null);
+  const [updateLivro, setUpdateLivro] = useState(false);
 
   useEffect(() => {
     async function getBooks() {
@@ -22,10 +23,12 @@ export function LivrosProvider({ children }) {
     }
 
     getBooks();
-  }, []);
+  }, [updateLivro]);
 
   return (
-    <LivrosContext.Provider value={{ livros, setLivros, livrosLoading }}>
+    <LivrosContext.Provider
+      value={{ livros, setLivros, livrosLoading, setUpdateLivro }}
+    >
       {children}
     </LivrosContext.Provider>
   );

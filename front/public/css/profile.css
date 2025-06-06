@@ -201,20 +201,20 @@ input[type="file"] {
   padding-bottom: 80px;
 }
 
-#delete-account div {
+.delete div {
   margin-top: 20px;
   display: flex;
   gap: 40px;
   justify-content: center;
 }
 
-#delete-account div a {
+.delete div a {
   background: linear-gradient(#dd323b, #c41111);
   font: 500 1.2rem/1.1 "Roboto";
   padding: 8px 28px;
   text-align: center;
 }
 
-#delete-account div a:first-child {
+.delete div a:first-child {
   background: linear-gradient(#65e040, #2cc438);
 }

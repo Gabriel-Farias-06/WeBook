@@ -23,7 +23,7 @@ function Home() {
   const [modalAberto, setModalAberto] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
   const [modalLivro, setModalLivro] = useState(null);
-  const [livro, setLivro] = useState(null);
+  const [livrosAComprar, setLivrosAComprar] = useState(null);
   const [livrosFiltrados, setLivrosFiltrados] = useState(null);
   const [carrinho, setCarrinho] = useState([]);
   const [notifications, setNotifications] = useState([]);
@@ -107,6 +107,7 @@ function Home() {
 
   async function getUser(token) {
     const decoded = jwtDecode(token);
+    console.log(token);
     if (decoded.exp && decoded.exp < Date.now() / 1000) {
       setUsuario(null);
       return;
@@ -121,6 +122,11 @@ function Home() {
         },
       }
     );
+
+    if (!response.ok) {
+      console.log("OH MDS");
+      return;
+    }
 
     const data = await response.json();
 
@@ -459,7 +465,44 @@ function Home() {
                   </ul>
                 )}
               </div>
-              <a id="more">
+              <a
+                id="more"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  if (carrinho.length == 0) return setModalAberto(null);
+                  if (!usuario) {
+                    setModalLivro(null);
+                    setModalAberto("login");
+                    return;
+                  }
+                  e.target.classList.add("inative");
+                  e.currentTarget.innerText = "Carregando";
+                  const total =
+                    carrinho.reduce(
+                      (acumulator, produto) => produto.preco + acumulator,
+                      0
+                    ) * 0.8;
+
+                  const response = await fetch(
+                    "https://webook-8d4j.onrender.com/api/pagamento",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${usuario.token}`,
+                      },
+                      body: JSON.stringify(total),
+                    }
+                  );
+
+                  const data = await response.json();
+                  setClientSecret(data.clientSecret);
+                  setLivrosAComprar(carrinho.map((livro) => livro.livro_id));
+                  setModalAberto("payment");
+                  setModalLivro(null);
+                  e.target.classList.remove("inative");
+                }}
+              >
                 {carrinho.length
                   ? "Comprar agora"
                   : "Adicione produtos ao carrinho"}
@@ -660,7 +703,7 @@ function Home() {
 
                     const data = await response.json();
                     setClientSecret(data.clientSecret);
-                    setLivro(modalLivro.livro_id);
+                    setLivrosAComprar([modalLivro.livro_id]);
                     setModalAberto("payment");
                     setModalLivro(null);
                     e.target.classList.remove("inative");
@@ -677,9 +720,10 @@ function Home() {
         {modalAberto == "payment" && clientSecret && (
           <StripeContainer
             clientSecret={clientSecret}
-            idLivro={livro}
+            idLivros={livrosAComprar}
             idUsuario={usuario.usuario_id}
             setModalAberto={setModalAberto}
+            token={usuario.token}
           />
         )}
 
