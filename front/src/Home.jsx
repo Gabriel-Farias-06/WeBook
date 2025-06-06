@@ -99,7 +99,7 @@ function Home() {
 
   async function getUser(token) {
     const decoded = jwtDecode(token);
-
+    console.log(token);
     if (decoded.exp && decoded.exp < Date.now() / 1000) {
       setUsuario(null);
       return;
