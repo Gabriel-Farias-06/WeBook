@@ -169,7 +169,7 @@ function Profile() {
 
     const { data, error } = await supabase.storage
       .from("ebooks")
-      .upload(`epubs/${newEbook.name}`, newEbook);
+      .upload(`epubs/${Date.now()}-${newEbook.name}`, newEbook);
 
     if (error) return null;
     return `https://uryeqjptemdyznogbeus.supabase.co/storage/v1/object/public/ebooks/${data.path}`;
@@ -711,6 +711,7 @@ function Profile() {
                 type="file"
                 accept=".jpg, .jpeg, .png, .gif, .bmp, .webp, .tiff, .ico"
                 name="capa"
+                id="capa"
                 onChange={(e) => setNewBookPhoto(e.target.files[0])}
               />
               <label htmlFor="classificacao">
@@ -756,7 +757,7 @@ function Profile() {
               />
               <div className="flex-upload">
                 <label htmlFor="epub" className="custom-file-upload">
-                  Envie o arquivo do livro em epub
+                  Envie o livro em epub
                 </label>
                 {newEbook && <p>{newEbook.name}</p>}
                 {!newEbook && <p>Escolha o arquivo do livro</p>}
@@ -765,6 +766,7 @@ function Profile() {
                 type="file"
                 accept=".epub"
                 name="epub"
+                id="epub"
                 onChange={(e) => setNewEbook(e.target.files[0])}
               />
               <label htmlFor="generos">Selecione os gêneros do livro</label>
@@ -919,7 +921,10 @@ function Profile() {
               <li key={livro.livro_id}>
                 <div
                   href="#"
-                  onClick={() => navigate("/livro", { state: livro })}
+                  onClick={() => {
+                    console.log(livro);
+                    navigate("/livro", { state: livro });
+                  }}
                 >
                   <img src={livro.caminhoLivro} />
                 </div>

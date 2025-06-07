@@ -23,6 +23,8 @@ public class LivroDTO {
 
     private ClassificacaoIndicativa classificacaoIndicativa;
 
+    private String caminhoEbook;
+
     private UUID autor;
 
     private UUID editora;
@@ -31,12 +33,12 @@ public class LivroDTO {
 
     public static LivroDTO toDTO(Livro livro){
         if(livro.getLivro_id() == null)
-            return new LivroDTO(livro.getIsbn(), livro.getTitulo(), livro.getSinopse(), livro.getCaminhoLivro(), livro.getNumeroPaginas(), livro.getPreco(), livro.getClassificacaoIndicativa(), livro.getAutor().getAutor_id(), livro.getEditora().getEditora_id(), livro.getGeneros().stream().map(Genero::getGenero_id).toList());
+            return new LivroDTO(livro.getIsbn(), livro.getTitulo(), livro.getSinopse(), livro.getCaminhoLivro(), livro.getNumeroPaginas(), livro.getPreco(), livro.getClassificacaoIndicativa(), livro.getAutor().getAutor_id(), livro.getEditora().getEditora_id(), livro.getGeneros().stream().map(Genero::getGenero_id).toList(), livro.getCaminhoEbook());
 
-        return new LivroDTO(livro.getLivro_id(), livro.getIsbn(), livro.getTitulo(), livro.getSinopse(), livro.getCaminhoLivro(), livro.getNumeroPaginas(), livro.getPreco(), livro.getClassificacaoIndicativa(), livro.getAutor().getAutor_id(), livro.getEditora().getEditora_id(), livro.getGeneros().stream().map(Genero::getGenero_id).toList());
+        return new LivroDTO(livro.getLivro_id(), livro.getIsbn(), livro.getTitulo(), livro.getSinopse(), livro.getCaminhoLivro(), livro.getNumeroPaginas(), livro.getPreco(), livro.getClassificacaoIndicativa(), livro.getAutor().getAutor_id(), livro.getEditora().getEditora_id(), livro.getGeneros().stream().map(Genero::getGenero_id).toList(), livro.getCaminhoEbook());
     }
 
-    public LivroDTO(UUID livro_id, String isbn, String titulo, String sinopse, String caminhoLivro, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, UUID autor, UUID editora, List<UUID> generos) {
+    public LivroDTO(UUID livro_id, String isbn, String titulo, String sinopse, String caminhoLivro, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, UUID autor, UUID editora, List<UUID> generos, String caminhoEbook) {
         this.livro_id = livro_id;
         this.isbn = isbn;
         this.titulo = titulo;
@@ -48,9 +50,10 @@ public class LivroDTO {
         this.autor = autor;
         this.editora = editora;
         this.generos = generos;
+        this.caminhoEbook = caminhoEbook;
     }
 
-    public LivroDTO(String isbn, String titulo, String sinopse, String caminhoLivro, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, UUID autor, UUID editora, List<UUID> generos) {
+    public LivroDTO(String isbn, String titulo, String sinopse, String caminhoLivro, int numeroPaginas, Double preco, ClassificacaoIndicativa classificacaoIndicativa, UUID autor, UUID editora, List<UUID> generos, String caminhoEbook) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.sinopse = sinopse;
@@ -61,6 +64,7 @@ public class LivroDTO {
         this.autor = autor;
         this.editora = editora;
         this.generos = generos;
+        this.caminhoEbook = caminhoEbook;
     }
 
     public LivroDTO() {}
@@ -151,5 +155,13 @@ public class LivroDTO {
 
     public void setCaminhoLivro(String caminhoLivro) {
         this.caminhoLivro = caminhoLivro;
+    }
+
+    public String getCaminhoEbook() {
+        return caminhoEbook;
+    }
+
+    public void setCaminhoEbook(String caminhoEbook) {
+        this.caminhoEbook = caminhoEbook;
     }
 }

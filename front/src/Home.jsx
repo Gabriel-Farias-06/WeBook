@@ -37,8 +37,8 @@ function Home() {
       setLivrosFiltrados(
         livros.filter((livro) => {
           if (usuario.livros)
-            return usuario.livros.some(
-              (livroUsuario) => livroUsuario === livro
+            return !usuario.livros.some(
+              (livroUsuario) => livroUsuario.livro_id === livro.livro_id
             );
 
           return true;

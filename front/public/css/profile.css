@@ -118,7 +118,7 @@ input[type="file"] {
   display: inline-block;
   white-space: nowrap;
   background-color: var(--r9);
-  width: 16ch;
+  width: 18ch;
   color: white;
   padding: 8px 12px;
   cursor: pointer;

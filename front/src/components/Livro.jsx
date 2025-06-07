@@ -8,6 +8,7 @@ function Livro() {
   const { titulo } = location.state || {};
   const viewerRef = useRef();
   const fileUrl = location.state || "booksTest/livro.epub";
+  console.log(fileUrl);
   const renditionRef = useRef();
   const bookRef = useRef();
   const [fontSize, setFontSize] = useState(100);
