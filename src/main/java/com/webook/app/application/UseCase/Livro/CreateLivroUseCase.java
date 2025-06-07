@@ -39,7 +39,7 @@ public class CreateLivroUseCase {
         if(autor.isEmpty() || editora.isEmpty())
             return ResponseEntity.status(404).body(null);
 
-        Livro livro = new Livro(livroRequest.getIsbn(), livroRequest.getTitulo(), livroRequest.getSinopse(),livroRequest.getNumeroPaginas(), livroRequest.getPreco(), livroRequest.getCaminhoLivro(), livroRequest.getClassificacaoIndicativa(), autor.get(), editora.get(), generos);
+        Livro livro = new Livro(livroRequest.getIsbn(), livroRequest.getTitulo(), livroRequest.getSinopse(),livroRequest.getNumeroPaginas(), livroRequest.getPreco(), livroRequest.getCaminhoLivro(), livroRequest.getClassificacaoIndicativa(), autor.get(), editora.get(), generos, livroRequest.getCaminhoEbook());
 
         if(livroRepository.findByIsbn(livro.getIsbn()).isPresent())
             return ResponseEntity.status(400).body(null);

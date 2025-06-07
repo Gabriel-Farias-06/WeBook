@@ -13,11 +13,12 @@ public class LivroRequest {
     Double preco;
     String caminhoLivro;
     ClassificacaoIndicativa classificacaoIndicativa;
+    String caminhoEbook;
     UUID autor_id;
     UUID editora_id;
     List<UUID> generos_id;
 
-    public LivroRequest(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, UUID autor_id, UUID editora_id, List<UUID> generos_id) {
+    public LivroRequest(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, String caminhoEbook, UUID autor_id, UUID editora_id, List<UUID> generos_id) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.sinopse = sinopse;
@@ -25,6 +26,7 @@ public class LivroRequest {
         this.preco = preco;
         this.caminhoLivro = caminhoLivro;
         this.classificacaoIndicativa = classificacaoIndicativa;
+        this.caminhoEbook = caminhoEbook;
         this.autor_id = autor_id;
         this.editora_id = editora_id;
         this.generos_id = generos_id;
@@ -110,5 +112,13 @@ public class LivroRequest {
 
     public void setGeneros_id(List<UUID> generos_id) {
         this.generos_id = generos_id;
+    }
+
+    public String getCaminhoEbook() {
+        return caminhoEbook;
+    }
+
+    public void setCaminhoEbook(String caminhoEbook) {
+        this.caminhoEbook = caminhoEbook;
     }
 }

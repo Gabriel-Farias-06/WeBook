@@ -1,0 +1,85 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+#sumary-open.modal {
+  background-color: transparent;
+}
+
+#sumary-open.modal .modal-content {
+  margin: 6% 14%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px 20px;
+  justify-content: space-between;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#sumary-open .modal-content button {
+  color: inherit;
+  width: 100%;
+  border: 2px solid var(--r11);
+  padding: 4px 8px;
+  font: 500 0.9rem /1.2 "Roboto";
+}
+
+.image-fade {
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+.image-fade.hidden {
+  opacity: 0;
+}
+
+#flex-start-book {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+#flex-start-book img {
+  cursor: pointer;
+}
+
+#flex-start-book button {
+  background: none;
+  border: none;
+}
+
+#flex-start-book p {
+  font: 500 1.8rem/1.2 "Poppins";
+  justify-self: center;
+  margin: 0px 320px;
+}
+
+#flex-start-book #sumary {
+  margin-left: 60px;
+}
+
+#flex-end-book {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 19px;
+}
+
+#flex-end-book button {
+  background: linear-gradient(var(--r8), var(--r10));
+  font: 500 1.2rem/1.2 "Roboto";
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+#flex-end-book p {
+  font: 400 1.2rem/1.2 "Roboto";
+}
+
+#livro {
+  padding: 16px 20px;
+}
