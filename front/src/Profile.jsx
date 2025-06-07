@@ -92,7 +92,7 @@ function Profile() {
     });
   }
 
-  function filterFilms(termo = "") {
+  function filterBooks(termo = "") {
     setLivrosFiltrados(
       livrosUsuario.filter((livroFiltrado) =>
         livroFiltrado.titulo.toLowerCase().includes(termo)
@@ -301,6 +301,10 @@ function Profile() {
       caminhoEbook: bookPath,
     };
 
+    setGenerosOptions([]);
+
+    console.log(book);
+
     try {
       const res = await fetch("https://webook-8d4j.onrender.com/api/livro", {
         method: "POST",
@@ -314,7 +318,9 @@ function Profile() {
       if (res.status == 201) {
         setUpdateLivro(true);
         setModalAberto("livro-criado");
-      } else setModalAberto("livro-error");
+      } else {
+        setModalAberto("livro-error");
+      }
     } catch (e) {
       console.error("Erro de rede: ", e);
     }
@@ -325,7 +331,7 @@ function Profile() {
   return (
     <div>
       <header className="container" id="header">
-        <Link to="/" className="logo">
+        <Link to="/" id="logo">
           <span>W</span>e<span>B</span>ook
         </Link>
         <div id="input-wrapper">
@@ -337,7 +343,7 @@ function Profile() {
             onKeyUp={(e) => {
               if (e.key == "Enter") {
                 const termo = e.currentTarget.value.toLowerCase();
-                filterFilms(termo);
+                filterBooks(termo);
               }
             }}
           />
@@ -348,51 +354,57 @@ function Profile() {
               const termo = document
                 .getElementById("searchInput")
                 .value.toLowerCase();
-              filterFilms(termo);
+              filterBooks(termo);
             }}
           />
         </div>
-        <a href="#">
-          <img
-            src="/img/Cart.svg"
-            alt="Carrinho"
-            onClick={() => {
-              document.body.style.overflow = "hidden";
-              setModalAberto("shopping");
-            }}
-          />
-        </a>
-        <a href="#">
-          <img
-            src="/img/Notification.svg"
-            alt="Notificações"
-            onClick={() => {
-              document.body.style.overflow = "hidden";
-              setModalAberto("notifications");
-            }}
-          />
-        </a>
-        <a href="#">
-          <img
-            src="/img/Settings.svg"
-            alt="Configurações"
-            onClick={() => {
-              setModalAberto("config");
-            }}
-          />
-        </a>
+        <div id="symbols">
+          <a href="#">
+            <img
+              src="/img/Cart.svg"
+              alt="Carrinho"
+              onClick={() => {
+                if (usuario) {
+                  document.body.style.overflow = "hidden";
+                  setModalAberto("shopping");
+                } else setModalAberto("login");
+              }}
+            />
+          </a>
+          <a href="#">
+            <img
+              src="/img/Notification.svg"
+              alt="Notificações"
+              onClick={() => {
+                if (usuario) {
+                  document.body.style.overflow = "hidden";
+                  setModalAberto("notifications");
+                } else setModalAberto("login");
+              }}
+            />
+          </a>
+          <a href="#">
+            <img
+              src="/img/Settings.svg"
+              alt="Configurações"
+              onClick={() => {
+                setModalAberto("config");
+              }}
+            />
+          </a>
+        </div>
         {modalAberto == "edit-perfil" && (
           <div
             className="modal"
             id="cadastro-bg"
             onClick={() => setModalAberto(null)}
           >
+            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
             <form
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
             >
-              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <h3>Alterar dados</h3>
               <div id="container-flex">
                 <p className="protect">Dados pessoais criptografados.</p>
@@ -527,7 +539,7 @@ function Profile() {
                   setModalAberto("excluir-conta");
                 }}
               >
-                <img src="/img/Logout.svg" alt="" />
+                <img src="/img/Delete.svg" alt="" />
                 <p>excluir livro </p>
               </span>
               <span
@@ -535,7 +547,7 @@ function Profile() {
                   setModalAberto("excluir-livro");
                 }}
               >
-                <img src="/img/Logout.svg" alt="" />
+                <img src="/img/Delete.svg" alt="" />
                 <p>excluir conta </p>
               </span>
               <span
@@ -552,12 +564,12 @@ function Profile() {
         )}
         {modalAberto == "excluir-conta" && (
           <div className="modal" onClick={() => setModalAberto(null)}>
+            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
             <div
               className="modal-content delete"
               onClick={(e) => e.stopPropagation()}
             >
               <span></span>
-              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <h3>Tem certeza que deseja excluir seu perfil?</h3>
               <p>
                 Todos os dados da sua conta serão perdidos, inclusive seus
@@ -591,12 +603,12 @@ function Profile() {
         )}
         {modalAberto == "excluir-conta" && (
           <div className="modal" onClick={() => setModalAberto(null)}>
+            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
             <div
               className="modal-content delete"
               onClick={(e) => e.stopPropagation()}
             >
               <span></span>
-              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <h3>Tem certeza que deseja excluir seu livro?</h3>
               <p>
                 Não será possível novas compras do livro mas os leitores atuais

@@ -39,8 +39,14 @@ img {
   background-color: var(--r10);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
   .container {
     margin: 0px 28px;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    margin: 0px 20px;
   }
 }

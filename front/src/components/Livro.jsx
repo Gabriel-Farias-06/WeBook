@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import ePub from "epubjs";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../public/css/style.css";
+import { useUsuario } from "../providers/UsuarioProvider";
 
 function Livro() {
   const location = useLocation();
   const { titulo } = location.state || {};
   const viewerRef = useRef();
-  const fileUrl = location.state || "booksTest/livro.epub";
+  const fileUrl = location.state.caminhoEbook;
   console.log(fileUrl);
   const renditionRef = useRef();
   const bookRef = useRef();
@@ -18,6 +19,9 @@ function Livro() {
   const [fade, setFade] = useState(false);
   const [changeImage, setChangeImage] = useState(false);
   const [toc, setToc] = useState([]);
+  const navigate = useNavigate();
+  const { usuario } = useUsuario();
+  if (!usuario) navigate("/");
 
   useEffect(() => {
     const book = ePub(fileUrl);
@@ -129,7 +133,7 @@ function Livro() {
           className="modal"
           onClick={() => setOpenSumary(false)}
         >
-          <ul
+          <div
             className="modal-content"
             style={
               darkMode
@@ -138,23 +142,26 @@ function Livro() {
             }
             onClick={(e) => e.stopPropagation()}
           >
-            {toc.map((item) => {
-              return (
-                <li key={item.href}>
-                  <button
-                    style={
-                      darkMode
-                        ? { background: "#141414", color: "#f0f0f0" }
-                        : { background: "#f0f0f0", color: "#141414" }
-                    }
-                    onClick={() => renditionRef.current.display(item.href)}
-                  >
-                    {item.label}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+            <h2>Sumário</h2>
+            <ul>
+              {toc.map((item) => {
+                return (
+                  <li key={item.href}>
+                    <button
+                      style={
+                        darkMode
+                          ? { background: "#141414", color: "#f0f0f0" }
+                          : { background: "#f0f0f0", color: "#141414" }
+                      }
+                      onClick={() => renditionRef.current.display(item.href)}
+                    >
+                      {item.label}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       )}
     </div>

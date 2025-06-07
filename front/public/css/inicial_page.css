@@ -1,11 +1,11 @@
 #header {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 32px;
 }
 
-#header .logo {
+#header #logo {
   font: 600 3.2rem/1.5 "Playfair Display";
   color: var(--r10);
   margin-right: 12px;
@@ -18,11 +18,19 @@
   font-style: italic;
 }
 
+#header #input-wrapper {
+  width: 100%;
+  max-width: 940px;
+  flex: 1;
+  position: relative;
+  margin-right: 32px;
+}
+
 #input-wrapper input {
-  height: 2.8rem;
+  height: 2.7rem;
   width: 97%;
-  border-radius: 32px;
   padding-left: 32px;
+  border-radius: 32px;
   background: linear-gradient(
     #f9f2ff 0%,
     #efe2f8 40%,
@@ -35,27 +43,25 @@
 
 #input-wrapper > input,
 #input-wrapper > input::placeholder {
-  font: 500 1.25rem/1.5 "Poppins";
+  font: 500 1.3rem/1.5 "Poppins";
   color: var(--r4);
-}
-
-#header #input-wrapper {
-  width: 100%;
-  min-width: 340px;
-  max-width: 940px;
-  flex: 1;
-  position: relative;
+  padding-bottom: 4px;
 }
 
 .search-icon {
   display: inline-block;
   width: 40px;
   height: 40px;
-  top: 6px;
+  top: 7px;
   right: 4px;
   left: auto;
   position: absolute;
   cursor: pointer;
+}
+
+#symbols {
+  display: flex;
+  gap: 20px;
 }
 
 #profilePhoto {
@@ -131,11 +137,12 @@ button.inative {
   text-decoration: underline;
 }
 
-.modal-content img {
+.modal img {
   cursor: pointer;
   position: absolute;
-  right: -16px;
-  top: -12px;
+  right: 420px;
+  top: 28px;
+  z-index: 10;
 }
 
 .cadastro-link {
@@ -292,9 +299,10 @@ p.termos {
 #links {
   padding: 40px 0px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   color: var(--c1);
-  font: 500 1.6rem/1.5 "Poppins";
+  font: 500 1.4rem/1.5 "Poppins";
   gap: 48px;
 }
 
@@ -315,6 +323,7 @@ p.termos {
 #footer {
   padding-top: 40px;
   display: flex;
+  flex-wrap: wrap;
   gap: 120px;
   justify-content: center;
 }
@@ -328,6 +337,7 @@ p.termos {
 #footer p {
   color: var(--r13);
   font: 400 1rem/1.5 "Poppins";
+  white-space: nowrap;
 }
 
 #copyrigth {
@@ -665,4 +675,94 @@ img#close {
 
 #livro-compra h5 + img {
   padding-left: 30px;
+}
+
+@media (max-width: 1000px) {
+  #header {
+    margin-top: 20px;
+    gap: 20px;
+  }
+
+  #header #logo {
+    font-size: 2.6rem;
+  }
+
+  #input-wrapper > input,
+  #input-wrapper > input::placeholder {
+    font-size: 1.1rem;
+    height: 2.4rem;
+  }
+
+  .search-icon {
+    width: 36px;
+    height: 36px;
+    top: 5px;
+    right: -4px;
+  }
+
+  .modal-content {
+    width: 50%;
+  }
+}
+
+@media (max-width: 800px) {
+  #logo {
+    grid-area: logo;
+  }
+
+  #header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas: "logo symbols" "input input";
+  }
+
+  #header #input-wrapper {
+    grid-area: input;
+    margin-bottom: 4px;
+  }
+
+  #symbols {
+    grid-area: symbols;
+    justify-content: end;
+    gap: 32px;
+  }
+
+  #symbols img {
+    width: 36px;
+    height: 36px;
+  }
+
+  #input-wrapper > input {
+    height: 2.2rem;
+    width: 80%;
+    margin-left: 20px;
+  }
+
+  #header #logo {
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  .search-icon {
+    right: 11%;
+    top: 5px;
+    width: 34px;
+    height: 34px;
+  }
+
+  #categories li {
+    font-size: 1rem;
+  }
+
+  #naoEncontrou {
+    font-size: 1.5rem;
+  }
+
+  .modal-content > a {
+    padding: 12px;
+  }
+
+  .modal-content p {
+    font-size: 0.7rem;
+  }
 }

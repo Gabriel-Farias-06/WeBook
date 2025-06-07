@@ -185,7 +185,7 @@ function Home() {
   return (
     <div>
       <header className="container" id="header">
-        <Link to="/" className="logo">
+        <Link to="/" id="logo">
           <span>W</span>e<span>B</span>ook
         </Link>
         <div id="input-wrapper">
@@ -212,67 +212,69 @@ function Home() {
             }}
           />
         </div>
-        <a href="#">
-          <img
-            src="/img/Cart.svg"
-            alt="Carrinho"
-            onClick={() => {
-              if (usuario) {
-                document.body.style.overflow = "hidden";
-                setModalAberto("shopping");
-              } else setModalAberto("login");
+        <div id="symbols">
+          <a href="#">
+            <img
+              src="/img/Cart.svg"
+              alt="Carrinho"
+              onClick={() => {
+                if (usuario) {
+                  document.body.style.overflow = "hidden";
+                  setModalAberto("shopping");
+                } else setModalAberto("login");
+              }}
+            />
+          </a>
+          <a href="#">
+            <img
+              src="/img/Notification.svg"
+              alt="Notificações"
+              onClick={() => {
+                if (usuario) {
+                  document.body.style.overflow = "hidden";
+                  setModalAberto("notifications");
+                } else setModalAberto("login");
+              }}
+            />
+          </a>
+          <Link
+            to="/profile"
+            id="userLogin"
+            onClick={(e) => {
+              if (!usuario) {
+                e.preventDefault();
+                setModalAberto("login");
+              }
             }}
-          />
-        </a>
-        <a href="#">
-          <img
-            src="/img/Notification.svg"
-            alt="Notificações"
-            onClick={() => {
-              if (usuario) {
-                document.body.style.overflow = "hidden";
-                setModalAberto("notifications");
-              } else setModalAberto("login");
-            }}
-          />
-        </a>
-        <Link
-          to="/profile"
-          id="userLogin"
-          onClick={(e) => {
-            if (!usuario) {
-              e.preventDefault();
-              setModalAberto("login");
-            }
-          }}
-        >
-          <img
-            id="profilePhoto"
-            src={
-              usuario && usuario.caminhoFoto
-                ? usuario.caminhoFoto
-                : "./img/UserDefault.png"
-            }
-            alt="Usuário"
-          />
-        </Link>
+          >
+            <img
+              id="profilePhoto"
+              src={
+                usuario && usuario.caminhoFoto
+                  ? usuario.caminhoFoto
+                  : "./img/UserDefault.png"
+              }
+              alt="Usuário"
+            />
+          </Link>
+        </div>
         {modalAberto === "login" && (
           <div
             className="modal"
             id="login-bg"
             onClick={() => setModalAberto(null)}
           >
+            <img
+              src="/img/Close.svg"
+              onClick={() => {
+                setModalAberto(null);
+              }}
+            />
             <form
               className="modal-content"
               id="login"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src="/img/Close.svg"
-                onClick={() => {
-                  setModalAberto(null);
-                }}
-              />
               <h3>Entrar</h3>
               <div id="container-flex">
                 <p className="protect">Dados pessoais criptografados.</p>
@@ -327,12 +329,12 @@ function Home() {
             id="cadastro-bg"
             onClick={() => setModalAberto(null)}
           >
+            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
             <div
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
             >
-              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <h3>Cadastro</h3>
               <div id="container-flex">
                 <p className="protect">Dados pessoais criptografados.</p>
@@ -400,13 +402,13 @@ function Home() {
             className="modal modal-error"
             onClick={() => setModalAberto(null)}
           >
+            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
             <div
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
             >
               <span></span>
-              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <img
                 src="/img/LoginError.png"
                 alt="Ícone de erro no login"
@@ -735,13 +737,13 @@ function Home() {
             className="modal modal-error"
             onClick={() => setModalAberto(null)}
           >
+            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
             <div
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
             >
               <span></span>
-              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <img
                 src="/img/LoginError.png"
                 alt="Ícone de erro no login"

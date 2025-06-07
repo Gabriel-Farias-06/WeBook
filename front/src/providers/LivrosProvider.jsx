@@ -23,6 +23,7 @@ export function LivrosProvider({ children }) {
         console.error("Erro no console: ", e);
       } finally {
         setLivrosLoading(false);
+        setUpdateLivro(false);
       }
     }
 

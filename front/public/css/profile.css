@@ -32,13 +32,13 @@ main img {
 main h2 {
   font: 500 1.7rem/1.2 "Poppins";
   bottom: 2px;
-  left: 22%;
+  left: 27%;
 }
 
 main p {
   font: 400 1.1rem/1.2 "Poppins";
   bottom: -24px;
-  left: 22%;
+  left: 27%;
   color: var(--c10);
 }
 
@@ -149,13 +149,21 @@ input[type="file"] {
   width: 17%;
   padding: 12px 4px;
   background-color: var(--c1);
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: start;
 }
 
 .config span {
+  margin: 0px 0px 12px 20px;
   display: flex;
   place-items: center;
   gap: 4px;
   justify-content: center;
+  background-color: var(--r4);
+  padding: 12px 8px;
+  border-radius: 12px;
+  cursor: pointer;
 }
 
 .config img {
@@ -217,4 +225,41 @@ input[type="file"] {
 
 .delete div a:first-child {
   background: linear-gradient(#65e040, #2cc438);
+}
+
+#booksUser img {
+  cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+  main {
+    padding-top: 120px;
+  }
+
+  main img {
+    width: 140px;
+    bottom: -70px;
+  }
+}
+
+@media (max-width: 700px) {
+  main img {
+    width: 120px;
+    bottom: -60px;
+  }
+
+  main h2 {
+    left: 180px;
+    font-size: 1.4rem;
+  }
+
+  main p {
+    left: 180px;
+    font-size: 1rem;
+  }
+
+  main a {
+    font-size: 1rem;
+    padding: 8px 12px;
+  }
 }

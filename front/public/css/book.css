@@ -9,12 +9,23 @@ body {
 
 #sumary-open.modal .modal-content {
   margin: 6% 14%;
+  overflow-y: auto;
+  padding-top: 16px;
+}
+
+#sumary-open.modal .modal-content h2 {
+  font: 700 1.6rem/1.2 "Playfair Display";
+  font-style: italic;
+  text-align: center;
+}
+
+#sumary-open.modal .modal-content ul {
+  padding-top: 12px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 12px 20px;
   justify-content: space-between;
   max-height: 200px;
-  overflow-y: auto;
 }
 
 #sumary-open .modal-content button {
@@ -23,6 +34,7 @@ body {
   border: 2px solid var(--r11);
   padding: 4px 8px;
   font: 500 0.9rem /1.2 "Roboto";
+  cursor: pointer;
 }
 
 .image-fade {
