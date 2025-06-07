@@ -8,6 +8,7 @@ import { useGeneros } from "./providers/GenerosProvider";
 import { IMaskInput } from "react-imask";
 import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { createClient } from "@supabase/supabase-js";
 import { useLivros } from "./providers/LivrosProvider";
 
 function Profile() {
@@ -21,6 +22,7 @@ function Profile() {
   const [newUsername, setNewUsername] = useState(null);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
   const [newBookPhoto, setNewBookPhoto] = useState(null);
+  const [newEbook, setNewEbook] = useState(null);
   const [newBook, setNewBook] = useState(null);
   const [isbn, setIsbn] = useState("");
   const { usuario, loading, setUsuario } = useUsuario();
@@ -159,6 +161,20 @@ function Profile() {
     }
   }
 
+  async function uploadNewEbook() {
+    const supabase = createClient(
+      "https://uryeqjptemdyznogbeus.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyeWVxanB0ZW1keXpub2diZXVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkzMDI4OTcsImV4cCI6MjA2NDg3ODg5N30.h-xARu8XNys8En6VbKaH_hiBO-oBRPOzUxkgSh3dOPw"
+    );
+
+    const { data, error } = await supabase.storage
+      .from("ebooks")
+      .upload(`epubs/${newEbook.name}`, newEbook);
+
+    if (error) return null;
+    return `https://uryeqjptemdyznogbeus.supabase.co/storage/v1/object/public/ebooks/${data.path}`;
+  }
+
   async function updateUser() {
     const nome = newUsername ? newUsername : usuario.nome;
     const senha = newPassword ? newPassword : null;
@@ -232,7 +248,9 @@ function Profile() {
 
   async function createBook() {
     const data = await uploadNewBookPhoto();
-    if (!data) return;
+    const bookPath = await uploadNewEbook();
+
+    if (!data || !bookPath) return;
 
     const nomeAutor = newBook.autor.trim().split(" ")[0];
     const sobrenomeAutor = newBook.autor.trim().split(" ").slice(1).join(" ");
@@ -280,6 +298,7 @@ function Profile() {
       generos_id: generosOptions,
       autor_id,
       editora_id,
+      caminhoEbook: bookPath,
     };
 
     try {
@@ -691,7 +710,6 @@ function Profile() {
               <input
                 type="file"
                 accept=".jpg, .jpeg, .png, .gif, .bmp, .webp, .tiff, .ico"
-                id="capa"
                 name="capa"
                 onChange={(e) => setNewBookPhoto(e.target.files[0])}
               />
@@ -735,6 +753,19 @@ function Profile() {
                 name="editora"
                 onChange={handleChangeNewBook}
                 required
+              />
+              <div className="flex-upload">
+                <label htmlFor="epub" className="custom-file-upload">
+                  Envie o arquivo do livro em epub
+                </label>
+                {newEbook && <p>{newEbook.name}</p>}
+                {!newEbook && <p>Escolha o arquivo do livro</p>}
+              </div>
+              <input
+                type="file"
+                accept=".epub"
+                name="epub"
+                onChange={(e) => setNewEbook(e.target.files[0])}
               />
               <label htmlFor="generos">Selecione os gêneros do livro</label>
               <div id="flex-generos">
@@ -886,9 +917,12 @@ function Profile() {
           <ul>
             {livrosFiltrados.map((livro) => (
               <li key={livro.livro_id}>
-                <a href="#">
+                <div
+                  href="#"
+                  onClick={() => navigate("/livro", { state: livro })}
+                >
                   <img src={livro.caminhoLivro} />
-                </a>
+                </div>
               </li>
             ))}
           </ul>

@@ -34,7 +34,6 @@ export function UsuarioProvider({ children }) {
 
           if (data) {
             setUsuario({ ...data, token });
-            console.log(data);
           }
         }
 

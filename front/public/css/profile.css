@@ -32,13 +32,13 @@ main img {
 main h2 {
   font: 500 1.7rem/1.2 "Poppins";
   bottom: 2px;
-  left: 21%;
+  left: 22%;
 }
 
 main p {
   font: 400 1.1rem/1.2 "Poppins";
   bottom: -24px;
-  left: 21%;
+  left: 22%;
   color: var(--c10);
 }
 

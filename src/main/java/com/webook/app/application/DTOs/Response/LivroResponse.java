@@ -2,6 +2,7 @@ package com.webook.app.application.DTOs.Response;
 
 import com.webook.app.application.DTOs.EditoraDTO;
 import com.webook.app.application.DTOs.GeneroDTO;
+import com.webook.app.application.DTOs.UsuarioDTO;
 import com.webook.app.domain.Entity.Autor;
 import com.webook.app.domain.Entity.Editora;
 import com.webook.app.domain.Entity.Genero;
@@ -20,6 +21,7 @@ public class LivroResponse {
     Double preco;
     String caminhoLivro;
     ClassificacaoIndicativa classificacaoIndicativa;
+    String caminhoEbook;
     AutorResponse autor;
     EditoraDTO editora;
     List<GeneroDTO> generos;
@@ -36,6 +38,7 @@ public class LivroResponse {
         this.autor = new AutorResponse(livro.getAutor().getNome(), livro.getAutor().getSobrenome());
         this.editora = EditoraDTO.toDTO(livro.getEditora());
         this.generos = livro.getGeneros().stream().map(GeneroDTO::toDTO).toList();
+        this.caminhoEbook = livro.getCaminhoEbook();
     }
 
     public LivroResponse() {}
@@ -126,5 +129,13 @@ public class LivroResponse {
 
     public void setGeneros(List<GeneroDTO> generos) {
         this.generos = generos;
+    }
+
+    public String getCaminhoEbook() {
+        return caminhoEbook;
+    }
+
+    public void setCaminhoEbook(String caminhoEbook) {
+        this.caminhoEbook = caminhoEbook;
     }
 }

@@ -12,7 +12,9 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.3.0",
+    "@supabase/supabase-js": "^2.50.0",
     "bcrypt": "^6.0.0",
+    "epubjs": "^0.3.93",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

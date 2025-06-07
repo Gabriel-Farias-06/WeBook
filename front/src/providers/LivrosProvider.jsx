@@ -8,7 +8,6 @@ export function LivrosProvider({ children }) {
   const [livros, setLivros] = useState(null);
   const { usuario } = useUsuario();
   const [updateLivro, setUpdateLivro] = useState(false);
-  const [livrosUsuario, setLivroUsuario] = useState([]);
 
   useEffect(() => {
     async function getBooks() {
@@ -20,35 +19,6 @@ export function LivrosProvider({ children }) {
         const json = await res.json();
 
         setLivros(json);
-
-        if (usuario) {
-          setLivroUsuario(
-            livros.filter((livro) => {
-              if (!livro.usuarios) return false;
-              else if (
-                livro.usuarios.some(
-                  (usuarioLivro) =>
-                    usuarioLivro.usuario_id === usuario.usuario_id
-                )
-              )
-                return true;
-              else return false;
-            })
-          );
-          setLivros(
-            livros.filter((livro) => {
-              if (!livro.usuarios) return true;
-              else if (
-                livro.usuarios.some(
-                  (usuarioLivro) =>
-                    usuarioLivro.usuario_id === usuario.usuario_id
-                )
-              )
-                return false;
-              else return true;
-            })
-          );
-        }
       } catch (e) {
         console.error("Erro no console: ", e);
       } finally {
@@ -66,7 +36,6 @@ export function LivrosProvider({ children }) {
         setLivros,
         livrosLoading,
         setUpdateLivro,
-        livrosUsuario,
       }}
     >
       {children}

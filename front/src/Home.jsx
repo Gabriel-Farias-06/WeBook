@@ -33,8 +33,19 @@ function Home() {
   }, [generos]);
 
   useEffect(() => {
-    if (livros) setLivrosFiltrados(livros);
-  }, [livros]);
+    if (livros && usuario)
+      setLivrosFiltrados(
+        livros.filter((livro) => {
+          if (usuario.livros)
+            return usuario.livros.some(
+              (livroUsuario) => livroUsuario === livro
+            );
+
+          return true;
+        })
+      );
+    else if (livros) setLivrosFiltrados(livros);
+  }, [livros, usuario]);
 
   useEffect(() => {
     const salvo = localStorage.getItem("carrinho");

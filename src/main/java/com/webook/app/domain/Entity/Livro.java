@@ -42,6 +42,9 @@ public class Livro {
     @Enumerated(EnumType.STRING)
     private ClassificacaoIndicativa classificacaoIndicativa;
 
+    @Column(nullable = false)
+    private String caminhoEbook;
+
     @ManyToOne
     @JoinColumn(name = "autor_id", nullable = false)
     private Autor autor;
@@ -58,7 +61,7 @@ public class Livro {
     @JoinTable(name = "genero_livro", joinColumns = @JoinColumn(name = "livro_id"), inverseJoinColumns = @JoinColumn(name = "genero_id"))
     private List<Genero> generos;
 
-    public Livro(UUID livro_id, String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Usuario> usuarios, List<Genero> generos) {
+    public Livro(UUID livro_id, String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Usuario> usuarios, List<Genero> generos, String caminhoEbook) {
         this.livro_id = livro_id;
         this.isbn = isbn;
         this.titulo = titulo;
@@ -71,9 +74,10 @@ public class Livro {
         this.editora = editora;
         this.usuarios = usuarios;
         this.generos = generos;
+        this.caminhoEbook = caminhoEbook;
     }
 
-    public Livro(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Genero> generos) {
+    public Livro(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Genero> generos, String caminhoEbook) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.sinopse = sinopse;
@@ -84,6 +88,7 @@ public class Livro {
         this.autor = autor;
         this.editora = editora;
         this.generos = generos;
+        this.caminhoEbook = caminhoEbook;
     }
 
     public Livro() {
@@ -185,4 +190,11 @@ public class Livro {
         this.generos = generos;
     }
 
+    public String getCaminhoEbook() {
+        return caminhoEbook;
+    }
+
+    public void setCaminhoEbook(String caminhoEbook) {
+        this.caminhoEbook = caminhoEbook;
+    }
 }
