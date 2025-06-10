@@ -1,0 +1,265 @@
+main {
+  margin-top: 20px;
+  background-color: var(--r4);
+  position: relative;
+  padding-top: 200px;
+}
+
+main > * {
+  position: absolute;
+}
+
+main a {
+  bottom: -24px;
+  background: linear-gradient(var(--r8) 0%, var(--r11) 100%);
+  display: block;
+  text-align: center;
+  font: 500 1.2rem/1.2 "Roboto";
+  color: var(--c1);
+  width: 13%;
+  right: 8%;
+  padding: 12px 0px;
+  border-radius: 4px;
+}
+
+main img {
+  width: 200px;
+  bottom: -100px;
+  left: 6%;
+  border-radius: 120px;
+}
+
+main h2 {
+  font: 500 1.7rem/1.2 "Poppins";
+  bottom: 2px;
+  left: 27%;
+}
+
+main p {
+  font: 400 1.1rem/1.2 "Poppins";
+  bottom: -24px;
+  left: 27%;
+  color: var(--c10);
+}
+
+#booksUser {
+  margin: 160px 180px 0px 180px;
+}
+
+#booksUser h2 {
+  font: 600 1.7rem/1.2 "Playfair Display";
+  font-style: italic;
+}
+
+#booksUser p {
+  margin-bottom: 40px;
+  font: 400 1rem/1.5 "Poppins";
+  color: var(--c11);
+}
+
+#booksUser ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 230px);
+  justify-items: left;
+  gap: 16px;
+  margin-bottom: 100px;
+}
+
+#checkbox-wrapper {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+#checkbox-wrapper input {
+  display: none;
+}
+
+#checkbox-wrapper label {
+  margin: 0px;
+  display: inline;
+  cursor: pointer;
+}
+
+#checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--r11);
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked + #checkmark::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 10px;
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  left: 5px;
+  top: 1px;
+  transform: rotate(45deg);
+}
+
+input:disabled {
+  background: #cabdd3 70%;
+  cursor: not-allowed;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.modal-content .custom-file-upload {
+  display: inline-block;
+  white-space: nowrap;
+  background-color: var(--r9);
+  width: 18ch;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-family: "Roboto";
+  text-align: center;
+}
+
+.custom-file-upload + p {
+  display: inline;
+  color: var(--c14);
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.flex-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.config {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.config .modal-content {
+  margin: 8% 80%;
+  width: 17%;
+  padding: 12px 4px;
+  background-color: var(--c1);
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: start;
+}
+
+.config span {
+  margin: 0px 0px 12px 20px;
+  display: flex;
+  place-items: center;
+  gap: 4px;
+  justify-content: center;
+  background-color: var(--r4);
+  padding: 12px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.config img {
+  position: static;
+}
+
+.config p {
+  font: 500 1.2rem/1.1 "Poppins";
+  color: var(--r11);
+}
+
+.modal-content {
+  margin: 3% auto;
+}
+
+.modal-content .generos {
+  display: flex;
+  justify-items: start;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-content .generos input {
+  width: 32px;
+}
+
+#flex-generos {
+  display: grid;
+  column-gap: 12px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+#classificacao {
+  width: 40%;
+  font: 500 0.9rem/1.2 "Roboto";
+  background-color: #f6eaff;
+  border: 2px solid var(--r12);
+  border-radius: 2px;
+}
+
+#no-books {
+  text-align: center;
+  padding-bottom: 80px;
+}
+
+.delete div {
+  margin-top: 20px;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+}
+
+.delete div a {
+  background: linear-gradient(#dd323b, #c41111);
+  font: 500 1.2rem/1.1 "Roboto";
+  padding: 8px 28px;
+  text-align: center;
+}
+
+.delete div a:first-child {
+  background: linear-gradient(#65e040, #2cc438);
+}
+
+#booksUser img {
+  cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+  main {
+    padding-top: 120px;
+  }
+
+  main img {
+    width: 140px;
+    bottom: -70px;
+  }
+}
+
+@media (max-width: 700px) {
+  main img {
+    width: 120px;
+    bottom: -60px;
+  }
+
+  main h2 {
+    left: 180px;
+    font-size: 1.4rem;
+  }
+
+  main p {
+    left: 180px;
+    font-size: 1rem;
+  }
+
+  main a {
+    font-size: 1rem;
+    padding: 8px 12px;
+  }
+}
