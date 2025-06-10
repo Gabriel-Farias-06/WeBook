@@ -8,7 +8,7 @@
 
 ## 🌐 Acesse o Projeto
 
-👉 [Clique aqui para acessar o site](https://seu-usuario.github.io/webook)
+👉 [Clique aqui para acessar o site](https://Gabriel-Farias-06.github.io/WeBook)
 
 ---
 
