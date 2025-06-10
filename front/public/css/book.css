@@ -1,6 +1,5 @@
 body {
-  margin: 0px;
-  padding: 0px;
+  margin-top: 0px;
 }
 
 #sumary-open.modal {
@@ -66,6 +65,7 @@ body {
   font: 500 1.8rem/1.2 "Poppins";
   justify-self: center;
   margin: 0px 320px;
+  white-space: nowrap;
 }
 
 #flex-start-book #sumary {

@@ -470,7 +470,9 @@ p.termos {
 }
 
 img#close {
-  position: absolute;
+  position: fixed;
+  right: 48px;
+  cursor: pointer;
 }
 
 #livro-meio h2 {

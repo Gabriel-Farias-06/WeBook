@@ -60,7 +60,11 @@ export default function CheckoutForm({
     <div className="modal">
       <form onSubmit={handleSubmit} className="modal-content">
         <PaymentElement />
-        <button type="submit" disabled={!stripe || carregando}>
+        <button
+          type="submit"
+          disabled={!stripe || carregando}
+          className={carregando ? "inative" : ""}
+        >
           {carregando ? "Processando..." : "Pagar"}
         </button>
       </form>

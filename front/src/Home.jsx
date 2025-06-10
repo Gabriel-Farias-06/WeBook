@@ -486,6 +486,9 @@ function Home() {
                       0
                     ) * 0.8;
 
+                  console.log(usuario.token);
+                  console.log(total);
+
                   const response = await fetch(
                     "https://webook-8d4j.onrender.com/api/pagamento",
                     {
@@ -494,7 +497,7 @@ function Home() {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${usuario.token}`,
                       },
-                      body: JSON.stringify(total),
+                      body: JSON.stringify(total * 100),
                     }
                   );
 
