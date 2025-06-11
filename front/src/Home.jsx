@@ -24,6 +24,7 @@ function Home() {
   const [clientSecret, setClientSecret] = useState(null);
   const [modalLivro, setModalLivro] = useState(null);
   const [livrosAComprar, setLivrosAComprar] = useState(null);
+  const [livrosDisponiveis, setLivrosDisponiveis] = useState(null);
   const [livrosFiltrados, setLivrosFiltrados] = useState(null);
   const [carrinho, setCarrinho] = useState([]);
   const [notifications, setNotifications] = useState([]);
@@ -33,8 +34,12 @@ function Home() {
   }, [generos]);
 
   useEffect(() => {
+    if (generoAtivo) filterBooks();
+  }, [generoAtivo]);
+
+  useEffect(() => {
     if (livros && usuario)
-      setLivrosFiltrados(
+      setLivrosDisponiveis(
         livros.filter((livro) => {
           if (usuario.livros)
             return !usuario.livros.some(
@@ -44,7 +49,7 @@ function Home() {
           return true;
         })
       );
-    else if (livros) setLivrosFiltrados(livros);
+    else if (livros) setLivrosDisponiveis(livros);
   }, [livros, usuario]);
 
   useEffect(() => {
@@ -93,12 +98,10 @@ function Home() {
 
   function filterBooks(termo = "") {
     const termoLower = termo.toLowerCase();
-    const filtrados = livros.filter((livro) => {
+    const filtrados = livrosDisponiveis.filter((livro) => {
       const porGenero =
         generoAtivo.nome === "Todos" ||
-        livro.generos.some(
-          (genero) => genero.genero_id == generoAtivo.genero_id
-        );
+        livro.generos.some((genero) => genero.nome == generoAtivo.nome);
 
       const porTitulo = livro.titulo.toLowerCase().includes(termoLower);
 
@@ -594,11 +597,17 @@ function Home() {
                   </li>
                   <li>
                     <p>Autor</p>
-                    <p>{modalLivro.autor.nome}</p>
+                    <p>
+                      {modalLivro.autor.nome.charAt(0).toUpperCase() +
+                        modalLivro.autor.nome.substring(1).toLowerCase()}
+                    </p>
                   </li>
                   <li>
                     <p>Editora</p>
-                    <p>{modalLivro.editora.nome}</p>
+                    <p>
+                      {modalLivro.editora.nome.charAt(0).toUpperCase() +
+                        modalLivro.editora.nome.substring(1).toLowerCase()}
+                    </p>
                   </li>
                 </ul>
                 <div id="avaliacao">
@@ -802,7 +811,6 @@ function Home() {
               onClick={() => {
                 document.getElementById("searchInput").value = "";
                 setGeneroAtivo({ nome: "Todos", genero_id: "unique" });
-                filterBooks();
               }}
             >
               Todos
@@ -817,7 +825,6 @@ function Home() {
                   onClick={() => {
                     document.getElementById("searchInput").value = "";
                     setGeneroAtivo(genero);
-                    filterBooks();
                   }}
                 >
                   {genero.nome}
@@ -837,25 +844,27 @@ function Home() {
               {livrosFiltrados.map((livro) => (
                 <li key={livro.livro_id} onClick={() => setModalLivro(livro)}>
                   <a href="#">
-                    <img src={livro.caminhoLivro} />
+                    <img src={livro.caminhoLivro} id="book-img" />
                     <h2>
-                      {livro.titulo.length > 21
-                        ? livro.titulo.substring(0, 21) + "..."
+                      {livro.titulo.length > 23
+                        ? livro.titulo.substring(0, 23) + "..."
                         : livro.titulo}
                     </h2>
                     <div>
                       <p>{"R$ " + livro.preco.toFixed(2)}</p>
-                      <img src={`${import.meta.env.BASE_URL}img/Star.svg`} />
-                      <p id="avaliacao">
-                        {livro.usuarios
-                          ? (
-                              livro.usuarios.reduce(
-                                (soma, usuario) => soma + usuario.nota,
-                                0
-                              ) / livro.usuarios.length
-                            ).toFixed(1)
-                          : "0.0"}
-                      </p>
+                      <div>
+                        <img src={`${import.meta.env.BASE_URL}img/Star.svg`} />
+                        <p id="avaliacao">
+                          {livro.usuarios
+                            ? (
+                                livro.usuarios.reduce(
+                                  (soma, usuario) => soma + usuario.nota,
+                                  0
+                                ) / livro.usuarios.length
+                              ).toFixed(1)
+                            : "0.0"}
+                        </p>
+                      </div>
                     </div>
                   </a>
                 </li>

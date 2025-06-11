@@ -21,7 +21,7 @@ function Links() {
           />
           <a href="https://github.com/Gabriel-Farias-06">Gabriel</a> <p>&</p>
           <a href="https://github.com/Hugo-Oliveira-RD11">Hugo</a> <p>&</p>
-          <a href="https://github.com/emily/">Emily</a>
+          <a href="https://github.com/emi-ly111">Emily</a>
         </div>
         <div>
           <img
@@ -30,8 +30,8 @@ function Links() {
           />
           <a href="https://www.instagram.com/gabriel___farias___/">Gabriel</a>{" "}
           <p>&</p>
-          <a href="https://www.instagram.com/hugo-resende/">Hugo</a> <p>&</p>
-          <a href="https://www.instagram.com/emily/">Emily</a>
+          <a href="#">Hugo</a> <p>&</p>
+          <a href="#">Emily</a>
         </div>
       </article>
     </section>

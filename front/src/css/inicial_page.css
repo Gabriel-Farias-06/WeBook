@@ -183,7 +183,7 @@ button.inative {
 .modal .protect::before {
   display: block;
   content: "";
-  background-image: url("WeBook/img/protected.svg");
+  background-image: url("/WeBook/img/protected.svg");
   background-repeat: no-repeat;
   width: 24px;
   height: 24px;
@@ -254,13 +254,13 @@ p.termos {
 #books div {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   color: var(--r9);
 }
 
 #books div img {
   width: 28px;
   height: 28px;
-  padding-left: 74px;
 }
 
 #books #avaliacao {
@@ -289,6 +289,7 @@ p.termos {
   border-radius: 20px;
   font: 500 1.25rem/1.5 "Roboto";
   padding: 6px 16px;
+  cursor: pointer;
 }
 
 #categories .active {
@@ -650,7 +651,7 @@ img#close {
   width: 16px;
   height: 16px;
   display: inline-block;
-  background: url("WeBook/img/Verify.svg") no-repeat center;
+  background: url("/WeBook/img/Verify.svg") no-repeat center;
 }
 
 #livro-compra a {
@@ -677,6 +678,10 @@ img#close {
 
 #livro-compra h5 + img {
   padding-left: 30px;
+}
+
+#book-img {
+  border-radius: 8px;
 }
 
 @media (max-width: 1000px) {
@@ -767,4 +772,9 @@ img#close {
   .modal-content p {
     font-size: 0.7rem;
   }
+}
+
+#footer img {
+  padding-left: 28px;
+  justify-self: center;
 }
