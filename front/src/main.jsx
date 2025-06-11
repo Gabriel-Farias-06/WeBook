@@ -11,7 +11,7 @@ createRoot(document.getElementById("root")).render(
   <GenerosProvider>
     <UsuarioProvider>
       <LivrosProvider>
-        <Router>
+        <Router basename="/WeBook">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />

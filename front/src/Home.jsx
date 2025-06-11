@@ -71,7 +71,7 @@ function Home() {
     if (usuario && usuario.livros.length)
       addNotification(
         `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
-        "/img/LivroIcone.png"
+        `${import.meta.env.BASE_URL}img/LivroIcone.png`
       );
   }, [usuario]);
 
@@ -79,7 +79,7 @@ function Home() {
     if (livros)
       addNotification(
         "Livros novos chegando na área, venha conferir os lançamentos da semana.",
-        "/img/NewIcone.png"
+        `${import.meta.env.BASE_URL}img/NewIcone.png`
       );
   }, [livros]);
 
@@ -202,7 +202,7 @@ function Home() {
             }}
           />
           <img
-            src="/img/Search.svg"
+            src={`${import.meta.env.BASE_URL}img/Search.svg`}
             className="search-icon"
             onClick={() => {
               const termo = document
@@ -215,7 +215,7 @@ function Home() {
         <div id="symbols">
           <a href="#">
             <img
-              src="/img/Cart.svg"
+              src={`${import.meta.env.BASE_URL}img/Cart.svg`}
               alt="Carrinho"
               onClick={() => {
                 if (usuario) {
@@ -227,7 +227,7 @@ function Home() {
           </a>
           <a href="#">
             <img
-              src="/img/Notification.svg"
+              src={`${import.meta.env.BASE_URL}img/Notification.svg`}
               alt="Notificações"
               onClick={() => {
                 if (usuario) {
@@ -252,7 +252,7 @@ function Home() {
               src={
                 usuario && usuario.caminhoFoto
                   ? usuario.caminhoFoto
-                  : "./img/UserDefault.png"
+                  : `${import.meta.env.BASE_URL}img/UserDefault.png`
               }
               alt="Usuário"
             />
@@ -265,7 +265,7 @@ function Home() {
             onClick={() => setModalAberto(null)}
           >
             <img
-              src="/img/Close.svg"
+              src={`${import.meta.env.BASE_URL}img/Close.svg`}
               onClick={() => {
                 setModalAberto(null);
               }}
@@ -329,7 +329,10 @@ function Home() {
             id="cadastro-bg"
             onClick={() => setModalAberto(null)}
           >
-            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+            <img
+              src={`${import.meta.env.BASE_URL}img/Close.svg`}
+              onClick={() => setModalAberto(null)}
+            />
             <div
               className="modal-content"
               id="cadastro"
@@ -402,7 +405,10 @@ function Home() {
             className="modal modal-error"
             onClick={() => setModalAberto(null)}
           >
-            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+            <img
+              src={`${import.meta.env.BASE_URL}img/Close.svg`}
+              onClick={() => setModalAberto(null)}
+            />
             <div
               className="modal-content"
               id="cadastro"
@@ -410,7 +416,7 @@ function Home() {
             >
               <span></span>
               <img
-                src="/img/LoginError.png"
+                src={`${import.meta.env.BASE_URL}img/LoginError.png`}
                 alt="Ícone de erro no login"
                 id="img-error"
               />
@@ -453,7 +459,7 @@ function Home() {
                         <p>{livro.preco.toFixed(2)}</p>
                         <img
                           id="remove"
-                          src="/img/Remove.svg"
+                          src={`${import.meta.env.BASE_URL}img/Remove.svg`}
                           alt="Remover livro"
                           onClick={() => {
                             setCarrinho((prev) =>
@@ -552,7 +558,7 @@ function Home() {
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <img
-                src="/img/Close.svg"
+                src={`${import.meta.env.BASE_URL}img/Close.svg`}
                 id="close"
                 onClick={() => setModalLivro(null)}
               />
@@ -570,7 +576,10 @@ function Home() {
                         ).toFixed(1)
                       : "0.0"}
                   </p>
-                  <img src="/img/Stars.svg" alt="Avaliações" />
+                  <img
+                    src={`${import.meta.env.BASE_URL}img/Stars.svg`}
+                    alt="Avaliações"
+                  />
                   <p>
                     {modalLivro.usuarios ? modalLivro.usuarios.length : "0"}{" "}
                     avaliações
@@ -611,13 +620,19 @@ function Home() {
                           ).toFixed(1)
                         : "0.0"}
                     </p>
-                    <img src="/img/Stars.svg" alt="Avaliações" />
+                    <img
+                      src={`${import.meta.env.BASE_URL}img/Stars.svg`}
+                      alt="Avaliações"
+                    />
                   </div>
                   <ul>
                     {[5, 4, 3, 2, 1].map((i) => (
                       <li key={i}>
                         <p>{i} estrelas</p>
-                        <img src="/img/Bar.svg" alt="Barra de estrelas" />
+                        <img
+                          src={`${import.meta.env.BASE_URL}img/Bar.svg`}
+                          alt="Barra de estrelas"
+                        />
                         <p>
                           {modalLivro.usuarios
                             ? modalLivro.usuarios.filter(
@@ -639,7 +654,10 @@ function Home() {
                 <ul>
                   <li>
                     <div className="flex">
-                      <img src="/img/Book.svg" alt="Ícone de livro" />
+                      <img
+                        src={`${import.meta.env.BASE_URL}img/Book.svg`}
+                        alt="Ícone de livro"
+                      />
                       <h4>Política de troca e devolução</h4>
                     </div>
                     <ul>
@@ -649,7 +667,10 @@ function Home() {
                   </li>
                   <li>
                     <div className="flex">
-                      <img src="/img/Security.svg" alt="Ícone de proteção" />
+                      <img
+                        src={`${import.meta.env.BASE_URL}img/Security.svg`}
+                        alt="Ícone de proteção"
+                      />
                       <h4>Segurança e privacidade</h4>
                     </div>
                     <ul>
@@ -718,7 +739,10 @@ function Home() {
                   Comprar agora
                 </a>
                 <h5>Formas de Pagamento</h5>
-                <img src="/img/Payments.png" alt="Formas de pagamento" />
+                <img
+                  src={`${import.meta.env.BASE_URL}img/Payments.png`}
+                  alt="Formas de pagamento"
+                />
               </div>
             </div>
           </div>
@@ -740,7 +764,10 @@ function Home() {
             className="modal modal-error"
             onClick={() => setModalAberto(null)}
           >
-            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+            <img
+              src={`${import.meta.env.BASE_URL}img/Close.svg`}
+              onClick={() => setModalAberto(null)}
+            />
             <div
               className="modal-content"
               id="cadastro"
@@ -748,7 +775,7 @@ function Home() {
             >
               <span></span>
               <img
-                src="/img/LoginError.png"
+                src={`${import.meta.env.BASE_URL}img/LoginError.png`}
                 alt="Ícone de erro no login"
                 id="img-error"
               />
@@ -821,7 +848,7 @@ function Home() {
                     </h2>
                     <div>
                       <p>{"R$ " + livro.preco.toFixed(2)}</p>
-                      <img src="/img/Star.svg" />
+                      <img src={`${import.meta.env.BASE_URL}img/Star.svg`} />
                       <p id="avaliacao">
                         {livro.usuarios
                           ? (

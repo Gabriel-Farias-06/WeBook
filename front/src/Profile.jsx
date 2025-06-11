@@ -13,6 +13,9 @@ import { useLivros } from "./providers/LivrosProvider";
 
 function Profile() {
   const navigate = useNavigate();
+  const [clientSecret, setClientSecret] = useState(null);
+  const [livrosAComprar, setLivrosAComprar] = useState(null);
+
   const [notifications, setNotifications] = useState([]);
   const [modalAberto, setModalAberto] = useState(null);
   const [changePassword, setChangePassword] = useState(false);
@@ -25,7 +28,7 @@ function Profile() {
   const [newEbook, setNewEbook] = useState(null);
   const [newBook, setNewBook] = useState(null);
   const [isbn, setIsbn] = useState("");
-  const { usuario, loading, setUsuario } = useUsuario();
+  const { usuario, loading, setUsuario, setUpdateUsuario } = useUsuario();
   const { generos, generosLoading } = useGeneros();
   const [alarmPassword, setAlarmPassword] = useState(false);
   const [generosOptions, setGenerosOptions] = useState([]);
@@ -45,6 +48,31 @@ function Profile() {
   useEffect(() => {
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
   }, [carrinho]);
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => setNotifications((prev) => prev.slice(1)),
+      60000 * 60
+    );
+
+    return () => clearTimeout(timeout);
+  }, [notifications]);
+
+  useEffect(() => {
+    if (usuario && usuario.livros.length)
+      addNotification(
+        `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
+        "./img/LivroIcone.png"
+      );
+  }, [usuario]);
+
+  useEffect(() => {
+    if (livros)
+      addNotification(
+        "Livros novos chegando na área, venha conferir os lançamentos da semana.",
+        "./img/NewIcone.png"
+      );
+  }, [livros]);
 
   if (loading || generosLoading || livrosLoading) <Loading />;
 
@@ -72,7 +100,7 @@ function Profile() {
     if (usuario && usuario.livros.length)
       addNotification(
         `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
-        "/img/LivroIcone.png"
+        "./img/LivroIcone.png"
       );
   }, [usuario]);
 
@@ -80,7 +108,7 @@ function Profile() {
     if (livros)
       addNotification(
         "Livros novos chegando na área, venha conferir os lançamentos da semana.",
-        "/img/NewIcone.png"
+        "./img/NewIcone.png"
       );
   }, [livros]);
 
@@ -348,7 +376,7 @@ function Profile() {
             }}
           />
           <img
-            src="/img/Search.svg"
+            src="./img/Search.svg"
             className="search-icon"
             onClick={() => {
               const termo = document
@@ -361,7 +389,7 @@ function Profile() {
         <div id="symbols">
           <a href="#">
             <img
-              src="/img/Cart.svg"
+              src="./img/Cart.svg"
               alt="Carrinho"
               onClick={() => {
                 if (usuario) {
@@ -373,7 +401,7 @@ function Profile() {
           </a>
           <a href="#">
             <img
-              src="/img/Notification.svg"
+              src="./img/Notification.svg"
               alt="Notificações"
               onClick={() => {
                 if (usuario) {
@@ -385,7 +413,7 @@ function Profile() {
           </a>
           <a href="#">
             <img
-              src="/img/Settings.svg"
+              src="./img/Settings.svg"
               alt="Configurações"
               onClick={() => {
                 setModalAberto("config");
@@ -399,7 +427,7 @@ function Profile() {
             id="cadastro-bg"
             onClick={() => setModalAberto(null)}
           >
-            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+            <img src="./img/Close.svg" onClick={() => setModalAberto(null)} />
             <form
               className="modal-content"
               id="cadastro"
@@ -531,7 +559,7 @@ function Profile() {
                   document.body.style.overflow = "hidden";
                 }}
               >
-                <img src="/img/ConfigBook.svg" alt="" />
+                <img src="./img/ConfigBook.svg" alt="" />
                 <p>adicionar livro</p>
               </span>
               <span
@@ -539,7 +567,7 @@ function Profile() {
                   setModalAberto("excluir-conta");
                 }}
               >
-                <img src="/img/Delete.svg" alt="" />
+                <img src="./img/Delete.svg" alt="" />
                 <p>excluir livro </p>
               </span>
               <span
@@ -547,7 +575,7 @@ function Profile() {
                   setModalAberto("excluir-livro");
                 }}
               >
-                <img src="/img/Delete.svg" alt="" />
+                <img src="./img/Delete.svg" alt="" />
                 <p>excluir conta </p>
               </span>
               <span
@@ -556,7 +584,7 @@ function Profile() {
                   navigate("/");
                 }}
               >
-                <img src="/img/Logout.svg" alt="" />
+                <img src="./img/Logout.svg" alt="" />
                 <p>sair </p>
               </span>
             </div>
@@ -564,7 +592,7 @@ function Profile() {
         )}
         {modalAberto == "excluir-conta" && (
           <div className="modal" onClick={() => setModalAberto(null)}>
-            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+            <img src="./img/Close.svg" onClick={() => setModalAberto(null)} />
             <div
               className="modal-content delete"
               onClick={(e) => e.stopPropagation()}
@@ -603,7 +631,7 @@ function Profile() {
         )}
         {modalAberto == "excluir-conta" && (
           <div className="modal" onClick={() => setModalAberto(null)}>
-            <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
+            <img src="./img/Close.svg" onClick={() => setModalAberto(null)} />
             <div
               className="modal-content delete"
               onClick={(e) => e.stopPropagation()}
@@ -852,7 +880,7 @@ function Profile() {
                         <p>{livro.preco.toFixed(2)}</p>
                         <img
                           id="remove"
-                          src="/img/Remove.svg"
+                          src="./img/Remove.svg"
                           alt="Remover livro"
                           onClick={() => {
                             setCarrinho((prev) =>
@@ -867,7 +895,41 @@ function Profile() {
                   </ul>
                 )}
               </div>
-              <a id="more">
+              <a
+                id="more"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  if (carrinho.length == 0) return setModalAberto(null);
+                  e.target.classList.add("inative");
+                  e.currentTarget.innerText = "Carregando";
+                  const total =
+                    carrinho.reduce(
+                      (acumulator, produto) => produto.preco + acumulator,
+                      0
+                    ) * 0.8;
+
+                  console.log(usuario.token);
+                  console.log(total);
+
+                  const response = await fetch(
+                    "https://webook-8d4j.onrender.com/api/pagamento",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${usuario.token}`,
+                      },
+                      body: JSON.stringify(total * 100),
+                    }
+                  );
+
+                  const data = await response.json();
+                  setClientSecret(data.clientSecret);
+                  setLivrosAComprar(carrinho.map((livro) => livro.livro_id));
+                  setModalAberto("payment");
+                  e.target.classList.remove("inative");
+                }}
+              >
                 {carrinho.length
                   ? "Comprar agora"
                   : "Adicione produtos ao carrinho"}
@@ -903,13 +965,24 @@ function Profile() {
             </div>
           </div>
         )}
+        {modalAberto == "payment" && clientSecret && (
+          <StripeContainer
+            clientSecret={clientSecret}
+            idLivros={livrosAComprar}
+            idUsuario={usuario.usuario_id}
+            setModalAberto={setModalAberto}
+            token={usuario.token}
+            setUpdateLivro={setUpdateLivro}
+            setUpdateUsuario={setUpdateUsuario}
+          />
+        )}
       </header>
       <main>
         <img
           src={
             usuario.caminhoFoto
               ? usuario.caminhoFoto
-              : "/img/UserDefaultBigger.png"
+              : "./img/UserDefaultBigger.png"
           }
         />
         <h2>{usuario.nome ? usuario.nome : "userDeafultName"}</h2>

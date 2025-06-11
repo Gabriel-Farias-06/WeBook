@@ -27,8 +27,10 @@ export function LivrosProvider({ children }) {
       }
     }
 
+    console.log("culpa da porcarias dos livrosprovider");
+
     getBooks();
-  }, [updateLivro, usuario, livros]);
+  }, [updateLivro, usuario]);
 
   return (
     <LivrosContext.Provider

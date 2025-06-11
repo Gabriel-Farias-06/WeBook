@@ -90,28 +90,28 @@ function Livro() {
     >
       <div id="flex-start-book">
         <Link to="/profile">
-          <img src="/img/Back.svg" alt="Voltar para o perfil" />
+          <img src="./img/Back.svg" alt="Voltar para o perfil" />
         </Link>
         <span id="sumary" onClick={() => setOpenSumary(true)}>
-          <img src="/img/Sumary.svg" alt="Abrir sumário" />
+          <img src="./img/Sumary.svg" alt="Abrir sumário" />
         </span>
         <p>{titulo}</p>
         <button onClick={() => setFontSize((size) => Math.max(size - 10, 80))}>
           <img
-            src="/img/DecreaseFontSize.svg"
+            src="./img/DecreaseFontSize.svg"
             alt="Diminuir tamanho da fonte"
           />
         </button>
         <button onClick={() => setFontSize((size) => Math.min(size + 10, 150))}>
           <img
-            src="/img/IncreaseFontSize.svg"
+            src="./img/IncreaseFontSize.svg"
             alt="Aumentar tamanho da fonte"
           />
         </button>
         <button onClick={() => setDarkMode(!darkMode)}>
           <img
             className={`image-fade ${fade ? "hidden" : ""}`}
-            src={changeImage ? "/img/DarkMode.svg" : "/img/LightMode.svg"}
+            src={changeImage ? "./img/DarkMode.svg" : "./img/LightMode.svg"}
             alt="Alternar entre modo claro e escuro"
           />
         </button>
