@@ -3,7 +3,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import "../../public/css/payments.css";
+import "../css/payments.css";
 import { useState } from "react";
 
 export default function CheckoutForm({

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import ePub from "epubjs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import "../../public/css/style.css";
+import "../css/style.css";
 import { useUsuario } from "../providers/UsuarioProvider";
 
 function Livro() {
@@ -9,7 +9,6 @@ function Livro() {
   const { titulo } = location.state || {};
   const viewerRef = useRef();
   const fileUrl = location.state.caminhoEbook;
-  console.log(fileUrl);
   const renditionRef = useRef();
   const bookRef = useRef();
   const [fontSize, setFontSize] = useState(100);

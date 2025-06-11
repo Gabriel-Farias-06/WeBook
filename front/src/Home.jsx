@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../public/css/style.css";
+import "./css/style.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useGeneros } from "./providers/GenerosProvider";
 import { useLivros } from "./providers/LivrosProvider";
@@ -491,9 +491,6 @@ function Home() {
                       (acumulator, produto) => produto.preco + acumulator,
                       0
                     ) * 0.8;
-
-                  console.log(usuario.token);
-                  console.log(total);
 
                   const response = await fetch(
                     "https://webook-8d4j.onrender.com/api/pagamento",

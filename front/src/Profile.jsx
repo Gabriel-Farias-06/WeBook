@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUsuario } from "./providers/UsuarioProvider";
-import "../public/css/profile.css";
+import "./css/profile.css";
 import Footer from "./components/Footer";
 import Links from "./components/Links";
 import Loading from "./components/Loading";
@@ -331,8 +331,6 @@ function Profile() {
 
     setGenerosOptions([]);
 
-    console.log(book);
-
     try {
       const res = await fetch("https://webook-8d4j.onrender.com/api/livro", {
         method: "POST",
@@ -564,7 +562,7 @@ function Profile() {
               </span>
               <span
                 onClick={() => {
-                  setModalAberto("excluir-conta");
+                  setModalAberto("excluir-livro");
                 }}
               >
                 <img src="./img/Delete.svg" alt="" />
@@ -572,10 +570,10 @@ function Profile() {
               </span>
               <span
                 onClick={() => {
-                  setModalAberto("excluir-livro");
+                  setModalAberto("excluir-conta");
                 }}
               >
-                <img src="./img/Delete.svg" alt="" />
+                <img src="./img/Delete.svg" alt="Excluir conta ícone" />
                 <p>excluir conta </p>
               </span>
               <span
@@ -629,7 +627,7 @@ function Profile() {
             </div>
           </div>
         )}
-        {modalAberto == "excluir-conta" && (
+        {modalAberto == "excluir-livro" && (
           <div className="modal" onClick={() => setModalAberto(null)}>
             <img src="./img/Close.svg" onClick={() => setModalAberto(null)} />
             <div
@@ -908,9 +906,6 @@ function Profile() {
                       0
                     ) * 0.8;
 
-                  console.log(usuario.token);
-                  console.log(total);
-
                   const response = await fetch(
                     "https://webook-8d4j.onrender.com/api/pagamento",
                     {
@@ -1007,7 +1002,6 @@ function Profile() {
                 <div
                   href="#"
                   onClick={() => {
-                    console.log(livro);
                     navigate("/livro", { state: livro });
                   }}
                 >
