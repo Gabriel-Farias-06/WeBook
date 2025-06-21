@@ -8,7 +8,7 @@
 
 ## 🌐 Acesse o Projeto
 
-👉 [Clique aqui para acessar o site](https://Gabriel-Farias-06.github.io/WeBook)
+[![WeBook](https://img.shields.io/badge/webook-871BD7?style=for-the-badge&labelColor=black)](https://Gabriel-Farias-06.github.io/WeBook)
 
 ---
 
