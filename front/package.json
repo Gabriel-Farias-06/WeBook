@@ -6,12 +6,23 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^3.7.0",
+    "@stripe/stripe-js": "^7.3.0",
+    "@supabase/supabase-js": "^2.50.0",
+    "bcrypt": "^6.0.0",
+    "epubjs": "^0.3.93",
+    "gh-pages": "^6.3.0",
+    "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-imask": "^7.6.1",
+    "react-input-mask-next": "^3.0.0-alpha.12",
     "react-router-dom": "^7.6.0",
     "uuid": "^11.1.0"
   },

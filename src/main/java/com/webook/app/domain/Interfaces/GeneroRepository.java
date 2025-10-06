@@ -10,6 +10,7 @@ public interface GeneroRepository {
     Genero create(Genero genero);
     Optional<Genero> findById(UUID id);
     Optional<Genero> findByNome(String name);
+    List<Genero> findAll();
     Genero update(Genero genero);
     void delete(UUID id);
 }

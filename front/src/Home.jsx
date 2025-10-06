@@ -1,68 +1,196 @@
-import { useState } from "react";
-import "../public/css/style.css";
-import { Link } from "react-router-dom";
-import { useGeneros } from "./GenerosProvider";
-import { useLivros } from "./LivrosProvider";
-import Footer from "./Footer";
-import Links from "./Links";
+import { useState, useEffect } from "react";
+import "./css/style.css";
+import { Link, useNavigate } from "react-router-dom";
+import { useGeneros } from "./providers/GenerosProvider";
+import { useLivros } from "./providers/LivrosProvider";
+import Footer from "./components/Footer";
+import Links from "./components/Links";
+import Loading from "./components/Loading";
+import { useUsuario } from "./providers/UsuarioProvider";
+import StripeContainer from "./components/StripeContainer";
+import { jwtDecode } from "jwt-decode";
 
 function Home() {
-  const [generosMock] = useGeneros();
-  const [livrosMock] = useLivros();
+  const navigate = useNavigate();
+  const { generos, generosLoading } = useGeneros();
+  const { livros, livrosLoading, setUpdateLivro } = useLivros();
+  const { usuario, setUsuario, loading, setUpdateUsuario } = useUsuario();
 
-  const [livrosFiltrados, setLivrosFiltrados] = useState(livrosMock);
-  const [generoAtivo, setGeneroAtivo] = useState(generosMock.at(0));
-  const [modalAberto, setModalAberto] = useState(null);
+  const [generoAtivo, setGeneroAtivo] = useState();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [usuarioLogado, setUsuarioLogado] = useState(null);
+  const [alarmPassword, setAlarmPassword] = useState(false);
+  const [modalAberto, setModalAberto] = useState(null);
+  const [clientSecret, setClientSecret] = useState(null);
   const [modalLivro, setModalLivro] = useState(null);
+  const [livrosAComprar, setLivrosAComprar] = useState(null);
+  const [livrosDisponiveis, setLivrosDisponiveis] = useState(null);
+  const [livrosFiltrados, setLivrosFiltrados] = useState(null);
+  const [carrinho, setCarrinho] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
-  function filterFilms(genero_id, termo = "") {
-    if (genero_id == "0000-zzzz")
-      setLivrosFiltrados(
-        livrosMock.filter((livro) => livro.titulo.toLowerCase().includes(termo))
-      );
-    else {
-      const filter = livrosMock.filter((livro) =>
-        livro.generos.includes(genero_id)
-      );
+  useEffect(() => {
+    if (generos) setGeneroAtivo({ nome: "Todos", genero_id: "unique" });
+  }, [generos]);
 
-      setLivrosFiltrados(
-        filter.filter((livroFiltrado) =>
-          livroFiltrado.titulo.toLowerCase().includes(termo)
-        )
+  useEffect(() => {
+    if (generoAtivo) filterBooks();
+  }, [generoAtivo]);
+
+  useEffect(() => {
+    if (livros && usuario)
+      setLivrosDisponiveis(
+        livros.filter((livro) => {
+          if (usuario.livros)
+            return !usuario.livros.some(
+              (livroUsuario) => livroUsuario.livro_id === livro.livro_id
+            );
+
+          return true;
+        })
       );
+    else if (livros) setLivrosDisponiveis(livros);
+  }, [livros, usuario]);
+
+  useEffect(() => {
+    const salvo = localStorage.getItem("carrinho");
+    if (salvo) {
+      setCarrinho(JSON.parse(salvo));
     }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  }, [carrinho]);
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => setNotifications((prev) => prev.slice(1)),
+      60000 * 60
+    );
+
+    return () => clearTimeout(timeout);
+  }, [notifications]);
+
+  useEffect(() => {
+    if (usuario && usuario.livros.length)
+      addNotification(
+        `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
+        `${import.meta.env.BASE_URL}img/LivroIcone.png`
+      );
+  }, [usuario]);
+
+  useEffect(() => {
+    if (livros)
+      addNotification(
+        "Livros novos chegando na área, venha conferir os lançamentos da semana.",
+        `${import.meta.env.BASE_URL}img/NewIcone.png`
+      );
+  }, [livros]);
+
+  function addNotification(message, typePhoto) {
+    setNotifications((prev) => {
+      if (prev.some((notification) => notification.message === message))
+        return prev;
+      return [...prev, { message_id: Date.now(), message, typePhoto }];
+    });
+  }
+
+  function filterBooks(termo = "") {
+    const termoLower = termo.toLowerCase();
+    const filtrados = livrosDisponiveis.filter((livro) => {
+      const porGenero =
+        generoAtivo.nome === "Todos" ||
+        livro.generos.some((genero) => genero.nome == generoAtivo.nome);
+
+      const porTitulo = livro.titulo.toLowerCase().includes(termoLower);
+
+      return porGenero && porTitulo;
+    });
+
+    setLivrosFiltrados(filtrados);
+  }
+
+  async function getUser(token) {
+    const decoded = jwtDecode(token);
+    if (decoded.exp && decoded.exp < Date.now() / 1000) {
+      setUsuario(null);
+      return;
+    }
+
+    const response = await fetch(
+      `https://webook-8d4j.onrender.com/api/usuario/${decoded.usuario_id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data) setUsuario({ ...data, token });
+    localStorage.setItem("token", token);
   }
 
   async function createUser() {
-    const response = await fetch(`webook/api/usuario`, {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        senha,
-      }),
-    });
+    const response = await fetch(
+      `https://webook-8d4j.onrender.com/api/usuario/signup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          senha,
+        }),
+      }
+    );
 
     if (response.status != 200) return setModalAberto("create-user-failed");
-    setUsuarioLogado(await response.json());
+    setModalAberto(null);
+    const json = await response.json();
+    await getUser(json.token);
+    navigate("/profile");
   }
 
   async function loginUser() {
     const login = await fetch(
-      `webook-8d4j.onrender.com/api/usuario/${email}/${senha}`
+      `https://webook-8d4j.onrender.com/api/usuario/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          senha,
+        }),
+      }
     );
     if (login.status != 200) return setModalAberto("login-failed");
-    setUsuarioLogado(await login.json());
+    setModalAberto(null);
+    const json = await login.json();
+    await getUser(json.token);
+    navigate("/profile");
   }
+
+  if (loading || generosLoading || livrosLoading) return <Loading />;
 
   return (
     <div>
       <header className="container" id="header">
-        <a href="/" className="logo">
+        <Link to="/" id="logo">
           <span>W</span>e<span>B</span>ook
-        </a>
+        </Link>
         <div id="input-wrapper">
           <input
             type="text"
@@ -70,81 +198,86 @@ function Home() {
             placeholder="pesquise seu livro"
             autoComplete="on"
             onKeyUp={(e) => {
-              const termo = e.currentTarget.value.toLowerCase();
-              filterFilms(generoAtivo.genero_id, termo);
+              if (e.key == "Enter") {
+                const termo = e.currentTarget.value.toLowerCase();
+                filterBooks(termo);
+              }
             }}
           />
           <img
-            src="/img/Search.svg"
+            src={`${import.meta.env.BASE_URL}img/Search.svg`}
             className="search-icon"
             onClick={() => {
               const termo = document
                 .getElementById("searchInput")
                 .value.toLowerCase();
-              filterFilms(generoAtivo.genero_id, termo);
+              filterBooks(termo);
             }}
           />
         </div>
-        <a href="#">
-          <img
-            src="/img/Cart.svg"
-            alt="Carrinho"
-            onClick={() => {
-              if (usuarioLogado) {
-                document.body.style.overflow = "hidden";
-                setModalAberto("shopping");
-              } else setModalAberto("login");
+        <div id="symbols">
+          <a href="#">
+            <img
+              src={`${import.meta.env.BASE_URL}img/Cart.svg`}
+              alt="Carrinho"
+              onClick={() => {
+                if (usuario) {
+                  document.body.style.overflow = "hidden";
+                  setModalAberto("shopping");
+                } else setModalAberto("login");
+              }}
+            />
+          </a>
+          <a href="#">
+            <img
+              src={`${import.meta.env.BASE_URL}img/Notification.svg`}
+              alt="Notificações"
+              onClick={() => {
+                if (usuario) {
+                  document.body.style.overflow = "hidden";
+                  setModalAberto("notifications");
+                } else setModalAberto("login");
+              }}
+            />
+          </a>
+          <Link
+            to="/profile"
+            id="userLogin"
+            onClick={(e) => {
+              if (!usuario) {
+                e.preventDefault();
+                setModalAberto("login");
+              }
             }}
-          />
-        </a>
-        <a href="#">
-          <img
-            src="/img/Notification.svg"
-            alt="Notificações"
-            onClick={() => {
-              if (usuarioLogado) {
-                document.body.style.overflow = "hidden";
-                setModalAberto("notifications");
-              } else setModalAberto("login");
-            }}
-          />
-        </a>
-        <Link
-          to="/profile"
-          id="userLogin"
-          onClick={(e) => {
-            if (!usuarioLogado) {
-              e.preventDefault();
-              setModalAberto("login");
-            }
-          }}
-        >
-          <img
-            src={
-              usuarioLogado && usuarioLogado.caminhoFoto
-                ? usuarioLogado.caminhoFoto
-                : "./img/UserDefault.png"
-            }
-            alt="Usuário"
-          />
-        </Link>
+          >
+            <img
+              id="profilePhoto"
+              src={
+                usuario && usuario.caminhoFoto
+                  ? usuario.caminhoFoto
+                  : `${import.meta.env.BASE_URL}img/UserDefault.png`
+              }
+              alt="Usuário"
+            />
+          </Link>
+        </div>
         {modalAberto === "login" && (
           <div
             className="modal"
             id="login-bg"
             onClick={() => setModalAberto(null)}
           >
-            <div
+            <img
+              src={`${import.meta.env.BASE_URL}img/Close.svg`}
+              onClick={() => {
+                setModalAberto(null);
+              }}
+            />
+            <form
               className="modal-content"
               id="login"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src="/img/Close.svg"
-                onClick={() => {
-                  setModalAberto(null);
-                }}
-              />
               <h3>Entrar</h3>
               <div id="container-flex">
                 <p className="protect">Dados pessoais criptografados.</p>
@@ -165,9 +298,12 @@ function Home() {
               />
               <a
                 href="#"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
-                  loginUser();
+                  e.target.classList.add("inative");
+                  e.currentTarget.innerText = "Carregando";
+                  await loginUser();
+                  e.target.classList.remove("inative");
                 }}
               >
                 Entrar
@@ -187,7 +323,7 @@ function Home() {
                 Ao continuar você afirma que é maior de idade e que leu e aceita
                 os termos da nossa <a href="/terms">política de privacidade.</a>
               </p>
-            </div>
+            </form>
           </div>
         )}
         {modalAberto == "cadastro" && (
@@ -196,12 +332,15 @@ function Home() {
             id="cadastro-bg"
             onClick={() => setModalAberto(null)}
           >
+            <img
+              src={`${import.meta.env.BASE_URL}img/Close.svg`}
+              onClick={() => setModalAberto(null)}
+            />
             <div
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
             >
-              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <h3>Cadastro</h3>
               <div id="container-flex">
                 <p className="protect">Dados pessoais criptografados.</p>
@@ -221,14 +360,27 @@ function Home() {
                 id="senha"
                 autoComplete="new-password"
                 onChange={(e) => {
+                  const regexp =
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=[\]{}|;:'",.<>?/`~-])(?!.*\s).{8,}$/;
+                  if (!regexp.test(e.target.value)) setAlarmPassword(2);
+                  else setAlarmPassword(0);
                   setSenha(e.target.value);
                 }}
               />
+              {alarmPassword == 2 && (
+                <p>
+                  A senha deve conter 8 caracteres, maiúsculas, minúsculas,
+                  números e símbolos!
+                </p>
+              )}
               <a
                 href="#"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.preventDefault();
-                  createUser();
+                  e.target.classList.add("inative");
+                  e.currentTarget.innerText = "Carregando";
+                  await createUser();
+                  e.target.classList.remove("inative");
                 }}
               >
                 Fazer Cadastro
@@ -254,18 +406,20 @@ function Home() {
         {modalAberto == "login-failed" && (
           <div
             className="modal modal-error"
-            id="cadastro-bg"
             onClick={() => setModalAberto(null)}
           >
+            <img
+              src={`${import.meta.env.BASE_URL}img/Close.svg`}
+              onClick={() => setModalAberto(null)}
+            />
             <div
               className="modal-content"
               id="cadastro"
               onClick={(e) => e.stopPropagation()}
             >
               <span></span>
-              <img src="/img/Close.svg" onClick={() => setModalAberto(null)} />
               <img
-                src="/img/LoginError.png"
+                src={`${import.meta.env.BASE_URL}img/LoginError.png`}
                 alt="Ícone de erro no login"
                 id="img-error"
               />
@@ -290,22 +444,81 @@ function Home() {
             }}
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <p>Produtos adicionados recentemente</p>
+              <p>
+                {carrinho.length
+                  ? "Produtos adicionados recentemente"
+                  : "O carrinho está vazio"}
+              </p>
               <div>
-                <ul>
-                  {livrosMock.map((livro) => (
-                    <li key={livro.livro_id}>
-                      <img
-                        src={"/img/" + livro.caminhoLivro}
-                        alt={"Capa do livro " + livro.titulo}
-                      />
-                      <p id="titulo">{livro.titulo}</p>
-                      <p>{livro.preco.toFixed(2)}</p>
-                    </li>
-                  ))}
-                </ul>
+                {carrinho.length != 0 && (
+                  <ul>
+                    {carrinho.map((livro) => (
+                      <li key={livro.livro_id}>
+                        <img
+                          src={livro.caminhoLivro}
+                          alt={"Capa do livro " + livro.titulo}
+                        />
+                        <p id="titulo">{livro.titulo}</p>
+                        <p>{livro.preco.toFixed(2)}</p>
+                        <img
+                          id="remove"
+                          src={`${import.meta.env.BASE_URL}img/Remove.svg`}
+                          alt="Remover livro"
+                          onClick={() => {
+                            setCarrinho((prev) =>
+                              prev.filter(
+                                (item) => item.livro_id != livro.livro_id
+                              )
+                            );
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              <p id="more">Ver tudo</p>
+              <a
+                id="more"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  if (carrinho.length == 0) return setModalAberto(null);
+                  if (!usuario) {
+                    setModalLivro(null);
+                    setModalAberto("login");
+                    return;
+                  }
+                  e.target.classList.add("inative");
+                  e.currentTarget.innerText = "Carregando";
+                  const total =
+                    carrinho.reduce(
+                      (acumulator, produto) => produto.preco + acumulator,
+                      0
+                    ) * 0.8;
+
+                  const response = await fetch(
+                    "https://webook-8d4j.onrender.com/api/pagamento",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${usuario.token}`,
+                      },
+                      body: JSON.stringify(total * 100),
+                    }
+                  );
+
+                  const data = await response.json();
+                  setClientSecret(data.clientSecret);
+                  setLivrosAComprar(carrinho.map((livro) => livro.livro_id));
+                  setModalAberto("payment");
+                  setModalLivro(null);
+                  e.target.classList.remove("inative");
+                }}
+              >
+                {carrinho.length
+                  ? "Comprar agora"
+                  : "Adicione produtos ao carrinho"}
+              </a>
             </div>
           </div>
         )}
@@ -319,22 +532,21 @@ function Home() {
             }}
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <p>Notificações recebidas recentemente</p>
+              <p>
+                {notifications.length
+                  ? "Notificações recebidas recentemente"
+                  : "Você não tem notificações recentes"}
+              </p>
               <div>
                 <ul>
-                  {livrosMock.map((livro) => (
-                    <li key={livro.livro_id}>
-                      <img
-                        src={"/img/" + livro.caminhoLivro}
-                        alt={"Capa do livro " + livro.titulo}
-                      />
-                      <p id="titulo">{livro.titulo}</p>
-                      <p>{livro.sinopse}</p>
+                  {notifications.map((message) => (
+                    <li key={message.message_id}>
+                      <img src={message.typePhoto} alt="Ícone de mensagem" />
+                      <p>{message.message}</p>
                     </li>
                   ))}
                 </ul>
               </div>
-              <p id="more">Ver tudo</p>
             </div>
           </div>
         )}
@@ -346,68 +558,93 @@ function Home() {
           >
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <img
-                src="/img/Close.svg"
+                src={`${import.meta.env.BASE_URL}img/Close.svg`}
                 id="close"
                 onClick={() => setModalLivro(null)}
               />
-              <img src={"/img/" + modalLivro.caminhoLivro} />
+              <img src={modalLivro.caminhoLivro} />
               <div id="livro-meio">
                 <h2>{modalLivro.titulo}</h2>
                 <div id="first-avaliation">
                   <p>
-                    {(
-                      modalLivro.usuarios.reduce(
-                        (soma, usuario) => soma + usuario.nota,
-                        0
-                      ) / modalLivro.usuarios.length
-                    ).toFixed(1)}
+                    {modalLivro.usuarios
+                      ? (
+                          modalLivro.usuarios.reduce(
+                            (soma, usuario) => soma + usuario.nota,
+                            0
+                          ) / modalLivro.usuarios.length
+                        ).toFixed(1)
+                      : "0.0"}
                   </p>
-                  <img src="/img/Stars.svg" alt="Avaliações" />
-                  <p>{modalLivro.usuarios.length} avaliações</p>
+                  <img
+                    src={`${import.meta.env.BASE_URL}img/Stars.svg`}
+                    alt="Avaliações"
+                  />
+                  <p>
+                    {modalLivro.usuarios ? modalLivro.usuarios.length : "0"}{" "}
+                    avaliações
+                  </p>
                 </div>
                 <p id="sinopse">{modalLivro.sinopse}</p>
                 <ul id="extra-info">
                   <li>
-                    <p>Idade de leitura</p>
-                    <p>{modalLivro.idadeLeitura}+</p>
+                    <p>Idade para Leitura</p>
+                    <p>{modalLivro.classificacaoIndicativa}</p>
                   </li>
                   <li>
                     <p>Nº de páginas</p>
-                    <p>{modalLivro.numeroPaginas}+</p>
+                    <p>{modalLivro.numeroPaginas}</p>
                   </li>
                   <li>
                     <p>Autor</p>
-                    <p>{modalLivro.autor.nome}</p>
+                    <p>
+                      {modalLivro.autor.nome.charAt(0).toUpperCase() +
+                        modalLivro.autor.nome.substring(1).toLowerCase()}
+                    </p>
                   </li>
                   <li>
                     <p>Editora</p>
-                    <p>{modalLivro.editora.nome}</p>
+                    <p>
+                      {modalLivro.editora.nome.charAt(0).toUpperCase() +
+                        modalLivro.editora.nome.substring(1).toLowerCase()}
+                    </p>
                   </li>
                 </ul>
                 <div id="avaliacao">
                   <div>
-                    <h3>Avaliações ({modalLivro.usuarios.length})</h3>
+                    <h3>
+                      Avaliações (
+                      {modalLivro.usuarios ? modalLivro.usuarios.length : "0"})
+                    </h3>
                     <p>
-                      {(
-                        modalLivro.usuarios.reduce(
-                          (soma, usuario) => soma + usuario.nota,
-                          0
-                        ) / modalLivro.usuarios.length
-                      ).toFixed(1)}
+                      {modalLivro.usuarios
+                        ? (
+                            modalLivro.usuarios.reduce(
+                              (soma, usuario) => soma + usuario.nota,
+                              0
+                            ) / modalLivro.usuarios.length
+                          ).toFixed(1)
+                        : "0.0"}
                     </p>
-                    <img src="/img/Stars.svg" alt="Avaliações" />
+                    <img
+                      src={`${import.meta.env.BASE_URL}img/Stars.svg`}
+                      alt="Avaliações"
+                    />
                   </div>
                   <ul>
                     {[5, 4, 3, 2, 1].map((i) => (
                       <li key={i}>
                         <p>{i} estrelas</p>
-                        <img src="/img/Bar.svg" alt="Barra de estrelas" />
+                        <img
+                          src={`${import.meta.env.BASE_URL}img/Bar.svg`}
+                          alt="Barra de estrelas"
+                        />
                         <p>
-                          {
-                            modalLivro.usuarios.filter(
-                              (usuario) => usuario.nota === i
-                            ).length
-                          }
+                          {modalLivro.usuarios
+                            ? modalLivro.usuarios.filter(
+                                (usuario) => usuario.nota === i
+                              ).length
+                            : "0"}
                         </p>
                       </li>
                     ))}
@@ -423,7 +660,10 @@ function Home() {
                 <ul>
                   <li>
                     <div className="flex">
-                      <img src="/img/Book.svg" alt="Ícone de livro" />
+                      <img
+                        src={`${import.meta.env.BASE_URL}img/Book.svg`}
+                        alt="Ícone de livro"
+                      />
                       <h4>Política de troca e devolução</h4>
                     </div>
                     <ul>
@@ -433,7 +673,10 @@ function Home() {
                   </li>
                   <li>
                     <div className="flex">
-                      <img src="/img/Security.svg" alt="Ícone de proteção" />
+                      <img
+                        src={`${import.meta.env.BASE_URL}img/Security.svg`}
+                        alt="Ícone de proteção"
+                      />
                       <h4>Segurança e privacidade</h4>
                     </div>
                     <ul>
@@ -442,74 +685,193 @@ function Home() {
                     </ul>
                   </li>
                 </ul>
-                <a href="#">Adicionar ao carrinho</a>
-                <a href="#">Comprar agora</a>
+                <a
+                  className={
+                    carrinho.some(
+                      (item) => item.livro_id === modalLivro.livro_id
+                    )
+                      ? "inative"
+                      : ""
+                  }
+                  href="#"
+                  onClick={() => {
+                    if (
+                      !carrinho.some(
+                        (item) => item.livro_id === modalLivro.livro_id
+                      )
+                    )
+                      setCarrinho((prev) => {
+                        return [...prev, modalLivro];
+                      });
+                  }}
+                >
+                  {carrinho.some(
+                    (item) => item.livro_id === modalLivro.livro_id
+                  )
+                    ? "Produto no carrinho"
+                    : "Adicionar ao carrinho"}
+                </a>
+                <a
+                  href="#"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (!usuario) {
+                      setModalLivro(null);
+                      setModalAberto("login");
+                      return;
+                    }
+                    e.target.classList.add("inative");
+                    e.currentTarget.innerText = "Carregando";
+                    const response = await fetch(
+                      "https://webook-8d4j.onrender.com/api/pagamento",
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${usuario.token}`,
+                        },
+                        body: JSON.stringify(modalLivro.preco * 100),
+                      }
+                    );
+
+                    const data = await response.json();
+                    setClientSecret(data.clientSecret);
+                    setLivrosAComprar([modalLivro.livro_id]);
+                    setModalAberto("payment");
+                    setModalLivro(null);
+                    e.target.classList.remove("inative");
+                  }}
+                >
+                  Comprar agora
+                </a>
                 <h5>Formas de Pagamento</h5>
-                <img src="/img/Payments.png" alt="Formas de pagamento" />
+                <img
+                  src={`${import.meta.env.BASE_URL}img/Payments.png`}
+                  alt="Formas de pagamento"
+                />
               </div>
+            </div>
+          </div>
+        )}
+        {modalAberto == "payment" && clientSecret && (
+          <StripeContainer
+            clientSecret={clientSecret}
+            idLivros={livrosAComprar}
+            idUsuario={usuario.usuario_id}
+            setModalAberto={setModalAberto}
+            token={usuario.token}
+            setUpdateLivro={setUpdateLivro}
+            setUpdateUsuario={setUpdateUsuario}
+          />
+        )}
+
+        {modalAberto == "payment-error" && (
+          <div
+            className="modal modal-error"
+            onClick={() => setModalAberto(null)}
+          >
+            <img
+              src={`${import.meta.env.BASE_URL}img/Close.svg`}
+              onClick={() => setModalAberto(null)}
+            />
+            <div
+              className="modal-content"
+              id="cadastro"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span></span>
+              <img
+                src={`${import.meta.env.BASE_URL}img/LoginError.png`}
+                alt="Ícone de erro no login"
+                id="img-error"
+              />
+              <h3>Ops! Algo deu errado</h3>
+              <p>
+                Ocorreu um erro ao realizar tentar realizar o pagamento,
+                verifique seus dados e se não houver resolução, nos contate.
+              </p>
+              <a href="#" onClick={() => setModalAberto("payment")}>
+                Voltar
+              </a>
             </div>
           </div>
         )}
       </header>
 
-      <article
-        aria-labelledby="categorias"
-        id="categories"
-        className="container"
-      >
-        <ul>
-          {generosMock.map((genero) => {
-            return (
-              <li
-                key={genero.genero_id}
-                className={
-                  generoAtivo.genero_id == genero.genero_id ? "active" : ""
-                }
-                onClick={() => {
-                  document.getElementById("searchInput").value = "";
-                  setGeneroAtivo(genero);
-                  filterFilms(genero.genero_id);
-                }}
-              >
-                <a href="#">{genero.nome}</a>
-              </li>
-            );
-          })}
-        </ul>
-      </article>
-
-      {livrosFiltrados.length == 0 ? (
-        <h2 id="naoEncontrou">Não há resultados para sua pesquisa</h2>
-      ) : (
-        <article aria-labelledby="books" id="books" className="container">
+      {generos && (
+        <article
+          aria-labelledby="categorias"
+          id="categories"
+          className="container"
+        >
           <ul>
-            {livrosFiltrados.map((livro) => (
-              <li key={livro.livro_id} onClick={() => setModalLivro(livro)}>
-                <a href="#">
-                  <img src={"/img/" + livro.caminhoLivro} />
-                  <h2>
-                    {livro.titulo.length > 21
-                      ? livro.titulo.substring(0, 21) + "..."
-                      : livro.titulo}
-                  </h2>
-                  <div>
-                    <p>{"R$ " + livro.preco.toFixed(2)}</p>
-                    <img src="/img/Star.svg" />
-                    <p id="avaliacao">
-                      {(
-                        livro.usuarios.reduce(
-                          (soma, usuario) => soma + usuario.nota,
-                          0
-                        ) / livro.usuarios.length
-                      ).toFixed(1)}
-                    </p>
-                  </div>
-                </a>
-              </li>
-            ))}
+            <li
+              key="unique"
+              className={generoAtivo?.genero_id == "unique" ? "active" : ""}
+              onClick={() => {
+                document.getElementById("searchInput").value = "";
+                setGeneroAtivo({ nome: "Todos", genero_id: "unique" });
+              }}
+            >
+              Todos
+            </li>
+            {generos.map((genero) => {
+              return (
+                <li
+                  key={genero.genero_id}
+                  className={
+                    generoAtivo?.genero_id == genero.genero_id ? "active" : ""
+                  }
+                  onClick={() => {
+                    document.getElementById("searchInput").value = "";
+                    setGeneroAtivo(genero);
+                  }}
+                >
+                  {genero.nome}
+                </li>
+              );
+            })}
           </ul>
         </article>
       )}
+
+      {livrosFiltrados &&
+        (livrosFiltrados.length == 0 ? (
+          <h2 id="naoEncontrou">Não há resultados para sua pesquisa</h2>
+        ) : (
+          <article aria-labelledby="books" id="books" className="container">
+            <ul>
+              {livrosFiltrados.map((livro) => (
+                <li key={livro.livro_id} onClick={() => setModalLivro(livro)}>
+                  <a href="#">
+                    <img src={livro.caminhoLivro} id="book-img" />
+                    <h2>
+                      {livro.titulo.length > 23
+                        ? livro.titulo.substring(0, 23) + "..."
+                        : livro.titulo}
+                    </h2>
+                    <div>
+                      <p>{"R$ " + livro.preco.toFixed(2)}</p>
+                      <div>
+                        <img src={`${import.meta.env.BASE_URL}img/Star.svg`} />
+                        <p id="avaliacao">
+                          {livro.usuarios
+                            ? (
+                                livro.usuarios.reduce(
+                                  (soma, usuario) => soma + usuario.nota,
+                                  0
+                                ) / livro.usuarios.length
+                              ).toFixed(1)
+                            : "0.0"}
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
 
       <Links />
 

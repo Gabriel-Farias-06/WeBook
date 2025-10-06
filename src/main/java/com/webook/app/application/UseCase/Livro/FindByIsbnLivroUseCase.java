@@ -1,7 +1,9 @@
 package com.webook.app.application.UseCase.Livro;
 
+import com.webook.app.application.DTOs.Response.LivroResponse;
 import com.webook.app.domain.Entity.Livro;
 import com.webook.app.domain.Interfaces.LivroRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,7 +17,8 @@ public class FindByIsbnLivroUseCase {
         this.livroRepository = livroRepository;
     }
 
-    public Optional<Livro> execute(String id) throws IllegalArgumentException {
-        return livroRepository.findByIsbn(id);
+    public ResponseEntity<LivroResponse> execute(String id) {
+        Optional<Livro> livro = livroRepository.findByIsbn(id);
+        return livro.map(value -> ResponseEntity.ok(new LivroResponse(value))).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 }

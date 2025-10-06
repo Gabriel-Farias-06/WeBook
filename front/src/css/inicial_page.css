@@ -1,14 +1,14 @@
 #header {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 32px;
 }
 
-#header .logo {
+#header #logo {
   font: 600 3.2rem/1.5 "Playfair Display";
   color: var(--r10);
-  margin-right: 40px;
+  margin-right: 12px;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -18,11 +18,19 @@
   font-style: italic;
 }
 
+#header #input-wrapper {
+  width: 100%;
+  max-width: 940px;
+  flex: 1;
+  position: relative;
+  margin-right: 32px;
+}
+
 #input-wrapper input {
-  height: 2.8rem;
+  height: 2.7rem;
   width: 97%;
-  border-radius: 32px;
   padding-left: 32px;
+  border-radius: 32px;
   background: linear-gradient(
     #f9f2ff 0%,
     #efe2f8 40%,
@@ -35,27 +43,31 @@
 
 #input-wrapper > input,
 #input-wrapper > input::placeholder {
-  font: 500 1.25rem/1.5 "Poppins";
+  font: 500 1.3rem/1.5 "Poppins";
   color: var(--r4);
-}
-
-#header #input-wrapper {
-  width: 100%;
-  min-width: 340px;
-  max-width: 940px;
-  flex: 1;
-  position: relative;
+  padding-bottom: 4px;
 }
 
 .search-icon {
   display: inline-block;
   width: 40px;
   height: 40px;
-  top: 6px;
+  top: 7px;
   right: 4px;
   left: auto;
   position: absolute;
   cursor: pointer;
+}
+
+#symbols {
+  display: flex;
+  gap: 20px;
+}
+
+#profilePhoto {
+  display: inline-block;
+  width: 40px;
+  border-radius: 20px;
 }
 
 .modal {
@@ -75,6 +87,9 @@
   border-radius: 4px;
   width: 30%;
   position: relative;
+  max-height: 80vh;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .modal-content label {
@@ -105,6 +120,13 @@
   border-radius: 4px;
 }
 
+a.inative,
+button.inative {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: default;
+}
+
 .modal-content p {
   color: var(--c10);
   font: 400 0.9rem/1.2 "Poppins";
@@ -115,11 +137,12 @@
   text-decoration: underline;
 }
 
-.modal-content img {
+.modal img {
   cursor: pointer;
   position: absolute;
-  right: -16px;
-  top: -12px;
+  right: 420px;
+  top: 28px;
+  z-index: 10;
 }
 
 .cadastro-link {
@@ -160,7 +183,7 @@
 .modal .protect::before {
   display: block;
   content: "";
-  background-image: url("/img/protected.svg");
+  background-image: url("/WeBook/img/protected.svg");
   background-repeat: no-repeat;
   width: 24px;
   height: 24px;
@@ -231,13 +254,13 @@ p.termos {
 #books div {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   color: var(--r9);
 }
 
 #books div img {
   width: 28px;
   height: 28px;
-  padding-left: 74px;
 }
 
 #books #avaliacao {
@@ -266,6 +289,7 @@ p.termos {
   border-radius: 20px;
   font: 500 1.25rem/1.5 "Roboto";
   padding: 6px 16px;
+  cursor: pointer;
 }
 
 #categories .active {
@@ -276,9 +300,10 @@ p.termos {
 #links {
   padding: 40px 0px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   color: var(--c1);
-  font: 500 1.6rem/1.5 "Poppins";
+  font: 500 1.4rem/1.5 "Poppins";
   gap: 48px;
 }
 
@@ -299,6 +324,7 @@ p.termos {
 #footer {
   padding-top: 40px;
   display: flex;
+  flex-wrap: wrap;
   gap: 120px;
   justify-content: center;
 }
@@ -312,6 +338,7 @@ p.termos {
 #footer p {
   color: var(--r13);
   font: 400 1rem/1.5 "Poppins";
+  white-space: nowrap;
 }
 
 #copyrigth {
@@ -355,10 +382,11 @@ p.termos {
 #shopping li {
   margin-top: 12px;
   display: grid;
-  grid-template-columns: 40px 2fr 1fr;
+  grid-template-columns: 40px 2fr 1fr 1fr;
   align-items: center;
   gap: 12px;
 }
+
 #shopping .modal-content p {
   padding: 12px 24px;
   font: 500 0.9rem/1.2 "Poppins";
@@ -391,11 +419,15 @@ p.termos {
   color: var(--c14);
 }
 
-#shopping #more,
-#notifications #more {
-  font-weight: 400;
-  text-decoration: underline;
+#shopping #more {
+  font-weight: 500;
+  text-decoration: none;
   text-align: center;
+  cursor: pointer;
+  margin: 24px 80px;
+}
+
+#shopping #remove {
   cursor: pointer;
 }
 
@@ -405,30 +437,23 @@ p.termos {
 
 #notifications li {
   margin-top: 12px;
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  align-items: start;
-  column-gap: 12px;
+  align-items: center;
+  display: flex;
+  align-content: center;
+  column-gap: 20px;
 }
 
 #notifications li img {
   position: static;
   max-width: 60px;
   cursor: default;
-  grid-row: 1/3;
 }
 
 #notifications .modal-content li p {
   text-align: start;
-  font: 500 1rem/1 "Poppins";
-  align-self: self-end;
-}
-
-#notifications .modal-content li p + p {
-  font: 400 0.9rem/1 "Poppins";
-  margin-bottom: 32px;
-  align-self: start;
-  color: var(--c10);
+  font: 400 1rem/1 "Poppins";
+  align-self: center;
+  color: var(--r12);
 }
 
 #modal-livro .modal-content {
@@ -446,7 +471,9 @@ p.termos {
 }
 
 img#close {
-  position: absolute;
+  position: fixed;
+  right: 48px;
+  cursor: pointer;
 }
 
 #livro-meio h2 {
@@ -624,7 +651,7 @@ img#close {
   width: 16px;
   height: 16px;
   display: inline-block;
-  background: url("../img/Verify.svg") no-repeat center;
+  background: url("/WeBook/img/Verify.svg") no-repeat center;
 }
 
 #livro-compra a {
@@ -651,4 +678,103 @@ img#close {
 
 #livro-compra h5 + img {
   padding-left: 30px;
+}
+
+#book-img {
+  border-radius: 8px;
+}
+
+@media (max-width: 1000px) {
+  #header {
+    margin-top: 20px;
+    gap: 20px;
+  }
+
+  #header #logo {
+    font-size: 2.6rem;
+  }
+
+  #input-wrapper > input,
+  #input-wrapper > input::placeholder {
+    font-size: 1.1rem;
+    height: 2.4rem;
+  }
+
+  .search-icon {
+    width: 36px;
+    height: 36px;
+    top: 5px;
+    right: -4px;
+  }
+
+  .modal-content {
+    width: 50%;
+  }
+}
+
+@media (max-width: 800px) {
+  #logo {
+    grid-area: logo;
+  }
+
+  #header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas: "logo symbols" "input input";
+  }
+
+  #header #input-wrapper {
+    grid-area: input;
+    margin-bottom: 4px;
+  }
+
+  #symbols {
+    grid-area: symbols;
+    justify-content: end;
+    gap: 32px;
+  }
+
+  #symbols img {
+    width: 36px;
+    height: 36px;
+  }
+
+  #input-wrapper > input {
+    height: 2.2rem;
+    width: 80%;
+    margin-left: 20px;
+  }
+
+  #header #logo {
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  .search-icon {
+    right: 11%;
+    top: 5px;
+    width: 34px;
+    height: 34px;
+  }
+
+  #categories li {
+    font-size: 1rem;
+  }
+
+  #naoEncontrou {
+    font-size: 1.5rem;
+  }
+
+  .modal-content > a {
+    padding: 12px;
+  }
+
+  .modal-content p {
+    font-size: 0.7rem;
+  }
+}
+
+#footer img {
+  padding-left: 28px;
+  justify-self: center;
 }

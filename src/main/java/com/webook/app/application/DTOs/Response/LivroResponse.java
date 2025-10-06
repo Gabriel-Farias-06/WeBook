@@ -1,13 +1,19 @@
 package com.webook.app.application.DTOs.Response;
 
+import com.webook.app.application.DTOs.EditoraDTO;
+import com.webook.app.application.DTOs.GeneroDTO;
+import com.webook.app.application.DTOs.UsuarioDTO;
 import com.webook.app.domain.Entity.Autor;
 import com.webook.app.domain.Entity.Editora;
 import com.webook.app.domain.Entity.Genero;
+import com.webook.app.domain.Entity.Livro;
 import com.webook.app.domain.Enums.ClassificacaoIndicativa;
 
 import java.util.List;
+import java.util.UUID;
 
 public class LivroResponse {
+    UUID livro_id;
     String isbn;
     String titulo;
     String sinopse;
@@ -15,24 +21,35 @@ public class LivroResponse {
     Double preco;
     String caminhoLivro;
     ClassificacaoIndicativa classificacaoIndicativa;
-    Autor autor;
-    Editora editora;
-    List<Genero> generos;
+    String caminhoEbook;
+    AutorResponse autor;
+    EditoraDTO editora;
+    List<GeneroDTO> generos;
 
-    public LivroResponse(String isbn, String titulo, String sinopse, int numeroPaginas, Double preco, String caminhoLivro, ClassificacaoIndicativa classificacaoIndicativa, Autor autor, Editora editora, List<Genero> generos) {
-        this.isbn = isbn;
-        this.titulo = titulo;
-        this.sinopse = sinopse;
-        this.numeroPaginas = numeroPaginas;
-        this.preco = preco;
-        this.caminhoLivro = caminhoLivro;
-        this.classificacaoIndicativa = classificacaoIndicativa;
-        this.autor = autor;
-        this.editora = editora;
-        this.generos = generos;
+    public LivroResponse(Livro livro) {
+        this.livro_id = livro.getLivro_id();
+        this.isbn = livro.getIsbn();
+        this.titulo = livro.getTitulo();
+        this.sinopse = livro.getSinopse();
+        this.numeroPaginas = livro.getNumeroPaginas();
+        this.preco = livro.getPreco();
+        this.caminhoLivro = livro.getCaminhoLivro();
+        this.classificacaoIndicativa = livro.getClassificacaoIndicativa();
+        this.autor = new AutorResponse(livro.getAutor().getNome(), livro.getAutor().getSobrenome());
+        this.editora = EditoraDTO.toDTO(livro.getEditora());
+        this.generos = livro.getGeneros().stream().map(GeneroDTO::toDTO).toList();
+        this.caminhoEbook = livro.getCaminhoEbook();
     }
 
     public LivroResponse() {}
+
+    public UUID getLivro_id() {
+        return livro_id;
+    }
+
+    public void setLivro_id(UUID livro_id) {
+        this.livro_id = livro_id;
+    }
 
     public String getIsbn() {
         return isbn;
@@ -90,27 +107,35 @@ public class LivroResponse {
         this.classificacaoIndicativa = classificacaoIndicativa;
     }
 
-    public Autor getAutor() {
+    public AutorResponse getAutor() {
         return autor;
     }
 
-    public void setAutor(Autor autor) {
+    public void setAutor(AutorResponse autor) {
         this.autor = autor;
     }
 
-    public Editora getEditora() {
+    public EditoraDTO getEditora() {
         return editora;
     }
 
-    public void setEditora(Editora editora) {
+    public void setEditora(EditoraDTO editora) {
         this.editora = editora;
     }
 
-    public List<Genero> getGeneros() {
+    public List<GeneroDTO> getGeneros() {
         return generos;
     }
 
-    public void setGeneros(List<Genero> generos) {
+    public void setGeneros(List<GeneroDTO> generos) {
         this.generos = generos;
+    }
+
+    public String getCaminhoEbook() {
+        return caminhoEbook;
+    }
+
+    public void setCaminhoEbook(String caminhoEbook) {
+        this.caminhoEbook = caminhoEbook;
     }
 }

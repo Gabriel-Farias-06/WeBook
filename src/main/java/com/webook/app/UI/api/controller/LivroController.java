@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,27 +26,25 @@ public class LivroController {
     private final DeleteLivroUseCase deleteLivroUseCase;
     private final FindByIdLivroUseCase findByIdLivroUseCase;
     private final FindByIsbnLivroUseCase findByIsbnLivroUseCase;
+    private final FindAllLivroUseCase findAllLivroUseCase;
 
-    public LivroController(CreateLivroUseCase createLivroUseCase, UpdateLivroUseCase updateLivroUseCase, DeleteLivroUseCase deleteLivroUseCase, FindByIdLivroUseCase findByIdLivroUseCase, FindByIsbnLivroUseCase findByIsbnLivroUseCase) {
+    public LivroController(CreateLivroUseCase createLivroUseCase, UpdateLivroUseCase updateLivroUseCase, DeleteLivroUseCase deleteLivroUseCase, FindByIdLivroUseCase findByIdLivroUseCase, FindByIsbnLivroUseCase findByIsbnLivroUseCase, FindAllLivroUseCase findAllLivroUseCase) {
         this.createLivroUseCase = createLivroUseCase;
         this.updateLivroUseCase = updateLivroUseCase;
         this.deleteLivroUseCase = deleteLivroUseCase;
         this.findByIdLivroUseCase = findByIdLivroUseCase;
         this.findByIsbnLivroUseCase = findByIsbnLivroUseCase;
+        this.findAllLivroUseCase = findAllLivroUseCase;
     }
 
     @PostMapping
     public ResponseEntity<LivroResponse> create(@RequestBody LivroRequest livroRequest) {
-        Livro livro = new Livro(livroRequest.getIsbn(), livroRequest.getTitulo(), livroRequest.getSinopse(),livroRequest.getNumeroPaginas(), livroRequest.getPreco(), livroRequest.getCaminhoLivro(), livroRequest.getClassificacaoIndicativa(), livroRequest.getAutor(), livroRequest.getEditora(), livroRequest.getGeneros());
-        return createLivroUseCase.execute(livro);
+        return createLivroUseCase.execute(livroRequest);
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> update(@RequestBody LivroRequest livroRequest) {
-        Livro livro = new Livro(livroRequest.getIsbn(), livroRequest.getTitulo(), livroRequest.getSinopse(),livroRequest.getNumeroPaginas(), livroRequest.getPreco(), livroRequest.getCaminhoLivro(), livroRequest.getClassificacaoIndicativa(), livroRequest.getAutor(), livroRequest.getEditora(), livroRequest.getGeneros());
-
-        updateLivroUseCase.execute(livro);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<LivroResponse> update(@RequestBody LivroRequest livroRequest) {
+        return updateLivroUseCase.execute(livroRequest);
     }
 
     @DeleteMapping("/{isbn}")
@@ -55,12 +54,17 @@ public class LivroController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Livro> findById(@PathVariable UUID id) {
-        return ResponseEntity.of(findByIdLivroUseCase.execute(id));
+    public ResponseEntity<LivroResponse> findById(@PathVariable UUID id) {
+        return findByIdLivroUseCase.execute(id);
     }
 
     @GetMapping("/isbn/{isbn}")
-    public ResponseEntity<Livro> findByIsbn(@PathVariable String isbn) {
-        return ResponseEntity.of(findByIsbnLivroUseCase.execute(isbn));
+    public ResponseEntity<LivroResponse> findByIsbn(@PathVariable String isbn) {
+        return findByIsbnLivroUseCase.execute(isbn);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LivroResponse>> findAll() {
+        return findAllLivroUseCase.execute();
     }
 }

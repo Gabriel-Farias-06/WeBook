@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,21 +22,21 @@ public class GeneroController {
     private final DeleteGeneroUseCase deleteGeneroUseCase;
     private final FindByIdGeneroUseCase findByIdGeneroUseCase;
     private final FindByNomeGeneroUseCase findByNomeGeneroUseCase;
+    private final FindAllGeneroUseCase findAllGeneroUseCase;
 
-    public GeneroController(CreateGeneroUseCase createGeneroUseCase, UpdateGeneroUseCase updateGeneroUseCase, DeleteGeneroUseCase deleteGeneroUseCase, FindByIdGeneroUseCase findByIdGeneroUseCase, FindByNomeGeneroUseCase findByNomeGeneroUseCase) {
+    public GeneroController(CreateGeneroUseCase createGeneroUseCase, UpdateGeneroUseCase updateGeneroUseCase, DeleteGeneroUseCase deleteGeneroUseCase, FindByIdGeneroUseCase findByIdGeneroUseCase, FindByNomeGeneroUseCase findByNomeGeneroUseCase, FindAllGeneroUseCase findAllGeneroUseCase) {
         this.createGeneroUseCase = createGeneroUseCase;
         this.updateGeneroUseCase = updateGeneroUseCase;
         this.deleteGeneroUseCase = deleteGeneroUseCase;
         this.findByIdGeneroUseCase = findByIdGeneroUseCase;
         this.findByNomeGeneroUseCase = findByNomeGeneroUseCase;
+        this.findAllGeneroUseCase = findAllGeneroUseCase;
     }
 
     @PostMapping
     public ResponseEntity<GeneroDTO> create(@RequestBody GeneroRequest generoRequest) {
         Genero genero = new Genero(generoRequest.getNome());
-        Genero generoCriado = createGeneroUseCase.execute(genero);
-        URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(generoCriado.getGenero_id()).toUri();
-        return ResponseEntity.created(localizacao).body(GeneroDTO.toDTO(generoCriado));
+        return createGeneroUseCase.execute(genero);
     }
 
     @PutMapping
@@ -47,17 +48,22 @@ public class GeneroController {
 
     @DeleteMapping("/{name}")
     public ResponseEntity<Boolean> delete(@PathVariable String name) {
-        deleteGeneroUseCase.execute(findByNomeGeneroUseCase.execute(name).get().getGenero_id());
+        deleteGeneroUseCase.execute(findByNomeGeneroUseCase.execute(name).getBody().getGenero_id());
         return ResponseEntity.ok(true);
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Optional<Genero>> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(findByIdGeneroUseCase.execute(id));
+    public ResponseEntity<GeneroDTO> findById(@PathVariable UUID id) {
+        return findByIdGeneroUseCase.execute(id);
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Optional<Genero>> findById(@PathVariable String name) {
-        return ResponseEntity.ok(findByNomeGeneroUseCase.execute(name));
+    public ResponseEntity<GeneroDTO> findById(@PathVariable String name) {
+        return findByNomeGeneroUseCase.execute(name);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<GeneroDTO>> findAll() {
+        return findAllGeneroUseCase.execute();
     }
 }

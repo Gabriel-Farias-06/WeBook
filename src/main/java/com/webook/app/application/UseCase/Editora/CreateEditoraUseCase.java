@@ -1,8 +1,14 @@
 package com.webook.app.application.UseCase.Editora;
 
+import com.webook.app.application.DTOs.AutorDTO;
+import com.webook.app.application.DTOs.EditoraDTO;
 import com.webook.app.domain.Entity.Editora;
 import com.webook.app.domain.Interfaces.EditoraRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CreateEditoraUseCase {
@@ -12,10 +18,12 @@ public class CreateEditoraUseCase {
         this.editoraRepository = editoraRepository;
     }
 
-    public Editora execute(Editora editora) throws IllegalArgumentException {
-        if(editoraRepository.findByNome(editora.getNome()).isPresent())
-            throw new IllegalArgumentException("Editora com mesmo nome já cadastrada");
-        editoraRepository.create(editora);
-        return editora;
+    @Transactional
+    public ResponseEntity<EditoraDTO> execute(Editora editora) throws IllegalArgumentException {
+        Optional<Editora> editoraOptional = editoraRepository.findByNome(editora.getNome());
+        if(editoraOptional.isPresent())
+            return ResponseEntity.status(200).body(EditoraDTO.toDTO(editoraOptional.get()));
+        Editora newEditora = editoraRepository.create(editora);
+        return ResponseEntity.status(201).body(EditoraDTO.toDTO(newEditora));
     }
 }

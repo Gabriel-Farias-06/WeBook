@@ -30,9 +30,7 @@ public class EditoraController {
 
     @PostMapping
     public ResponseEntity<EditoraDTO> create(@RequestBody Editora editora) {
-        Editora editoraCriado = createEditoraUseCase.execute(editora);
-        URI localizacao = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(editoraCriado.getEditora_id()).toUri();
-        return ResponseEntity.created(localizacao).body(EditoraDTO.toDTO(editoraCriado));
+        return createEditoraUseCase.execute(editora);
     }
 
     @PutMapping
@@ -48,12 +46,14 @@ public class EditoraController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Optional<Editora>> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(findByIdEditoraUseCase.execute(id));
+    public ResponseEntity<EditoraDTO> findById(@PathVariable UUID id) {
+        Optional<Editora> editora = findByIdEditoraUseCase.execute(id);
+        return editora.map(value -> ResponseEntity.ok(EditoraDTO.toDTO(value))).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Optional<Editora>> findById(@PathVariable String name) {
-        return ResponseEntity.ok(findByNomeEditoraUseCase.execute(name));
+    public ResponseEntity<EditoraDTO> findById(@PathVariable String name) {
+        Optional<Editora> editora = findByNomeEditoraUseCase.execute(name);
+        return editora.map(value -> ResponseEntity.ok(EditoraDTO.toDTO(value))).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 }
