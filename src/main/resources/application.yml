@@ -28,7 +28,12 @@ spring:
         generate_statistics: false
 
 server:
-  port: 8080
+  tomcat:
+    accesslog:
+      enabled: true
+      pattern: "%h %l %u %t \"%r\" %s %b %D"
+
+  port: ${PORT:8080}
   address: 0.0.0.0
   shutdown: graceful
   forward-headers-strategy: native
