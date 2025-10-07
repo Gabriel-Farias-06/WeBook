@@ -24,3 +24,7 @@ jwt:
 stripe:
   secret:
     key: ${STRIPE_SECRET_KEY}
+debug: true
+logging:
+  level:
+    org.springframework.boot.autoconfigure: DEBUG
