@@ -28,7 +28,7 @@ spring:
     pool-name: HikariPool-1
 
 server:
-  port: ${PORT}
+  port: 8080
   address: 0.0.0.0
   shutdown: graceful
   forward-headers-strategy: native
