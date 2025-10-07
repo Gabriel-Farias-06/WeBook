@@ -3,15 +3,15 @@ spring:
     url: jdbc:mysql://${MYSQL_ADDON_HOST}:${MYSQL_ADDON_PORT}/${MYSQL_ADDON_DB}
     username: ${MYSQL_ADDON_USER}
     password: ${MYSQL_ADDON_PASSWORD}
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: false
     show-sql: false
     hibernate:
       ddl-auto: validate
-      connection.provider_disables_autocommit: true
     properties:
       hibernate:
+        connection.provider_disables_autocommit: true
         jdbc.batch_size: 20
         order_inserts: true
         order_updates: true
