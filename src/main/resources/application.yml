@@ -4,6 +4,14 @@ spring:
     username: ${MYSQL_ADDON_USER}
     password: ${MYSQL_ADDON_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 170000
+      validation-timeout: 5000
+      pool-name: HikariPool-1
 
   jpa:
     open-in-view: false
@@ -12,20 +20,12 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        connection.provider_disables_autocommit: true
+        connection:
+          provider_disables_autocommit: true
         jdbc.batch_size: 50
         order_inserts: true
         order_updates: true
         generate_statistics: false
-
-  datasource.hikari:
-    minimum-idle: 2
-    maximum-pool-size: 10
-    idle-timeout: 30000
-    connection-timeout: 30000
-    max-lifetime: 170000
-    validation-timeout: 5000
-    pool-name: HikariPool-1
 
 server:
   port: 8080
@@ -45,10 +45,6 @@ management:
 
 jwt:
   secret: ${JWT_SECRET}
-
-stripe:
-  secret:
-    key: ${STRIPE_SECRET_KEY}
 
 debug: true
 logging:
