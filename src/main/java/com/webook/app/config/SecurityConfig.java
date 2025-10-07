@@ -37,7 +37,7 @@ public class SecurityConfig {
                     "/api/usuario/login", "/api/usuario/signup", "/api/genero",
                     "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",
                     "/swagger-resources/**", "/webjars/**",
-                    "/actuator/health", "/actuator/health/**"
+                    "/actuator/health", "/actuator/health/**", "/healthz"
                 ).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/livro").permitAll()
                 .anyRequest().authenticated()
