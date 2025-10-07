@@ -32,9 +32,15 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/usuario/login", "/api/usuario/signup", "/api/genero", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**", "/actuator/health", "/actuator/health/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/livro").permitAll()
-                    .anyRequest().authenticated()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()   // <— adicione isto
+                .requestMatchers(
+                    "/api/usuario/login", "/api/usuario/signup", "/api/genero",
+                    "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",
+                    "/swagger-resources/**", "/webjars/**",
+                    "/actuator/health", "/actuator/health/**"
+                ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/livro").permitAll()
+                .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .headers(headers -> headers
