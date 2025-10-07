@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     exclude = { UserDetailsServiceAutoConfiguration.class }
 )
 @EnableJpaRepositories(basePackages = "com.webook.app.Infraestructure.Repositories")
-@EntityScan(basePackages = "com.webook.app.domain")
+@EntityScan(basePackages = "com.webook.app.domain.Entity")
 public class AppApplication {
   public static void main(String[] args) {
     SpringApplication.run(AppApplication.class, args);
