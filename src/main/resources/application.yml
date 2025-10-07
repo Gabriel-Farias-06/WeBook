@@ -1,9 +1,10 @@
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_ADDON_HOST}:${MYSQL_ADDON_PORT}/${MYSQL_ADDON_DB}
+    url: jdbc:mysql://${MYSQL_ADDON_HOST}:${MYSQL_ADDON_PORT}/${MYSQL_ADDON_DB}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&cachePrepStmts=true&useServerPrepStmts=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=${MYSQL_USE_SSL:false}
     username: ${MYSQL_ADDON_USER}
     password: ${MYSQL_ADDON_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     open-in-view: false
     show-sql: false
@@ -12,19 +13,51 @@ spring:
     properties:
       hibernate:
         connection.provider_disables_autocommit: true
-        jdbc.batch_size: 20
+        jdbc.batch_size: 50
         order_inserts: true
         order_updates: true
         generate_statistics: false
+
+  datasource.hikari:
+    minimum-idle: 2
+    maximum-pool-size: 10
+    idle-timeout: 30000
+    connection-timeout: 30000
+    max-lifetime: 170000
+    validation-timeout: 5000
+    pool-name: HikariPool-1
+
 server:
   port: ${PORT:8080}
+  address: 0.0.0.0
   shutdown: graceful
+  forward-headers-strategy: native
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+cors:
+  allowed-origins: "https://gabriel-farias-06.github.io/WeBook"
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+
 jwt:
   secret: ${JWT_SECRET}
+
 stripe:
   secret:
     key: ${STRIPE_SECRET_KEY}
+
 debug: true
 logging:
   level:
     org.springframework.boot.autoconfigure: DEBUG
+    com.zaxxer.hikari: INFO
+    org.hibernate.SQL: WARN
