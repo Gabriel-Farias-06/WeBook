@@ -1,4 +1,7 @@
 spring:
+  main:
+    web-application-type: servlet
+    lazy-initialization: true 
   datasource:
     url: jdbc:mysql://${MYSQL_ADDON_HOST}:${MYSQL_ADDON_PORT}/${MYSQL_ADDON_DB}?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&cachePrepStmts=true&useServerPrepStmts=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&sslMode=${MYSQL_SSL_MODE:REQUIRED}&connectTimeout=5000&socketTimeout=5000
     username: ${MYSQL_ADDON_USER}
