@@ -9,9 +9,12 @@ export function GenerosProvider({ children }) {
   useEffect(() => {
     async function getGenders() {
       try {
-        const res = await fetch(`https://webook-8d4j.onrender.com/api/genero`, {
-          method: "GET",
-        });
+        const res = await fetch(
+          `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/genero`,
+          {
+            method: "GET",
+          }
+        );
 
         setGeneros(await res.json());
       } catch (e) {

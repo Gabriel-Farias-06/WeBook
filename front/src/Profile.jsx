@@ -61,7 +61,9 @@ function Profile() {
   useEffect(() => {
     if (usuario && usuario.livros.length)
       addNotification(
-        `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
+        `Sua compra do livro ${
+          usuario.livros[usuario.livros.length - 1].titulo
+        } foi realizada com sucesso`,
         "./img/LivroIcone.png"
       );
   }, [usuario]);
@@ -99,7 +101,9 @@ function Profile() {
   useEffect(() => {
     if (usuario && usuario.livros.length)
       addNotification(
-        `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
+        `Sua compra do livro ${
+          usuario.livros[usuario.livros.length - 1].titulo
+        } foi realizada com sucesso`,
         "./img/LivroIcone.png"
       );
   }, [usuario]);
@@ -131,7 +135,7 @@ function Profile() {
   async function deleteBook() {
     try {
       const res = await fetch(
-        `https://webook-8d4j.onrender.com/api/livro/${deleteIsbn}`,
+        `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/livro/${deleteIsbn}`,
         {
           method: "DELETE",
           headers: {
@@ -151,7 +155,7 @@ function Profile() {
   async function deleteProfile() {
     try {
       const res = await fetch(
-        `https://webook-8d4j.onrender.com/api/usuario/${usuario.email}/${deletePassword}`,
+        `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/usuario/${usuario.email}/${deletePassword}`,
         {
           method: "DELETE",
           headers: {
@@ -212,20 +216,23 @@ function Profile() {
       caminhoFoto = resul.data.url;
     }
 
-    const res = await fetch("https://webook-8d4j.onrender.com/api/usuario", {
-      method: "PUT",
-      body: JSON.stringify({
-        nome,
-        email: usuario.email,
-        senhaAtual: actualPassword,
-        senhaNova: senha,
-        caminhoFoto,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${usuario.token}`,
-      },
-    });
+    const res = await fetch(
+      "https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/usuario",
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          nome,
+          email: usuario.email,
+          senhaAtual: actualPassword,
+          senhaNova: senha,
+          caminhoFoto,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${usuario.token}`,
+        },
+      }
+    );
 
     if (res.status == 401) {
       setCorrectPassword(false);
@@ -283,23 +290,26 @@ function Profile() {
     const nomeAutor = newBook.autor.trim().split(" ")[0];
     const sobrenomeAutor = newBook.autor.trim().split(" ").slice(1).join(" ");
 
-    const newAutor = await fetch(`https://webook-8d4j.onrender.com/api/autor`, {
-      method: "POST",
-      body: JSON.stringify({
-        nome: nomeAutor.toUpperCase(),
-        sobrenome: sobrenomeAutor.toUpperCase(),
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${usuario.token}`,
-      },
-    });
+    const newAutor = await fetch(
+      `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/autor`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          nome: nomeAutor.toUpperCase(),
+          sobrenome: sobrenomeAutor.toUpperCase(),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${usuario.token}`,
+        },
+      }
+    );
 
     const autor = await newAutor.json();
     const autor_id = autor.autor_id;
 
     const editoraResponse = await fetch(
-      `https://webook-8d4j.onrender.com/api/editora`,
+      `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/editora`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -332,14 +342,17 @@ function Profile() {
     setGenerosOptions([]);
 
     try {
-      const res = await fetch("https://webook-8d4j.onrender.com/api/livro", {
-        method: "POST",
-        body: JSON.stringify(book),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${usuario.token}`,
-        },
-      });
+      const res = await fetch(
+        "https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/livro",
+        {
+          method: "POST",
+          body: JSON.stringify(book),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${usuario.token}`,
+          },
+        }
+      );
 
       if (res.status == 201) {
         setUpdateLivro(true);
@@ -907,7 +920,7 @@ function Profile() {
                     ) * 0.8;
 
                   const response = await fetch(
-                    "https://webook-8d4j.onrender.com/api/pagamento",
+                    "https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/pagamento",
                     {
                       method: "POST",
                       headers: {

@@ -75,7 +75,9 @@ function Home() {
   useEffect(() => {
     if (usuario && usuario.livros.length)
       addNotification(
-        `Sua compra do livro ${usuario.livros[usuario.livros.length - 1].titulo} foi realizada com sucesso`,
+        `Sua compra do livro ${
+          usuario.livros[usuario.livros.length - 1].titulo
+        } foi realizada com sucesso`,
         `${import.meta.env.BASE_URL}img/LivroIcone.png`
       );
   }, [usuario]);
@@ -119,7 +121,7 @@ function Home() {
     }
 
     const response = await fetch(
-      `https://webook-8d4j.onrender.com/api/usuario/${decoded.usuario_id}`,
+      `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/usuario/${decoded.usuario_id}`,
       {
         method: "GET",
         headers: {
@@ -140,7 +142,7 @@ function Home() {
 
   async function createUser() {
     const response = await fetch(
-      `https://webook-8d4j.onrender.com/api/usuario/signup`,
+      `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/usuario/signup`,
       {
         method: "POST",
         headers: {
@@ -163,7 +165,7 @@ function Home() {
 
   async function loginUser() {
     const login = await fetch(
-      `https://webook-8d4j.onrender.com/api/usuario/login`,
+      `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/usuario/login`,
       {
         method: "POST",
         headers: {
@@ -496,7 +498,7 @@ function Home() {
                     ) * 0.8;
 
                   const response = await fetch(
-                    "https://webook-8d4j.onrender.com/api/pagamento",
+                    "https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/pagamento",
                     {
                       method: "POST",
                       headers: {
@@ -723,7 +725,7 @@ function Home() {
                     e.target.classList.add("inative");
                     e.currentTarget.innerText = "Carregando";
                     const response = await fetch(
-                      "https://webook-8d4j.onrender.com/api/pagamento",
+                      "https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/pagamento",
                       {
                         method: "POST",
                         headers: {

@@ -12,9 +12,12 @@ export function LivrosProvider({ children }) {
   useEffect(() => {
     async function getBooks() {
       try {
-        const res = await fetch(`https://webook-8d4j.onrender.com/api/livro`, {
-          method: "GET",
-        });
+        const res = await fetch(
+          `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/livro`,
+          {
+            method: "GET",
+          }
+        );
 
         const json = await res.json();
 

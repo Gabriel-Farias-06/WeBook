@@ -37,7 +37,7 @@ export default function CheckoutForm({
     } else if (paymentIntent.status === "succeeded") {
       idLivros.forEach(async (livroId) => {
         await fetch(
-          `https://webook-8d4j.onrender.com/api/usuario/${idUsuario}/livros/${livroId}`,
+          `https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io/api/usuario/${idUsuario}/livros/${livroId}`,
           {
             method: "POST",
             headers: {
