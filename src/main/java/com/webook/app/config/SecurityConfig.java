@@ -47,11 +47,13 @@ public class SecurityConfig {
                 .contentSecurityPolicy(csp -> csp
                     .policyDirectives(
                         "default-src 'self'; " +
-                                "script-src 'self' https://js.stripe.com; " +
-                                "style-src 'self' 'unsafe-inline' https://js.stripe.com https://fonts.googleapis.com; " +
-                                "font-src 'self' https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com data:; " +
-                                "connect-src 'self' https://api.stripe.com https://api.imgbb.com; " +
-                                "img-src 'self' data: https://i.ibb.co;"
+      "connect-src 'self' https://webook-8d4j.onrender.com https://app-d94fb6f2-81df-40a2-b55c-f206a66d9298.cleverapps.io https://api.stripe.com; " +
+      "script-src 'self' https://js.stripe.com; " +
+      "style-src 'self' 'unsafe-inline'; " +
+      "img-src 'self' data: https://gabriel-farias-06.github.io; " +
+      "font-src 'self' data: https://js.stripe.com; " +
+      "frame-src https://js.stripe.com; " +
+      "base-uri 'self'; object-src 'none';"
                     )
                 )
             );
